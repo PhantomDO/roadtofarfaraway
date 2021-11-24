@@ -22,8 +22,6 @@ __Pitch__ : Aidez Shrek et ses amis à sauver Fiona de Lord Farquaad à Far Far 
 
 # Gameplay
 
-## Core
-
 ### Spawn
 
 * __Start__ : le joueur peut poser notre base sur une tile libre et tagger comme *__"Spawnable"__* 
@@ -44,3 +42,19 @@ __Pitch__ : Aidez Shrek et ses amis à sauver Fiona de Lord Farquaad à Far Far 
 * __Current Health__ : point de vie actuel de l'unité
 * __Move Speed__ : vitesse de déplacement de l'unité
 * __Fire rate__ : temps entre chacun des coups de l'unité
+
+# Level Design
+
+Le level design est géré par une TileMap.
+On défini un set de règles de construction avec différents set d'objets tile.
+Notre ennemi a ses forts placés aléatoirement sur la TileMap, Aux bords des routes.
+
+# UX/UI
+
+TODO
+
+# Défi
+
+* Level Design procédural
+* State Machine, Pattern d'ennemi, Intelligence Artificielle
+* Beaucoup d'intelligence artificielle en même temps
