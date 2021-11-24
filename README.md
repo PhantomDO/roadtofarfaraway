@@ -8,7 +8,17 @@ __Mode__ : Solo <br>
 __Support__ : PC <br>
 __Moteur__ : Unity 2020.3.23f1 <br>
 __Pitch__ : Aidez Shrek et ses amis à sauver Fiona de Lord Farquaad à Far Far Away. Prenez toutes les forteresses sur votre chemin pour vous faire plus d'alliés à déployer lors de l'attaque de la ville.<br>
-__Inspiration__ : Totally Accurate Battle Simulator, Advance Wars <br>
+
+# Inspiration 
+
+## Shrek
+![image](images/shrek.gif)
+
+## Totally Accurate Battle Simulator
+![image](images/tabs.gif)
+
+## Advance Wars
+![image](images/advance_wars.gif)
 
 # Gameplay
 
