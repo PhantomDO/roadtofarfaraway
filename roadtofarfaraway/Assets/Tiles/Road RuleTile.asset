@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e93f8b16c6e94843b1b6ffafc6bcc83, type: 3}
-  m_Name: RuleTile 1
+  m_Name: Road RuleTile
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 21300000, guid: 2daa1dcca06420646bd0d9291d1fb276, type: 3}
   m_DefaultGameObject: {fileID: 1256022685940966092, guid: 0f773ec6077598c4d8338bc7631a1dbd, type: 3}
