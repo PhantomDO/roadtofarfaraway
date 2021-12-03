@@ -7,8 +7,6 @@ namespace Units
 {
     public class Player : MonoBehaviour
     {
-        public event Action OnUnitLostLife;
-
         [SerializeField] private int _startCurrency;
         public int CurrentCurrency { get; private set; }
 
