@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3905531374615397477
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5451420836166616068}
+  - component: {fileID: 8537437345424257718}
+  m_Layer: 0
+  m_Name: GrassTile
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5451420836166616068
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3905531374615397477}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8537437345424257718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3905531374615397477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d07b6c9b5a84aa4ab4e65c23a206a4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RandomizingRules:
+  - GameObject: {fileID: 860844775855582542, guid: 43ec8e7f617a4a5479293284f193d042, type: 3}
+    Probability: 1
+  - GameObject: {fileID: 439276543989561935, guid: dd917efbe5593fc4e85262b11f897013, type: 3}
+    Probability: 0.4
+  - GameObject: {fileID: 4903490646895771460, guid: d65f4de31dae17c46a0298bfdbe280ef, type: 3}
+    Probability: 0.4
+  - GameObject: {fileID: 1218312148550916250, guid: ec83f77ed121def4c98681b4b87cccec, type: 3}
+    Probability: 0.35
+  - GameObject: {fileID: 659409976806704960, guid: b1e9b6903d1234948b149335ea4c1fc0, type: 3}
+    Probability: 0.2
+  - GameObject: {fileID: 3943415106569061006, guid: 5aaeebcebcbe1b1498edfce40508bdef, type: 3}
+    Probability: 0.1

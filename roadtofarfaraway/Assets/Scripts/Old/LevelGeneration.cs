@@ -7,7 +7,6 @@ public class LevelGeneration : MonoBehaviour
 {
     int[,] _TileGrid;
     Tilemap _TerrainTilemap;
-    Tilemap _BuildingsTilemap;
 
     [Header("Level Parameters")]
     public int LevelWidth = 10;
@@ -16,17 +15,20 @@ public class LevelGeneration : MonoBehaviour
     [Header("Rule Tiles")]
     public RuleTile GrassTile;
     public RuleTile RoadTile;
+    
+    [Header("Buildings Prefabs")]
+    public GameObject Tower;
 
     enum TileType : int
     {
         Grass = 0,
-        Road = 1
+        Road = 1,
+        Fort = 2
     }
 
     private void Awake()
     {
         _TerrainTilemap = transform.Find("Terrain").GetComponent<Tilemap>();
-        _BuildingsTilemap = transform.Find("Buildings").GetComponent<Tilemap>();
     }
 
     void Start()
@@ -39,12 +41,14 @@ public class LevelGeneration : MonoBehaviour
             {
                 if (j == 5)
                     _TileGrid[i,j] = (int)TileType.Road;
+                else if (j == 4 && i % 2 == 0)
+                    _TileGrid[i,j] = (int)TileType.Fort;
                 else
                     _TileGrid[i,j] = (int)TileType.Grass;
             }
         }
 
-        InstantiateTiles();
+        InstantiateLevel();
     }
 
     void Update()
@@ -52,7 +56,7 @@ public class LevelGeneration : MonoBehaviour
         
     }
 
-    private void InstantiateTiles()
+    private void InstantiateLevel()
     {
         for (int i = 0; i < LevelLength; i++)
         {
@@ -60,11 +64,14 @@ public class LevelGeneration : MonoBehaviour
             {
                 switch(_TileGrid[i,j])
                 {
-                    case (int)TileType.Grass:
-                        _TerrainTilemap.SetTile(new Vector3Int(i, j, 0), GrassTile);
-                        break;
                     case (int)TileType.Road:
                         _TerrainTilemap.SetTile(new Vector3Int(i, j, 0), RoadTile);
+                        break;
+                    case (int)TileType.Fort:
+                        Instantiate(Tower, new Vector3(i + 0.5f, 0f, j + 0.5f), transform.rotation);
+                        break;
+                    default:
+                        _TerrainTilemap.SetTile(new Vector3Int(i, j, 0), GrassTile);
                         break;
                 }
             }

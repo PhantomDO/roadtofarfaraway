@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Grass RuleTile
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 21300000, guid: 5b430f0d85ff70c43814989f281fc037, type: 3}
-  m_DefaultGameObject: {fileID: 860844775855582542, guid: 43ec8e7f617a4a5479293284f193d042, type: 3}
+  m_DefaultGameObject: {fileID: 3905531374615397477, guid: f5b7c5c4ebbded1459f7d92ff2a18b1e, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules:
   - m_Id: 0
     m_Sprites:
     - {fileID: 21300000, guid: 5b430f0d85ff70c43814989f281fc037, type: 3}
     - {fileID: 0}
-    m_GameObject: {fileID: 860844775855582542, guid: 43ec8e7f617a4a5479293284f193d042, type: 3}
+    m_GameObject: {fileID: 3905531374615397477, guid: f5b7c5c4ebbded1459f7d92ff2a18b1e, type: 3}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
     m_PerlinScale: 0.5

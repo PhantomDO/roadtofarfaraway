@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 52219585250670580}
   - component: {fileID: 3969464553219045457}
   - component: {fileID: 1221225035389258907}
+  - component: {fileID: -761712690679203781}
   m_Layer: 0
   m_Name: tile
   m_TagString: Untagged
@@ -26,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 860844775855582542}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.5, y: 0, z: 4.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -82,3 +83,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-761712690679203781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 860844775855582542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d07b6c9b5a84aa4ab4e65c23a206a4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameObjectsPool:
+  - {fileID: 659409976806704960, guid: b1e9b6903d1234948b149335ea4c1fc0, type: 3}
+  - {fileID: 439276543989561935, guid: dd917efbe5593fc4e85262b11f897013, type: 3}
+  - {fileID: 4903490646895771460, guid: d65f4de31dae17c46a0298bfdbe280ef, type: 3}
+  - {fileID: 1218312148550916250, guid: ec83f77ed121def4c98681b4b87cccec, type: 3}
