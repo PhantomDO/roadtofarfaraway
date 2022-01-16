@@ -742,6 +742,7 @@ MonoBehaviour:
   endEdge: 1
   randomStartAndEnd: 0
   numberOfPieces: 10
+  numberOfTowers: 0
   visualizeUsingPrefabs: 1
   autoRepair: 1
 --- !u!1 &1048600587
@@ -789,6 +790,7 @@ MonoBehaviour:
   endEdge: 1
   randomStartAndEnd: 0
   knightPiecesNumber: 7
+  numberOfTowers: 2
   mapVisualizer: {fileID: 1160608439}
 --- !u!4 &1048600589
 Transform:
@@ -840,6 +842,7 @@ MonoBehaviour:
   animate: 0
   roadStraightTile: {fileID: 1256022685940966092, guid: 0f773ec6077598c4d8338bc7631a1dbd, type: 3}
   roadCornerTile: {fileID: 3937196609972504525, guid: bda4f022ee3af0b45906531124c486a4, type: 3}
+  towerTile: {fileID: 5642627916672779223, guid: e204ff643796be049a4de71b1eede4ce, type: 3}
   emptyTile: {fileID: 860844775855582542, guid: 43ec8e7f617a4a5479293284f193d042, type: 3}
   startTile: {fileID: 5990198699574685538, guid: 690635bb726deb24f91f81f1e413a318, type: 3}
   endTile: {fileID: 5642627916672779223, guid: 0ff51904590538f41be42287183a3602, type: 3}

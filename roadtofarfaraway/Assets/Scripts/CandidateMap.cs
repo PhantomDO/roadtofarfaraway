@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 using System.Linq;
+using System.Text;
 
 namespace FFA.MapGeneration
 {
@@ -9,9 +10,11 @@ namespace FFA.MapGeneration
     {
         private MapGrid grid;
         private int numberOfPieces = 0;
+        private int numberOfTowers = 0;
         private bool[] obstaclesArray;
         private Vector3 startPosition, endPosition;
         private List<KnightPiece> knightPieces;
+        private List<Vector3> towers;
         private List<Vector3> path;
 
         private List<Vector3> cornersPosition;
@@ -20,12 +23,14 @@ namespace FFA.MapGeneration
         public MapGrid Grid { get => grid; }
         public bool[] ObstaclesArray { get => obstaclesArray; }
 
-        public CandidateMap(MapGrid grid, int numberOfPieces)
+        public CandidateMap(MapGrid grid, int numberOfPieces, int numberOfTowers)
         {
             this.grid = grid;
             this.numberOfPieces = numberOfPieces;
+            this.numberOfTowers = numberOfTowers;
             obstaclesArray = null;
             knightPieces = new List<KnightPiece>();
+            towers = new List<Vector3>();
             path = new List<Vector3>();
         }
 
@@ -38,6 +43,8 @@ namespace FFA.MapGeneration
             this.cornersPosition = new List<Vector3>(candidateMap.cornersPosition);
             this.repetitiveCornersCount = candidateMap.repetitiveCornersCount;
             this.path = new List<Vector3>(candidateMap.path);
+            this.numberOfTowers = candidateMap.numberOfTowers;
+            this.towers = new List<Vector3>(candidateMap.towers);
         }
 
         public void CreateMap(Vector3 startPosition, Vector3 endPosition, bool autoRepair = false)
@@ -49,6 +56,21 @@ namespace FFA.MapGeneration
             PlaceObstacles();
             FindPath();
             if (autoRepair) { Repair(); }
+            GenerateTowers();
+        }
+
+        public void GenerateTowers()
+        {
+            towers.Clear();
+            int pathWithStartLength = path.Count + 1;
+            for (int i = 0; i < numberOfTowers; i++)
+            {
+                int index = pathWithStartLength / (numberOfTowers + 1) * (i + 1);
+                if (path[index] != endPosition)
+                {
+                    towers.Add(path[index]);
+                }
+            }
         }
 
         public void FindPath()
@@ -143,11 +165,13 @@ namespace FFA.MapGeneration
             {
                 obstacleArray = this.obstaclesArray,
                 knightPieces = this.knightPieces,
+                towers = this.towers,
                 startPosition = this.startPosition,
                 endPosition = this.endPosition,
                 path = this.path,
                 cornersPosition = this.cornersPosition,
-                repetitiveCornersCount = this.repetitiveCornersCount
+                repetitiveCornersCount = this.repetitiveCornersCount,
+                numberOfTowers = this.numberOfTowers
             };
         }
 
@@ -207,6 +231,20 @@ namespace FFA.MapGeneration
         public bool IsObstacleAt(int i)
         {
             return obstaclesArray[i];
+        }
+
+        public void DebugCellObjectType()
+        {
+            for (int col = 0; col < grid.Width; col++)
+            {
+                StringBuilder b = new StringBuilder();
+                for (int row = 0; row < grid.Length; row++)
+                {
+                    CellObjectType objectType = grid.GetCell(col, row).ObjectType;
+                    b.Append(objectType + " ");
+                }
+                Debug.Log(b.ToString());
+            }
         }
     }
 }

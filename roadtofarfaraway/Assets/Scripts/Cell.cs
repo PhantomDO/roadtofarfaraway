@@ -27,6 +27,7 @@ namespace FFA.MapGeneration
         Empty,
         Road,
         Obstacle,
+        Tower,
         Start,
         End
     }

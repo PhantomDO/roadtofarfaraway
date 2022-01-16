@@ -11,7 +11,7 @@ namespace FFA.MapGeneration
         public Color startColor, endColor, knightColor, obstacleColor;
         public bool animate = true;
 
-        public GameObject roadStraightTile, roadCornerTile, emptyTile, startTile, endTile;
+        public GameObject roadStraightTile, roadCornerTile, towerTile, emptyTile, startTile, endTile;
         public GameObject[] environmentTiles;
 
         private Dictionary<Vector3, GameObject> obstaclesDictonary = new Dictionary<Vector3, GameObject>();
@@ -36,10 +36,16 @@ namespace FFA.MapGeneration
 
         private void VisualizeUsingPrefabs(MapGrid grid, MapData data)
         {
+            // Setting towers
+            foreach (Vector3 towerPosition in data.towers)
+            {
+                grid.SetCell(towerPosition.x, towerPosition.z, CellObjectType.Tower, true);
+            }
+            // Setting path roads
             for (int i = 0; i < data.path.Count; i++)
             {
                 Vector3 position = data.path[i];
-                if (position != data.endPosition)
+                if (position != data.endPosition && grid.GetCell(position.x, position.z).ObjectType == CellObjectType.Empty)
                 {
                     grid.SetCell(position.x, position.z, CellObjectType.Road);
                 }
@@ -97,6 +103,9 @@ namespace FFA.MapGeneration
                         case CellObjectType.Obstacle:
                             int randomIndex = Random.Range(0, environmentTiles.Length);
                             CreateIndicator(position, environmentTiles[randomIndex], rotation);
+                            break;
+                        case CellObjectType.Tower:
+                            CreateIndicator(position, towerTile, rotation);
                             break;
                         case CellObjectType.Start:
                             if (data.path.Count > 0)

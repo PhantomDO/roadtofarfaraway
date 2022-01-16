@@ -7,6 +7,8 @@ namespace FFA.MapGeneration
     {
         public bool[] obstacleArray;
         public List<KnightPiece> knightPieces;
+        public List<Vector3> towers;
+        public int numberOfTowers;
         public Vector3 startPosition;
         public Vector3 endPosition;
         public List<Vector3> path;

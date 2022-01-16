@@ -52,6 +52,8 @@ namespace FFA.MapGeneration
         private bool randomStartAndEnd = false;
         [SerializeField, Range(4, 9)]
         private int knightPiecesNumber = 7;
+        [SerializeField, Range(0, 3)]
+        private int numberOfTowers = 2;
 
         [Header("Grid visualization")]
         public MapVisualizer mapVisualizer;
@@ -93,7 +95,7 @@ namespace FFA.MapGeneration
             currentGeneration = new List<CandidateMap>(populationSize);
             for (int i =0; i < populationSize; i++)
             {
-                CandidateMap candidateMap = new CandidateMap(grid, knightPiecesNumber);
+                CandidateMap candidateMap = new CandidateMap(grid, knightPiecesNumber, numberOfTowers);
                 candidateMap.CreateMap(startPosition, endPosition, true);
                 currentGeneration.Add(candidateMap);
             }
@@ -109,6 +111,7 @@ namespace FFA.MapGeneration
             {
                 candidateMap.FindPath();
                 candidateMap.Repair();
+                candidateMap.GenerateTowers();
                 int fitness = CalculateFitness(candidateMap.ReturnMapData());
 
                 totalFitnessCurrentGeneration += fitness;
@@ -152,7 +155,10 @@ namespace FFA.MapGeneration
                 currentGeneration = nextGeneration;
                 StartCoroutine(GeneticAlgorithm());
             }
-            else { ShowResults(); }
+            else
+            {
+                ShowResults();
+            }
         }
 
         private int CalculateFitness(MapData mapData)
@@ -211,6 +217,7 @@ namespace FFA.MapGeneration
 
             MapData data = bestMap.ReturnMapData();
             mapVisualizer.VisualizeMap(bestMap.Grid, data, true);
+            //bestMap.DebugCellObjectType();
 
             UIController.instance.HideLoadingScreen();
 

@@ -12,6 +12,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8526209057656701045, guid: f05df414859584545bb64e8adc77c855, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526209057656701045, guid: f05df414859584545bb64e8adc77c855, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526209057656701045, guid: f05df414859584545bb64e8adc77c855, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526209057656701045, guid: f05df414859584545bb64e8adc77c855, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -112,6 +124,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TowerSquare
       objectReference: {fileID: 0}
+    - target: {fileID: 3969464553219045457, guid: 43ec8e7f617a4a5479293284f193d042, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -4855243574250553854, guid: 32fd4d87bc4699f4a93427f0c9df4b0c, type: 3}
     m_RemovedComponents:
     - {fileID: -761712690679203781, guid: 43ec8e7f617a4a5479293284f193d042, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 43ec8e7f617a4a5479293284f193d042, type: 3}

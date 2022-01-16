@@ -14,6 +14,8 @@ namespace FFA.MapGeneration
         public bool randomStartAndEnd;
         [Range(1, 10)]
         public int numberOfPieces;
+        [Range(0, 3)]
+        public int numberOfTowers;
         public bool visualizeUsingPrefabs = false;
         public bool autoRepair = true;
 
@@ -35,7 +37,7 @@ namespace FFA.MapGeneration
 
             MapHelper.SetStartAndEndPositions(grid, ref startPosition, ref endPosition, randomStartAndEnd, startEdge, endEdge);
 
-            map = new CandidateMap(grid, numberOfPieces);
+            map = new CandidateMap(grid, numberOfPieces, numberOfTowers);
             map.CreateMap(startPosition, endPosition, autoRepair);
             mapVisualizer.VisualizeMap(grid, map.ReturnMapData(), visualizeUsingPrefabs);
         }
