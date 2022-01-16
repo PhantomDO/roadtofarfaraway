@@ -29,7 +29,6 @@ namespace FFA.MapGeneration
                 currentTime += Time.deltaTime;
                 yield return null;
             } while (currentTime <= scaleTime);
-            Debug.Log(currentTime);
             gameObject.transform.position = destination;
         }
 

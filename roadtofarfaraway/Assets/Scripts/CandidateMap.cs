@@ -14,6 +14,9 @@ namespace FFA.MapGeneration
         private List<KnightPiece> knightPieces;
         private List<Vector3> path;
 
+        private List<Vector3> cornersPosition;
+        private int repetitiveCornersCount;
+
         public MapGrid Grid { get => grid; }
         public bool[] ObstaclesArray { get => obstaclesArray; }
 
@@ -24,6 +27,17 @@ namespace FFA.MapGeneration
             obstaclesArray = null;
             knightPieces = new List<KnightPiece>();
             path = new List<Vector3>();
+        }
+
+        public CandidateMap(CandidateMap candidateMap)
+        {
+            this.grid = candidateMap.grid;
+            this.startPosition = candidateMap.startPosition;
+            this.endPosition = candidateMap.endPosition;
+            this.obstaclesArray = (bool[])candidateMap.obstaclesArray.Clone();
+            this.cornersPosition = new List<Vector3>(candidateMap.cornersPosition);
+            this.repetitiveCornersCount = candidateMap.repetitiveCornersCount;
+            this.path = new List<Vector3>(candidateMap.path);
         }
 
         public void CreateMap(Vector3 startPosition, Vector3 endPosition, bool autoRepair = false)
@@ -37,9 +51,44 @@ namespace FFA.MapGeneration
             if (autoRepair) { Repair(); }
         }
 
-        private void FindPath()
+        public void FindPath()
         {
             this.path = Astar.Astar.GetPath(startPosition, endPosition, obstaclesArray, grid);
+            cornersPosition = GetListOfCorners(this.path);
+            repetitiveCornersCount = CalculateRepetitiveCornersCount(this.cornersPosition);
+        }
+
+        private List<Vector3> GetListOfCorners(List<Vector3> path)
+        {
+            List<Vector3> pathWithStart = new List<Vector3>(path);
+            pathWithStart.Insert(0, startPosition);
+            List<Vector3> cornersPosition = new List<Vector3>();
+            if (pathWithStart.Count <= 0) { return cornersPosition; }
+            for (int i = 0; i < pathWithStart.Count - 2; i++)
+            {
+                if (pathWithStart[i].x != pathWithStart[i+1].x)
+                {
+                    if (pathWithStart[i+1].z != pathWithStart[i+2].z) { cornersPosition.Add(pathWithStart[i+1]); }
+                }
+                else if (pathWithStart[i].z != pathWithStart[i+1].z)
+                {
+                    if (pathWithStart[i+1].x != pathWithStart[i+2].x) { cornersPosition.Add(pathWithStart[i+1]); }
+                }
+            }
+            return cornersPosition;
+        }
+
+        private int CalculateRepetitiveCornersCount(List<Vector3> cornersPosition)
+        {
+            int repetitiveCornersCount = 0;
+            for (int i = 0; i < cornersPosition.Count - 1; i++)
+            {
+                if (Vector3.Distance(cornersPosition[i], cornersPosition[i+1]) >= 1)
+                {
+                    repetitiveCornersCount++;
+                }
+            }
+            return repetitiveCornersCount;
         }
 
         public bool PositionCanBeObstacle(Vector3 position)
@@ -96,7 +145,9 @@ namespace FFA.MapGeneration
                 knightPieces = this.knightPieces,
                 startPosition = this.startPosition,
                 endPosition = this.endPosition,
-                path = this.path
+                path = this.path,
+                cornersPosition = this.cornersPosition,
+                repetitiveCornersCount = this.repetitiveCornersCount
             };
         }
 
@@ -130,6 +181,32 @@ namespace FFA.MapGeneration
                 if (!path.Contains(obstaclePosition)) { obstaclesArray[grid.CalculateIndexFromCoordinates(obstaclePosition.x, obstaclePosition.z)] = true; }
             }
             return obstaclesToRemove;
+        }
+
+        public void AddMutation(double mutationRate)
+        {
+            int numItems = (int)(obstaclesArray.Length * mutationRate);
+            while (numItems > 0)
+            {
+                int randomIndex = Random.Range(0, obstaclesArray.Length);
+                obstaclesArray[randomIndex] = !obstaclesArray[randomIndex];
+                numItems--;
+            }
+        }
+
+        public CandidateMap DeepClone()
+        {
+            return new CandidateMap(this);
+        }
+
+        public void PlaceObstacle(int i, bool isObstacle)
+        {
+            obstaclesArray[i] = isObstacle;
+        }
+
+        public bool IsObstacleAt(int i)
+        {
+            return obstaclesArray[i];
         }
     }
 }

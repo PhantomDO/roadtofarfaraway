@@ -17,8 +17,8 @@ namespace FFA.MapGeneration
                 startPosition = RandomPositionOnEdge(grid, startPosition, startPositionEdge);
                 endPosition = RandomPositionOnEdge(grid, startPosition, endPositionEdge);
             }
-            grid.SetCell(startPosition.x, startPosition.z, CellObjectType.Start);
-            grid.SetCell(endPosition.x, endPosition.z, CellObjectType.End);
+            grid.SetCell(startPosition.x, startPosition.z, CellObjectType.Start, true);
+            grid.SetCell(endPosition.x, endPosition.z, CellObjectType.End, true);
         }
 
         public static Vector3 RandomPositionOnEdge(MapGrid grid, Vector3 positionToAvoid, Direction direction = Direction.None)
