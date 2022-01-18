@@ -1,19 +1,14 @@
 ﻿using Tools;
 using Gameplay;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Managers
 {
-    public class UnitParameters : ScriptableObject
-    {
-        public uint Cost;
-        public GameObject Prefab;
-    }
-
     public class GameManager : MonoSingleton<GameManager>
     {
         [field: SerializeField] public GenericDictionary<UnitType, UnitParameters> TypesParameters { get; private set; }
-
+        
         public Unit SpawnUnit(int currency, UnitType type, Vector3 position, Transform parent = null)
         {
             UnitParameters usedTypes = TypesParameters[type];

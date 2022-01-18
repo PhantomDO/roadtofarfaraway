@@ -106,6 +106,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "ClickDown",
+                    "type": "PassThrough",
+                    "id": "d2966e8e-a33d-42de-bcbf-2c04b515e225",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
+                },
+                {
                     "name": "ScrollWheel",
                     "type": "PassThrough",
                     "id": "809aca44-08d5-4b4e-87d3-0dd91d75d64d",
@@ -562,6 +570,50 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ed406ef9-dca3-402c-ae32-34f95f35aa28",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "ClickDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "183fe2d8-834f-41a9-bba5-d908e9180545",
+                    "path": "<Pen>/tip",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "ClickDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "276d0912-2c5c-4a98-9886-944a670ccc18",
+                    "path": "<Touchscreen>/touch*/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "ClickDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "55d8c605-efed-4091-8170-7d402ad9ce84",
+                    "path": "<XRController>/trigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR",
+                    "action": "ClickDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

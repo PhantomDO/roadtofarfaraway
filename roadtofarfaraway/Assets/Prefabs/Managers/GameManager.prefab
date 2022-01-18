@@ -46,7 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
   <TypesParameters>k__BackingField:
-    list: []
+    list:
+    - Key: 0
+      Value: {fileID: 11400000, guid: e3dd0593d5e5b7840b38ec01450aa61e, type: 2}
     keyCollision: 0
 --- !u!114 &6630338379699878881
 MonoBehaviour:
