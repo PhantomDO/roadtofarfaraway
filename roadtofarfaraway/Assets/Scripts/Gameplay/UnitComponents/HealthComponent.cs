@@ -27,24 +27,23 @@ namespace Gameplay.UnitComponents
             IsDead = false;
 
             GameEventManager.OnKillUnit += KillUnit;
+            GameEventManager.OnDamageUnit += DamageUnit; 
         }
 
         private void OnDestroy()
         {
             GameEventManager.OnKillUnit -= KillUnit;
+            GameEventManager.OnDamageUnit -= DamageUnit;
         }
 
         private void KillUnit(Unit unit)
         {
             Destroy(unit.gameObject);
         }
-
-        /// <summary>
-        /// Call when something is hitting the Unit
-        /// </summary>
-        /// <param name="damage"></param>
-        public void TakeDamage(float damage)
+        
+        private void DamageUnit(float damage, Unit damagedUnit)
         {
+            if (damagedUnit.gameObject != this.gameObject) return;
             CurrentHealth -= damage;
         }
     }

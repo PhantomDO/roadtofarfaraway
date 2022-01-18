@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1050966383882908428}
   - component: {fileID: 7040570366754146707}
   - component: {fileID: 1076935392793355785}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SkeletalMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 723534003263975199}
   - component: {fileID: 8406222725612080621}
   - component: {fileID: 3713097260883734016}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Unit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,5 +189,5 @@ MonoBehaviour:
   _fovRadius: 120
   _detectionLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   _searchingMethod: 0

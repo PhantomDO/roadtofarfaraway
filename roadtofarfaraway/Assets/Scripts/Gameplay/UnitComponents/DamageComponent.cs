@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Managers;
 using UnityEngine;
 
 namespace Gameplay.UnitComponents
@@ -40,7 +41,7 @@ namespace Gameplay.UnitComponents
                 // Attack the nearest target
                 if (Time.time - _rateSinceAttack >= _fireRate && Target.Health)
                 {
-                    Target.Health.TakeDamage(_damage);
+                    GameEventManager.Instance?.DamageUnit(_damage, Target);
                     _rateSinceAttack = Time.time;
                 }
             }
@@ -53,14 +54,14 @@ namespace Gameplay.UnitComponents
         /// <param name="positiveInfinity"></param>
         /// <param name="lambdaParameter"></param>
         /// <returns></returns>
-        private int SearchParameter(List<Unit> units, bool positiveInfinity, Func<float, int, int> lambdaParameter = null)
+        private int SearchParameter(List<Unit> units, bool positiveInfinity, Func<int, int> lambdaParameter = null)
         {
             if (lambdaParameter == null) return -1;
 
             var savedParameter = positiveInfinity ? Mathf.Infinity : Mathf.NegativeInfinity;
             var index = -1;
 
-            for (int i = 0; i < units.Count; i++) index = lambdaParameter.Invoke(savedParameter, i);
+            for (int i = 0; i < units.Count; i++) index = lambdaParameter.Invoke(i);
 
             return index;
         }
@@ -72,30 +73,42 @@ namespace Gameplay.UnitComponents
         private Unit SearchForTarget()
         {
             // Find nearby collider, if they're units stock it in colliders[].
-            Collider[] results = new Collider[3];
+            Collider[] results = new Collider[4];
             var size = Physics.OverlapSphereNonAlloc(transform.position, _fovRadius, results, _detectionLayer);
 
             int index = -1;
-
+            Debug.Log($"Size: {size}");
+            
+            Unit unit;
             List<Unit> units = new List<Unit>();
             for (int i = 0; i < size; i++)
             {
-                if (results[i].TryGetComponent(out Unit unit) && !units.Contains(unit))
+                if (!results[i].TryGetComponent(out unit))
+                {
+                    if (!results[i].transform.parent.TryGetComponent(out unit))
+                    {
+                        Debug.Log($"Can't find Unit component on : {results[i]}");
+                    }
+                }
+
+                if (!units.Contains(unit) && unit?.Damage != this)
                 {
                     units.Add(unit);
                 }
             }
-            
+
+            float save = 0f;
+
             // nearest method
             switch (_searchingMethod)
             {
                 case SearchingMethod.Nearest:
-                    index = SearchParameter(units, true, (saveDist, i) =>
+                    index = SearchParameter(units, true, (i) =>
                     {
                         var dist = Vector3.Distance(transform.position, units[i].transform.position);
-                        if (saveDist < dist)
+                        if (save < dist)
                         {
-                            saveDist = dist;
+                            save = dist;
                             return i;
                         }
 
@@ -103,11 +116,11 @@ namespace Gameplay.UnitComponents
                     });
                     break;
                 case SearchingMethod.LowLife:
-                    index = SearchParameter(units, true, (saveHealth, i) =>
+                    index = SearchParameter(units, true, (i) =>
                     {
-                        if (units[i].Health && saveHealth > units[i].Health.CurrentHealth)
+                        if (units[i].Health && save > units[i].Health.CurrentHealth)
                         {
-                            saveHealth = units[i].Health.CurrentHealth;
+                            save = units[i].Health.CurrentHealth;
                             return i;
                         }
 
@@ -115,11 +128,11 @@ namespace Gameplay.UnitComponents
                     });
                     break;
                 case SearchingMethod.HighLife:
-                    index = SearchParameter(units, false, (saveHealth, i) =>
+                    index = SearchParameter(units, false, (i) =>
                     {
-                        if (units[i].Health && saveHealth < units[i].Health.CurrentHealth)
+                        if (units[i].Health && save < units[i].Health.CurrentHealth)
                         {
-                            saveHealth = units[i].Health.CurrentHealth;
+                            save = units[i].Health.CurrentHealth;
                             return i;
                         }
 
@@ -129,6 +142,8 @@ namespace Gameplay.UnitComponents
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            Debug.Log($"Index: {index}, Save: {save}, Units.Count: {units.Count}");
 
             // Set the target only if she's near the unit
             return index != -1 && units[index] ? units[index] : null;
