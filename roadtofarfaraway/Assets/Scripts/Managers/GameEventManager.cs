@@ -1,7 +1,7 @@
 ﻿using System;
 using Tools;
 using Gameplay;
-using Gameplay.UnitComponents;
+using UI;
 
 namespace Managers
 {
@@ -18,8 +18,6 @@ namespace Managers
         public delegate void KillUnitDelegate(Unit killedUnit);
         public static event KillUnitDelegate OnKillUnit;
 
-        #endregion
-
         public void SpawnUnit(int updateCurrency, Unit spawnedUnit)
         {
             OnSpawnUnit?.Invoke(updateCurrency, spawnedUnit);
@@ -34,6 +32,20 @@ namespace Managers
         {
             OnKillUnit?.Invoke(unit);
         }
+
+        #endregion
+
+        #region UI Events
+        
+        public delegate void SelectSpawnableUnitDelegate(UnitTypeSelector unitTypeSelector);
+        public static event SelectSpawnableUnitDelegate OnSelectSpawnableUnit;
+        
+        public void SelectSpawnabUnit(UnitTypeSelector unitTypeSelector)
+        {
+            OnSelectSpawnableUnit?.Invoke(unitTypeSelector);
+        }
+
+        #endregion
 
     }
 }

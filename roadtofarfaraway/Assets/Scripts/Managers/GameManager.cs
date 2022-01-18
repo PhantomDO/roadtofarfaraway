@@ -1,4 +1,5 @@
-﻿using Tools;
+﻿using System;
+using Tools;
 using Gameplay;
 using UnityEngine;
 
@@ -7,7 +8,19 @@ namespace Managers
     public class GameManager : MonoSingleton<GameManager>
     {
         [field: SerializeField] public GenericDictionary<UnitType, UnitParameters> TypesParameters { get; private set; }
-        
+        [field: SerializeField] public Player Player { get; private set; }
+
+        private void Start()
+        {
+            Player = GameObject.FindObjectOfType<Player>();
+
+            if (Player == null)
+            {
+                GameObject go = new GameObject("Player", typeof(Player));
+                if (go.TryGetComponent(out Player player)) Player = player;
+            }
+        }
+
         public Unit SpawnUnit(int currency, UnitType type, Vector3 position, Transform parent = null)
         {
             UnitParameters usedTypes = TypesParameters[type];

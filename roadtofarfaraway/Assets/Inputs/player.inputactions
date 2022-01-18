@@ -6,9 +6,9 @@
             "id": "2c569818-7284-495e-86a1-5e0dc801e020",
             "actions": [
                 {
-                    "name": "Spawn",
+                    "name": "SelectAndSpawnUnit",
                     "type": "PassThrough",
-                    "id": "badb2dce-ed66-4f2f-af1f-9b5e1e8b775a",
+                    "id": "8f14cf0d-20e5-4a03-9c24-8804c2b87921",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -17,45 +17,45 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "93c19f90-762d-4dda-a6ad-cf74884d3d7f",
+                    "id": "e3197d60-575e-49dc-8125-008fa184998a",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Spawn",
+                    "action": "SelectAndSpawnUnit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "67852d8e-ec7f-4695-bcef-506192de8337",
+                    "id": "2a3db7e3-a19a-41af-af7b-7f8edd071fef",
                     "path": "<Pen>/tip",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Spawn",
+                    "action": "SelectAndSpawnUnit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "95916135-d3c3-409d-addd-d2d734d90717",
+                    "id": "c15d520b-7c5e-4642-b09e-818d6ffc0117",
                     "path": "<Touchscreen>/touch*/press",
                     "interactions": "",
                     "processors": "",
                     "groups": "Touch",
-                    "action": "Spawn",
+                    "action": "SelectAndSpawnUnit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "eabc40f1-fc12-4db1-be9b-4795970941e0",
+                    "id": "139aea27-9fe1-4ff2-b960-0e57791cef03",
                     "path": "<XRController>/trigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "Spawn",
+                    "action": "SelectAndSpawnUnit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -100,15 +100,15 @@
                 {
                     "name": "Click",
                     "type": "PassThrough",
-                    "id": "fa22d518-f627-440c-88cc-4a2125386697",
+                    "id": "d2966e8e-a33d-42de-bcbf-2c04b515e225",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
                 {
-                    "name": "ClickDown",
+                    "name": "PressOnly",
                     "type": "PassThrough",
-                    "id": "d2966e8e-a33d-42de-bcbf-2c04b515e225",
+                    "id": "5ea164e7-3d2b-45c9-8cf1-226f4f3916a3",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Press"
@@ -476,50 +476,6 @@
                 },
                 {
                     "name": "",
-                    "id": "4faf7dc9-b979-4210-aa8c-e808e1ef89f5",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8d66d5ba-88d7-48e6-b1cd-198bbfef7ace",
-                    "path": "<Pen>/tip",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "47c2a644-3ebc-4dae-a106-589b7ca75b59",
-                    "path": "<Touchscreen>/touch*/press",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Touch",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "bb9e6b34-44bf-4381-ac63-5aa15d19f677",
-                    "path": "<XRController>/trigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "XR",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "38c99815-14ea-4617-8627-164d27641299",
                     "path": "<Mouse>/scroll",
                     "interactions": "",
@@ -580,7 +536,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "ClickDown",
+                    "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -591,7 +547,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "ClickDown",
+                    "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -602,7 +558,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Touch",
-                    "action": "ClickDown",
+                    "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -613,7 +569,51 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "ClickDown",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d9eb4678-b54c-4d17-95df-da6a54ffefe3",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "PressOnly",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4871b8be-6f09-477c-b2d6-4375618699a4",
+                    "path": "<Pen>/tip",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "PressOnly",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a0f69755-68e2-4a10-829e-d042145517ef",
+                    "path": "<Touchscreen>/touch*/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "PressOnly",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "80a5f5d0-5cf1-4b47-a66c-3de135b22b5f",
+                    "path": "<XRController>/trigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR",
+                    "action": "PressOnly",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
