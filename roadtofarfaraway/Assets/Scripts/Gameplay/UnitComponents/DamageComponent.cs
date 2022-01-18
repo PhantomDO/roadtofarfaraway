@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Managers;
 using UnityEngine;
 
@@ -54,11 +55,10 @@ namespace Gameplay.UnitComponents
         /// <param name="positiveInfinity"></param>
         /// <param name="lambdaParameter"></param>
         /// <returns></returns>
-        private int SearchParameter(List<Unit> units, bool positiveInfinity, Func<int, int> lambdaParameter = null)
+        private int SearchParameter(List<Unit> units, Func<int, int> lambdaParameter = null)
         {
             if (lambdaParameter == null) return -1;
-
-            var savedParameter = positiveInfinity ? Mathf.Infinity : Mathf.NegativeInfinity;
+            
             var index = -1;
 
             for (int i = 0; i < units.Count; i++) index = lambdaParameter.Invoke(i);
@@ -77,73 +77,69 @@ namespace Gameplay.UnitComponents
             var size = Physics.OverlapSphereNonAlloc(transform.position, _fovRadius, results, _detectionLayer);
 
             int index = -1;
-            Debug.Log($"Size: {size}");
-            
-            Unit unit;
             List<Unit> units = new List<Unit>();
+
             for (int i = 0; i < size; i++)
             {
-                if (!results[i].TryGetComponent(out unit))
+                // Check if you find a UnitComponent in the hierarchy of the collider
+                Transform rootNotPlayer = results[i].transform;
+                while (!rootNotPlayer.CompareTag("Player") || rootNotPlayer.parent != null)
                 {
-                    if (!results[i].transform.parent.TryGetComponent(out unit))
+                    // it can't be this unit, then ignore itself
+                    if (rootNotPlayer.TryGetComponent(out Unit unit) && 
+                        rootNotPlayer.GetInstanceID() != transform.GetInstanceID())
                     {
-                        Debug.Log($"Can't find Unit component on : {results[i]}");
+                        // if it does not ontains the unit add it to the list then break
+                        if (!units.Contains(unit)) units.Add(unit);
+                        break;
                     }
-                }
 
-                if (!units.Contains(unit) && unit?.Damage != this)
-                {
-                    units.Add(unit);
+                    // up the hierarchy
+                    rootNotPlayer = rootNotPlayer.parent;
                 }
             }
 
-            float save = 0f;
-
-            // nearest method
-            switch (_searchingMethod)
+            if (units.Count > 0)
             {
-                case SearchingMethod.Nearest:
-                    index = SearchParameter(units, true, (i) =>
-                    {
-                        var dist = Vector3.Distance(transform.position, units[i].transform.position);
-                        if (save < dist)
+                float save;
+                // nearest method
+                switch (_searchingMethod)
+                {
+                    case SearchingMethod.Nearest:
+                        save = Mathf.NegativeInfinity;
+                        index = SearchParameter(units, (i) =>
                         {
+                            var dist = Vector3.Distance(transform.position, units[i].transform.position);
+                            if (save >= dist) return -1;
+
                             save = dist;
                             return i;
-                        }
-
-                        return -1;
-                    });
-                    break;
-                case SearchingMethod.LowLife:
-                    index = SearchParameter(units, true, (i) =>
-                    {
-                        if (units[i].Health && save > units[i].Health.CurrentHealth)
+                        });
+                        break;
+                    case SearchingMethod.LowLife:
+                        save = Mathf.Infinity;
+                        index = SearchParameter(units, (i) =>
                         {
+                            if (!units[i].Health || save <= units[i].Health.CurrentHealth) return -1;
+
                             save = units[i].Health.CurrentHealth;
                             return i;
-                        }
-
-                        return -1;
-                    });
-                    break;
-                case SearchingMethod.HighLife:
-                    index = SearchParameter(units, false, (i) =>
-                    {
-                        if (units[i].Health && save < units[i].Health.CurrentHealth)
+                        });
+                        break;
+                    case SearchingMethod.HighLife:
+                        save = Mathf.NegativeInfinity;
+                        index = SearchParameter(units, (i) =>
                         {
+                            if (!units[i].Health || save >= units[i].Health.CurrentHealth) return -1;
+
                             save = units[i].Health.CurrentHealth;
                             return i;
-                        }
-
-                        return -1;
-                    });
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                        });
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
-
-            Debug.Log($"Index: {index}, Save: {save}, Units.Count: {units.Count}");
 
             // Set the target only if she's near the unit
             return index != -1 && units[index] ? units[index] : null;

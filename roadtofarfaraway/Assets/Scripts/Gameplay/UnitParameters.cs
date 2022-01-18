@@ -6,6 +6,6 @@ namespace Gameplay
     public class UnitParameters : ScriptableObject
     {
         public uint Cost;
-        public GameObject Prefab;
+        public Unit Prefab;
     }
 }

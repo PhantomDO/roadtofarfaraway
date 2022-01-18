@@ -1,7 +1,6 @@
 ﻿using Tools;
 using Gameplay;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Managers
 {
@@ -13,9 +12,9 @@ namespace Managers
         {
             UnitParameters usedTypes = TypesParameters[type];
             int currencyAfterBuying = currency - (int)usedTypes.Cost;
-            if (currencyAfterBuying < 0 || !usedTypes.Prefab.TryGetComponent(out Unit unit)) return null;
+            if (currencyAfterBuying < 0 || !usedTypes.Prefab) return null;
 
-            GameObject unitGO = GameObject.Instantiate(usedTypes.Prefab, position, Quaternion.identity, parent);
+            var unit = Instantiate(usedTypes.Prefab, position, Quaternion.identity, parent);
             GameEventManager.Instance?.SpawnUnit(currencyAfterBuying, unit);
             return unit;
         }

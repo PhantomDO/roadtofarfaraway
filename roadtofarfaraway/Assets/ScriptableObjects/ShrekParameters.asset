@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: ShrekParameters
   m_EditorClassIdentifier: 
   Cost: 10
-  Prefab: {fileID: 9209436320094935089, guid: 987e2c014a2fdab4da68594de92242aa, type: 3}
+  Prefab: {fileID: 1518027972769674038, guid: 987e2c014a2fdab4da68594de92242aa, type: 3}

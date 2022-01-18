@@ -7,6 +7,8 @@ namespace Managers
 {
     public class GameEventManager : MonoSingleton<GameEventManager>
     {
+        #region Unit Events
+        
         public delegate void SpawnUnitDelegate(int updateCurrency, Unit spawnedUnit);
         public static event SpawnUnitDelegate OnSpawnUnit;
 
@@ -15,6 +17,8 @@ namespace Managers
 
         public delegate void KillUnitDelegate(Unit killedUnit);
         public static event KillUnitDelegate OnKillUnit;
+
+        #endregion
 
         public void SpawnUnit(int updateCurrency, Unit spawnedUnit)
         {
