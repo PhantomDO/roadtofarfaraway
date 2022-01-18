@@ -40,7 +40,7 @@ namespace Gameplay.UnitComponents
             else
             {
                 // Attack the nearest target
-                if (Time.time - _rateSinceAttack >= _fireRate && Target.Health)
+                if (Time.time - _rateSinceAttack >= _fireRate)
                 {
                     GameEventManager.Instance?.DamageUnit(_damage, Target);
                     _rateSinceAttack = Time.time;
@@ -120,9 +120,9 @@ namespace Gameplay.UnitComponents
                         save = Mathf.Infinity;
                         index = SearchParameter(units, (i) =>
                         {
-                            if (!units[i].Health || save <= units[i].Health.CurrentHealth) return -1;
+                            if (!units[i].TryGetComponent(out HealthComponent health) || save <= health.CurrentHealth) return -1;
 
-                            save = units[i].Health.CurrentHealth;
+                            save = health.CurrentHealth;
                             return i;
                         });
                         break;
@@ -130,9 +130,9 @@ namespace Gameplay.UnitComponents
                         save = Mathf.NegativeInfinity;
                         index = SearchParameter(units, (i) =>
                         {
-                            if (!units[i].Health || save >= units[i].Health.CurrentHealth) return -1;
+                            if (!units[i].TryGetComponent(out HealthComponent health) || save >= health.CurrentHealth) return -1;
 
-                            save = units[i].Health.CurrentHealth;
+                            save = health.CurrentHealth;
                             return i;
                         });
                         break;

@@ -7,9 +7,7 @@ namespace Gameplay.UnitComponents
     {
         [Header("Health")]
         [SerializeField] private float _maxHealth = 100f;
-
-        public bool IsDead { get; private set; }
-
+        
         private float _currentHealth;
         public float CurrentHealth
         {
@@ -17,14 +15,16 @@ namespace Gameplay.UnitComponents
             private set
             {
                 _currentHealth = Mathf.Max(0.0f, value);
-                if (CurrentHealth <= 0.0f) IsDead = true;
+                if (CurrentHealth <= 0.0f && TryGetComponent(out Unit unit))
+                {
+                    GameEventManager.Instance?.KillUnit(unit);
+                }
             }
         }
         
         private void Awake()
         {
             CurrentHealth = _maxHealth;
-            IsDead = false;
 
             GameEventManager.OnKillUnit += KillUnit;
             GameEventManager.OnDamageUnit += DamageUnit; 
@@ -35,16 +35,17 @@ namespace Gameplay.UnitComponents
             GameEventManager.OnKillUnit -= KillUnit;
             GameEventManager.OnDamageUnit -= DamageUnit;
         }
-
-        private void KillUnit(Unit unit)
-        {
-            Destroy(unit.gameObject);
-        }
         
         private void DamageUnit(float damage, Unit damagedUnit)
         {
-            if (damagedUnit.gameObject != this.gameObject) return;
+            if (TryGetComponent(out Unit unit) && unit != damagedUnit) return;
             CurrentHealth -= damage;
+        }
+
+        private void KillUnit(Unit killedUnit)
+        {
+            if (TryGetComponent(out Unit unit) && unit != killedUnit) return;
+            Destroy(unit.gameObject);
         }
     }
 }
