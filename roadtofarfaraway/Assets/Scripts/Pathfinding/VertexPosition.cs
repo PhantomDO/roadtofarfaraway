@@ -1,12 +1,12 @@
-using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace FFA.Astar
+namespace Pathfinding
 {
     public class VertexPosition : IEquatable<VertexPosition>, IComparable<VertexPosition>
     {
-        public static List<Vector2Int> possibleNeighbours = new List<Vector2Int>
+        public static readonly List<Vector2Int> PossibleNeighbours = new List<Vector2Int>
         {
             new Vector2Int( 0,-1),
             new Vector2Int( 0, 1),
@@ -16,18 +16,17 @@ namespace FFA.Astar
 
         public float totalCost, estimatedCost;
         public VertexPosition previousVertex = null;
-        private Vector3 position;
-        private bool isTaken;
+        private readonly Vector3 _position;
 
-        public int X { get => (int)position.x; }
-        public int Z { get => (int)position.z; }
-        public Vector3 Position { get => position; }
-        public bool IsTaken { get => isTaken; }
+        public int X => (int)_position.x;
+        public int Z => (int)_position.z;
+        public Vector3 Position => _position;
+        public bool IsTaken { get; }
 
         public VertexPosition(Vector3 position, bool isTaken = false)
         {
-            this.position = position;
-            this.isTaken = isTaken;
+            this._position = position;
+            this.IsTaken = isTaken;
             this.totalCost = 1;
             this.estimatedCost = 0;
         }
@@ -39,7 +38,7 @@ namespace FFA.Astar
 
         public override int GetHashCode()
         {
-            return position.GetHashCode();
+            return _position.GetHashCode();
         }
 
         public int CompareTo(VertexPosition other)
@@ -51,7 +50,7 @@ namespace FFA.Astar
 
         public bool Equals(VertexPosition other)
         {
-            return position == other.Position;
+            return other != null && _position == other.Position;
         }
     }
 }

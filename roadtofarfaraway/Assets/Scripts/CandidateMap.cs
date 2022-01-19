@@ -75,7 +75,7 @@ namespace FFA.MapGeneration
 
         public void FindPath()
         {
-            this.path = Astar.Astar.GetPath(startPosition, endPosition, obstaclesArray, grid);
+            this.path = global::Pathfinding.Astar.GetPath(startPosition, endPosition, obstaclesArray, grid);
             cornersPosition = GetListOfCorners(this.path);
             repetitiveCornersCount = CalculateRepetitiveCornersCount(this.cornersPosition);
         }
@@ -149,7 +149,7 @@ namespace FFA.MapGeneration
 
         private void PlaceKnightObstacles(KnightPiece knight)
         {
-            foreach (Vector3 position in KnightPiece.possibleMoves)
+            foreach (Vector3 position in KnightPiece.PossibleMoves)
             {
                 Vector3 newPosition = knight.Position + position;
                 if (grid.IsCellValid(newPosition.x, newPosition.z) && PositionCanBeObstacle(newPosition))

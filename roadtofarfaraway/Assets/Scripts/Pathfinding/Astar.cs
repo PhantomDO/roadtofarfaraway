@@ -1,13 +1,11 @@
-using UnityEngine;
 using System.Collections.Generic;
-using System;
-using FFA.MapGeneration;
+using UnityEngine;
 
-namespace FFA.Astar
+namespace Pathfinding
 {
     public static class Astar
     {
-        public static List<Vector3> GetPath(Vector3 startPosition, Vector3 endPosition, bool[] obstaclesArray, MapGeneration.MapGrid grid)
+        public static List<Vector3> GetPath(Vector3 startPosition, Vector3 endPosition, bool[] obstaclesArray, MapGrid grid)
         {
             VertexPosition startVertex = new VertexPosition(startPosition);
             VertexPosition endVertex = new VertexPosition(endPosition);
@@ -20,12 +18,10 @@ namespace FFA.Astar
             startVertex.estimatedCost = ManhattanDistance(startVertex, endVertex);
             openedList.Add(startVertex);
 
-            VertexPosition currentVertex = null;
-
             while (openedList.Count > 0)
             {
                 openedList.Sort();
-                currentVertex = openedList[0];
+                var currentVertex = openedList[0];
 
                 if (currentVertex.Equals(endVertex))
                 {
@@ -42,7 +38,7 @@ namespace FFA.Astar
                 foreach (VertexPosition neighbour in neighbours)
                 {
                     if (neighbour == null || closedList.Contains(neighbour)) { continue; }
-                    if (neighbour.IsTaken == true) { continue; }
+                    if (neighbour.IsTaken) { continue; }
                     float totalCost = currentVertex.totalCost + 1;
                     float estimatedCost = ManhattanDistance(neighbour, endVertex);
                     neighbour.totalCost = totalCost;
@@ -63,7 +59,7 @@ namespace FFA.Astar
         {
             VertexPosition[] neighbours = new VertexPosition[4];
             int arrayIndex = 0;
-            foreach (Vector2Int relativePosition in VertexPosition.possibleNeighbours)
+            foreach (Vector2Int relativePosition in VertexPosition.PossibleNeighbours)
             {
                 Vector3 position = new Vector3(currentVertex.X + relativePosition.x, 0, currentVertex.Z + relativePosition.y);
                 if (grid.IsCellValid(position.x, position.z))
