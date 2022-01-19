@@ -39,10 +39,17 @@ namespace Managers
         
         public delegate void SelectSpawnableUnitDelegate(UnitTypeSelector unitTypeSelector);
         public static event SelectSpawnableUnitDelegate OnSelectSpawnableUnit;
+
+        public delegate void DropUnitInWorldDelegate(Unit unit);
+        public static event DropUnitInWorldDelegate OnDropUnitInWorld;
         
         public void SelectSpawnabUnit(UnitTypeSelector unitTypeSelector)
         {
             OnSelectSpawnableUnit?.Invoke(unitTypeSelector);
+        }
+        public void DropUnitInWorld(Unit unit)
+        {
+            OnDropUnitInWorld?.Invoke(unit);
         }
 
         #endregion

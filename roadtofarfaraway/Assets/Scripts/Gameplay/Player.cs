@@ -100,6 +100,7 @@ namespace Gameplay
             if (Physics.Raycast(cursorAsRay, out RaycastHit hitInfo, Mathf.Infinity, _unitLayerMask) && 
                 hitInfo.collider != null)
             {
+                bool unitDraguable = true;
                 // Check if you find a UnitComponent in the hierarchy of the collider
                 Transform rootNotPlayer = hitInfo.collider.transform;
                 while (!rootNotPlayer.CompareTag("Player") || rootNotPlayer.parent != null)
@@ -107,13 +108,14 @@ namespace Gameplay
                     // it can't be this unit, then ignore itself
                     if (rootNotPlayer.TryGetComponent(out Unit unit))
                     {
+                        unitDraguable = unit.isDraguable;
                         break;
                     }
                     // up the hierarchy
                     rootNotPlayer = rootNotPlayer.parent;
                 }
 
-                StartCoroutine(DragUpdate(rootNotPlayer));
+                if (unitDraguable) StartCoroutine(DragUpdate(rootNotPlayer));
             }
             
         }
@@ -137,6 +139,9 @@ namespace Gameplay
 
                 Debug.DrawLine(cursorAsRay.origin, cursorAsRay.GetPoint(initialDistance), Color.red);
 
+
+                if (collidingObject == null) yield break;
+
                 if (collidingObject.TryGetComponent(out Rigidbody rb))
                 {
                     Vector3 direction = cursorAsRay.GetPoint(initialDistance) - collidingObject.position;
@@ -145,10 +150,15 @@ namespace Gameplay
                 }
                 else
                 {
-                    collidingObject.position = Vector3.SmoothDamp(collidingObject.position, 
+                    collidingObject.position = Vector3.SmoothDamp(collidingObject.position,
                         cursorAsRay.GetPoint(initialDistance), ref _velocity, _dragSpeed);
                     yield return null;
                 }
+            }
+
+            if (collidingObject.TryGetComponent(out Unit unit))
+            {
+                GameEventManager.Instance?.DropUnitInWorld(unit);
             }
         }
     }
