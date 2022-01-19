@@ -1,4 +1,6 @@
 ﻿
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 using Managers;
@@ -37,6 +39,29 @@ namespace Gameplay
             if (unit == this)
             {
                 isDraguable = false;
+                if (TryGetComponent(out Rigidbody rb))
+                {
+                    StartCoroutine(UpdatePhysicsInAir(rb));
+                }
+            }
+        }
+
+        private IEnumerator UpdatePhysicsInAir(Rigidbody rb)
+        {
+            while (Physics.Raycast(rb.transform.position, -Vector3.up, out RaycastHit hit, Mathf.Infinity) &&
+                hit.collider.CompareTag("Ground"))
+            {
+                if (hit.distance <= 0.02f)
+                {
+                    rb.drag = 1.0f;
+                    rb.angularDrag = 1.0f;
+                    yield break;
+                }
+                
+                rb.AddForce(Physics.gravity);
+                rb.drag = 1.0f;
+                rb.angularDrag = 1.0f;
+                yield return new WaitForFixedUpdate();
             }
         }
     }
