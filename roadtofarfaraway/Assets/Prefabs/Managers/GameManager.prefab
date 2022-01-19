@@ -49,6 +49,10 @@ MonoBehaviour:
     list:
     - Key: 0
       Value: {fileID: 11400000, guid: e3dd0593d5e5b7840b38ec01450aa61e, type: 2}
+    - Key: 2
+      Value: {fileID: 11400000, guid: 5d901cb3e3dd551449184f7953e15d62, type: 2}
+    - Key: 1
+      Value: {fileID: 11400000, guid: 64d8a10c38d26b749ae77710c03aa113, type: 2}
     keyCollision: 0
   <Player>k__BackingField: {fileID: 0}
 --- !u!114 &6630338379699878881
