@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using FFA.MapGeneration;
 using UnityEngine;
 
 public struct MapData

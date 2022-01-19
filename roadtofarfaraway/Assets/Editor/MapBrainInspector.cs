@@ -1,16 +1,16 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
-namespace FFA.MapGeneration
+namespace Editor
 {
     [CustomEditor(typeof(MapBrain))]
-    public class MapBrainInspector : Editor
+    public class MapBrainInspector : UnityEditor.Editor
     {
-        MapBrain mapBrain;
+        MapBrain _mapBrain;
 
         private void OnEnable()
         {
-            mapBrain = (MapBrain)target;
+            _mapBrain = (MapBrain)target;
         }
 
         public override void OnInspectorGUI()
@@ -18,10 +18,17 @@ namespace FFA.MapGeneration
             base.OnInspectorGUI();
             if (Application.isPlaying)
             {
-                GUI.enabled = !mapBrain.IsAlgorithmRunning;
+                GUI.enabled = !_mapBrain.IsAlgorithmRunning;
                 if (GUILayout.Button("Run genetic algorithm"))
                 {
-                    mapBrain.RunAlgorithm();
+                    _mapBrain.RunAlgorithm();
+                }
+
+                if (_mapBrain.BestMap != null) { GUI.enabled = _mapBrain.BestMap.Towers.Count > 0; }
+                else { GUI.enabled = false; }
+                if (GUILayout.Button("Destroy tower"))
+                {
+                    _mapBrain.DestroyTower();
                 }
             }
         }

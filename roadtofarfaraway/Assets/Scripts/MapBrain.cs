@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using FFA;
-using FFA.MapGeneration;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -24,7 +22,7 @@ public class MapBrain : MonoBehaviour
     // Algorithm variables
     private List<CandidateMap> _currentGeneration;
     private int _totalFitnessCurrentGeneration, _bestFitnessAllTime;
-    private CandidateMap _bestMap;
+    public CandidateMap BestMap { get; private set; }
     private int _bestMapGenerationNumber, _generationNumber;
         
     [Header("Fitness parameters")]
@@ -84,7 +82,7 @@ public class MapBrain : MonoBehaviour
     {
         _totalFitnessCurrentGeneration = 0;
         _bestFitnessAllTime = 0;
-        _bestMap = null;
+        BestMap = null;
         _bestMapGenerationNumber = 0;
         _generationNumber = 0;
     }
@@ -124,7 +122,7 @@ public class MapBrain : MonoBehaviour
         if (bestFitnessCurrentGeneration > _bestFitnessAllTime)
         {
             _bestFitnessAllTime = bestFitnessCurrentGeneration;
-            if (bestMapCurrentGeneration != null) _bestMap = bestMapCurrentGeneration.DeepClone();
+            if (bestMapCurrentGeneration != null) BestMap = bestMapCurrentGeneration.DeepClone();
             _bestMapGenerationNumber = _generationNumber;
         }
 
@@ -208,13 +206,20 @@ public class MapBrain : MonoBehaviour
         }
     }
 
+    public void DestroyTower()
+    {
+        if (IsAlgorithmRunning || BestMap.Towers.Count == 0) { return; }
+        mapVisualizer.DestroyGameObject(BestMap.Towers[0], BestMap.ReturnMapData());
+        BestMap.Towers.RemoveAt(0);
+    }
+
     private void ShowResults()
     {
         IsAlgorithmRunning = false;
         Debug.Log("Best solution at generation " + _bestMapGenerationNumber + " with score: " + _bestFitnessAllTime);
 
-        MapData data = _bestMap.ReturnMapData();
-        mapVisualizer.VisualizeMap(_bestMap.Grid, data, true);
+        MapData data = BestMap.ReturnMapData();
+        mapVisualizer.VisualizeMap(BestMap.Grid, data);
         //bestMap.DebugCellObjectType();
 
         UIController.instance.HideLoadingScreen();

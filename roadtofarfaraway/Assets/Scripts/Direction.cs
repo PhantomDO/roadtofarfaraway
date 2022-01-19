@@ -1,13 +1,10 @@
 using UnityEngine;
 
-namespace FFA.MapGeneration
+public enum Direction
 {
-    public enum Direction
-    {
-        None,
-        Right,
-        Left,
-        Up,
-        Down
-    }
+    None,
+    Right,
+    Left,
+    Up,
+    Down
 }

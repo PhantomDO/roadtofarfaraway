@@ -1,4 +1,3 @@
-using FFA.MapGeneration;
 using UnityEngine;
 
 public static class MapHelper

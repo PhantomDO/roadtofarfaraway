@@ -1,45 +1,44 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
-namespace FFA.MapGeneration
+public class DropTween : MonoBehaviour
 {
-    public class DropTween : MonoBehaviour
+    private static float _timeOffset;
+    public float scaleTime = 0.05f;
+    private Vector3 _destination;
+
+    private void Start()
     {
-        public static float timeOffset = 0f;
-        public float scaleTime = 0.05f;
-        private Vector3 destination;
+        var o = gameObject;
+        var position = o.transform.position;
+        _destination = position;
+        position += new Vector3(0, 10, 0);
+        o.transform.position = position;
+        scaleTime += _timeOffset;
+        _timeOffset += 0.01f;
+        StartCoroutine(Grow());
+    }
 
-        private void Start()
+    private IEnumerator Grow()
+    {
+        Vector3 position = gameObject.transform.position;
+        float currentTime = 0f;
+        do
         {
-            destination = gameObject.transform.position;
-            gameObject.transform.position += new Vector3(0, 10, 0);
-            scaleTime += timeOffset;
-            timeOffset += 0.01f;
-            StartCoroutine(Grow());
-        }
+            gameObject.transform.position = Vector3.Lerp(position, _destination, currentTime / scaleTime);
+            currentTime += Time.deltaTime;
+            yield return null;
+        } while (currentTime <= scaleTime);
+        gameObject.transform.position = _destination;
+    }
 
-        private IEnumerator Grow()
-        {
-            Vector3 position = gameObject.transform.position;
-            float currentTime = 0f;
-            do
-            {
-                gameObject.transform.position = Vector3.Lerp(position, destination, currentTime / scaleTime);
-                currentTime += Time.deltaTime;
-                yield return null;
-            } while (currentTime <= scaleTime);
-            gameObject.transform.position = destination;
-        }
+    public static void IncreaseDropTime()
+    {
+        _timeOffset += 0.01f;
+    }
 
-        public static void IncreaseDropTime()
-        {
-            timeOffset += 0.01f;
-        }
-
-        public static void ResetTime()
-        {
-            timeOffset = 0f;
-        }
+    public static void ResetTime()
+    {
+        _timeOffset = 0f;
     }
 }

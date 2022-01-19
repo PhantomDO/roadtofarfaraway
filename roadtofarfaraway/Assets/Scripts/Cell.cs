@@ -1,34 +1,26 @@
-using UnityEngine;
-
-namespace FFA.MapGeneration
+public class Cell
 {
-    public class Cell
+    public int X { get; }
+    public int Z { get; }
+    public bool IsTaken { get; set; }
+
+    public CellObjectType ObjectType { get; set; }
+
+    public Cell(int x, int z)
     {
-        private int x, z;
-        private bool isTaken;
-        private CellObjectType objectType;
-
-        public int X { get => x; }
-        public int Z { get => z; }
-        public bool IsTaken { get => isTaken; set => isTaken = value; }
-        public CellObjectType ObjectType { get => objectType; set => objectType = value; }
-
-        public Cell(int x, int z)
-        {
-            this.x = x;
-            this.z = z;
-            this.isTaken = false;
-            this.objectType = CellObjectType.Empty;
-        }
+        this.X = x;
+        this.Z = z;
+        this.IsTaken = false;
+        this.ObjectType = CellObjectType.Empty;
     }
+}
 
-    public enum CellObjectType
-    {
-        Empty,
-        Road,
-        Obstacle,
-        Tower,
-        Start,
-        End
-    }
+public enum CellObjectType
+{
+    Empty,
+    Road,
+    Obstacle,
+    Tower,
+    Start,
+    End
 }
