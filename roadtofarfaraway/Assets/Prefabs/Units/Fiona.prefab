@@ -53,7 +53,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5950127577575670744, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
       propertyPath: m_Name
-      value: Unit
+      value: Fiona
       objectReference: {fileID: 0}
+    - target: {fileID: 7040570366754146707, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 21b14997809f9bc46af64db5346fe570, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}

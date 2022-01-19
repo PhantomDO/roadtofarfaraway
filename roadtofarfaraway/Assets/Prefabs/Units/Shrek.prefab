@@ -63,5 +63,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shrek
       objectReference: {fileID: 0}
+    - target: {fileID: 7040570366754146707, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c026c0c9782361f4a9c30267f4c72ac5, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
