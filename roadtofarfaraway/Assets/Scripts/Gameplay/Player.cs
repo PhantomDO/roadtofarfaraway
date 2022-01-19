@@ -128,6 +128,13 @@ namespace Gameplay
                 var cursorPosition = UiManager.Instance.CursorPosition;
                 var cursorAsRay = UiManager.Instance.currentCamera.ScreenPointToRay(cursorPosition);
                 
+
+                if (Physics.Raycast(cursorAsRay, out RaycastHit hit, Mathf.Infinity) && 
+                    hit.collider.CompareTag("Ground"))
+                {
+                    initialDistance = hit.distance;
+                }
+
                 Debug.DrawLine(cursorAsRay.origin, cursorAsRay.GetPoint(initialDistance), Color.red);
 
                 if (collidingObject.TryGetComponent(out Rigidbody rb))

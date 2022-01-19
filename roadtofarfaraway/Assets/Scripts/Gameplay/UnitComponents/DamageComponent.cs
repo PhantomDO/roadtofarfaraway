@@ -83,13 +83,14 @@ namespace Gameplay.UnitComponents
             {
                 // Check if you find a UnitComponent in the hierarchy of the collider
                 Transform rootNotPlayer = results[i].transform;
-                while (!rootNotPlayer.CompareTag("Player") || rootNotPlayer.parent != null)
+                while (!rootNotPlayer.CompareTag("Player"))
                 {
                     // it can't be this unit, then ignore itself
+
                     if (rootNotPlayer.TryGetComponent(out Unit unit) && 
                         rootNotPlayer.GetInstanceID() != transform.GetInstanceID())
                     {
-                        // if it does not ontains the unit add it to the list then break
+                        // if it does not contains the unit add it to the list then break
                         if (!units.Contains(unit)) units.Add(unit);
                         break;
                     }

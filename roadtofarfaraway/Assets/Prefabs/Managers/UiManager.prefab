@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7fd182b9f1bc6148be81a00b22a8305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dontDestroyOnLoad: 1
+  dontDestroyOnLoad: 0
   <UnitTypeSelectors>k__BackingField: []
   <PointAction>k__BackingField: {fileID: -796707649884976080, guid: aed30760abe006a489a35fba1e43822f, type: 3}
   <ClickAction>k__BackingField: {fileID: 2089408049377201257, guid: aed30760abe006a489a35fba1e43822f, type: 3}
