@@ -17,9 +17,15 @@ namespace Gameplay.UnitComponents
     {
         [SerializeField] private float _damage;
         [SerializeField] private float _fireRate;
+        [SerializeField, Range(30f, 180f)] private float _fov = 90f;
+        [SerializeField] private float _range = 1f;
 
         private float _rateSinceAttack;
         private RadarComponent _radar;
+        private SphereCollider _collider;
+
+        private Vector3 _transform2D;
+        private Vector3 _target2D;
 
         private void Awake()
         {
@@ -29,19 +35,53 @@ namespace Gameplay.UnitComponents
             {
                 Debug.Log($"Got a radar");
             }
+
+            _collider = gameObject.AddComponent<SphereCollider>();
+            _collider.center = new Vector3(0, 1, 0);
+            _collider.radius = _range;
+            _collider.isTrigger = true;
         }
 
         private void Update()
         {
-            if (_radar && _radar.Target)
+            _transform2D = new Vector3(transform.position.x, 0, transform.position.z);
+            if (_radar && _collider && _radar.Target)
             {
+                var targetPosition = _radar.Target.transform.position;
+                _target2D = new Vector3(targetPosition.x, 0, targetPosition.z);
+
+
+                var angle = Mathf.Max(0, 1f - (_fov / 180f));
+                var direction = ( _target2D - _transform2D ).normalized;
+                var dot = Vector3.Dot(direction, transform.forward);
+                
+#if true
+                Debug.DrawLine(_transform2D, transform.position + direction * _collider.radius, Color.magenta); 
+                Debug.DrawLine(_transform2D, transform.position + transform.forward * _collider.radius, Color.cyan);
+                
+                Debug.Log($"Distance: {Vector3.Distance(_transform2D, _target2D)}");
+                Debug.Log($"Dot (direction, forward): {dot}, Angle: {angle}");
+#endif
+
                 // Attack the nearest target
-                if (Time.time - _rateSinceAttack >= _fireRate)
+                if (Time.time - _rateSinceAttack >= _fireRate && Mathf.Abs(dot) > angle &&
+                    Vector3.Distance(_transform2D, _target2D) <= _collider.radius)
                 {
                     GameEventManager.Instance?.DamageUnit(_damage, _radar.Target);
                     _rateSinceAttack = Time.time;
                 }
             }
         }
+        
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            UnityEditor.Handles.color = Gizmos.color = Color.magenta;
+            Gizmos.DrawLine(transform.position, transform.position + (-transform.right + transform.forward) * _collider.radius);
+            Gizmos.DrawLine(transform.position, transform.position + (transform.right + transform.forward) * _collider.radius);
+            UnityEditor.Handles.DrawWireArc(transform.position, transform.up, 
+                (-transform.right + transform.forward), _fov, _collider.radius);   
+        }
+#endif
     }
 }

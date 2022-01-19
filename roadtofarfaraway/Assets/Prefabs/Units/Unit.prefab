@@ -161,6 +161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _searchingRate: 0.5
   _fovRadius: 2
+  _smoothTime: 0.1
   _detectionLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -179,6 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _canMove: 1
   _moveSpeed: 10
+  _threshold: 0.45
 --- !u!114 &8406222725612080621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,6 +208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 10
   _fireRate: 0.5
+  _range: 1
 --- !u!54 &1166667022271524665
 Rigidbody:
   m_ObjectHideFlags: 0

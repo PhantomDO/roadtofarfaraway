@@ -1,12 +1,50 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.AI;
 
 namespace Gameplay.UnitComponents
 {
     public class MovementComponent : MonoBehaviour
     {
-        [SerializeField] private bool _canMove = true;
+        [SerializeField] private bool _canMove = false;
         [SerializeField] private float _moveSpeed = 10;
+        [SerializeField] private float _threshold = 0.45f;
         
+        private RadarComponent _radar;
+        private NavMeshAgent _agent =null;
+
+        private Vector2 _target2D;
+        private Vector2 _transform2D;
+
+        private void Awake()
+        {
+            if (TryGetComponent(out _radar))
+            {
+                _canMove = true;
+                _agent = gameObject.AddComponent<NavMeshAgent>();
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            _transform2D = new Vector2(transform.position.x, transform.position.z);
+            if (_radar.Target)
+            {
+                var targetPosition = _radar.Target.transform.position;
+                _target2D = new Vector2(targetPosition.x, targetPosition.z);
+
+                if (Vector3.Distance(_agent.destination, targetPosition) > 0.05f)
+                {
+                    _agent.destination = targetPosition;
+                }
+
+                if (Vector2.Distance(_transform2D, _target2D) >= _threshold)
+                {
+                    // move
+                }
+            }
+        }
+
         /// <summary>
         /// Movement method, move to the next point
         /// </summary>

@@ -11,13 +11,17 @@ public class RadarComponent : MonoBehaviour
 
     [SerializeField] private float _searchingRate = 0.5f;
     [SerializeField] private float _fovRadius = 2 ;
+    [SerializeField] private float _smoothTime = 0.1f;
     [SerializeField] private LayerMask _detectionLayer;
     [SerializeField] private SearchingMethod _searchingMethod = SearchingMethod.LowLife;
-    
+
+    private float _baseRadius;
+    private float _radiusVelocity;
     private float _rateSinceUpdateSearch;
 
     private void Awake()
     {
+        _baseRadius = _fovRadius;
         _rateSinceUpdateSearch = 0f;
     }
 
@@ -27,13 +31,17 @@ public class RadarComponent : MonoBehaviour
         if (Time.time - _rateSinceUpdateSearch >= _searchingRate)
         {
             Target = SearchForTarget();
+            _rateSinceUpdateSearch = Time.time;
+
+            var targetRadius = Target == null ? _fovRadius * 1.5f : _baseRadius;
+            _fovRadius = Mathf.SmoothDamp(_fovRadius, targetRadius, ref _radiusVelocity, _smoothTime);
         }
     }
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        UnityEditor.Handles.color = Color.green;
+        UnityEditor.Handles.color = Color.red;
         UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, _fovRadius);
     }
 #endif
@@ -75,7 +83,6 @@ public class RadarComponent : MonoBehaviour
             while (!rootNotPlayer.CompareTag("Player"))
             {
                 // it can't be this unit, then ignore itself
-
                 if (rootNotPlayer.TryGetComponent(out Unit unit) && 
                     rootNotPlayer.GetInstanceID() != transform.GetInstanceID())
                 {
