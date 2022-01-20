@@ -81,23 +81,39 @@ namespace Gameplay
             if (unitTypeSelector == null) return;
             _spawningType = unitTypeSelector.Type;
             
-            var cursorPosition = UiManager.Instance.CursorPosition;
-            var cursorAsRay = UiManager.Instance.currentCamera.ScreenPointToRay(cursorPosition);
-            // Get UI button that gives you the UnitTypes to spawn
-            if (Physics.Raycast(cursorAsRay, out RaycastHit hitInfo, Mathf.Infinity) &&
-                hitInfo.collider.gameObject.CompareTag("Ground"))
-            {
-                GameManager.Instance?.SpawnUnit(CurrentCurrency, _spawningType, hitInfo.point, transform);
-                _spawningType = UnitType.Null;
-            }
+            //var cursorPosition = UiManager.Instance.CursorPosition;
+            //var cursorAsRay = UiManager.Instance.currentCamera.ScreenPointToRay(cursorPosition);
+            //// Get UI button that gives you the UnitTypes to spawn
+            //if (Physics.Raycast(cursorAsRay, out RaycastHit hitInfo, Mathf.Infinity))
+            //{
+            //    if (hitInfo.collider.CompareTag("Ground"))
+            //    {
+            //        GameManager.Instance?.SpawnUnit(CurrentCurrency, _spawningType, hitInfo.point, transform);
+            //        _spawningType = UnitType.Null;
+            //    }
+            //}
         }
 
         private void OnSelectAndSpawnUnitPerformed(InputAction.CallbackContext callback)
         {
             var cursorPosition = UiManager.Instance.CursorPosition;
             var cursorAsRay = UiManager.Instance.currentCamera.ScreenPointToRay(cursorPosition);
+            RaycastHit hitInfo;
 
-            if (Physics.Raycast(cursorAsRay, out RaycastHit hitInfo, Mathf.Infinity, _unitLayerMask) && 
+            if (_spawningType != UnitType.Null)
+            {
+                // Get UI button that gives you the UnitTypes to spawn
+                if (Physics.Raycast(cursorAsRay, out hitInfo, Mathf.Infinity))
+                {
+                    if (hitInfo.collider.CompareTag("Ground"))
+                    {
+                        GameManager.Instance?.SpawnUnit(CurrentCurrency, _spawningType, hitInfo.point, transform);
+                        _spawningType = UnitType.Null;
+                    }
+                }
+            }
+
+            if (Physics.Raycast(cursorAsRay, out hitInfo, Mathf.Infinity, _unitLayerMask) && 
                 hitInfo.collider != null)
             {
                 bool unitDraguable = true;
