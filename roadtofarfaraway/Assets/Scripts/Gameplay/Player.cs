@@ -11,27 +11,31 @@ namespace Gameplay
 {
     public class Player : MonoBehaviour
     {
+        [Header("Currency")]
         [SerializeField] private int _startCurrency;
         [field: SerializeField] public int CurrentCurrency { get; private set; }
 
         public List<Unit> SpawnedUnits { get; private set; }
-        
+
+        [Header("Spawn & Drag")]
+        [SerializeField] private float _dragSpeed = .10f;
+        [SerializeField] private GameObject _crosshairPrefab;
         [field: SerializeField] public InputActionReference SelectAndSpawnUnitAction { get; private set; }
 
-        [SerializeField] private LayerMask _unitLayerMask;
-        [SerializeField] private float _dragPhysicsSpeed = 10f;
-        [SerializeField] private float _dragSpeed = .10f;
         private Vector3 _velocity = Vector3.zero;
         private WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
 
         private UnitType _spawningType = UnitType.Null;
+        private GameObject _crosshairSpawn;
 
         private void Awake()
         {
+            _crosshairSpawn = GameObject.Instantiate(_crosshairPrefab, Vector3.zero, Quaternion.identity, transform);
+            _crosshairSpawn.SetActive(false);
+
             SpawnedUnits = new List<Unit>();
             CurrentCurrency = _startCurrency;
-
-            GameEventManager.OnSpawnUnit += AddSpawnedUnitFromArmy;
+            
             GameEventManager.OnKillUnit += RemoveKilledUnitFromArmy;
             GameEventManager.OnSelectSpawnableUnit += SelectSpawnableUnit;
         }
@@ -60,15 +64,8 @@ namespace Gameplay
 
         private void OnDestroy()
         {
-            GameEventManager.OnSpawnUnit -= AddSpawnedUnitFromArmy;
             GameEventManager.OnKillUnit -= RemoveKilledUnitFromArmy;
             GameEventManager.OnSelectSpawnableUnit -= SelectSpawnableUnit;
-        }
-
-        private void AddSpawnedUnitFromArmy(int updateCurrency, Unit spawnedUnit)
-        {
-            CurrentCurrency = updateCurrency;
-            SpawnedUnits.Add(spawnedUnit);
         }
 
         private void RemoveKilledUnitFromArmy(Unit killedUnit)
@@ -80,102 +77,67 @@ namespace Gameplay
         {
             if (unitTypeSelector == null) return;
             _spawningType = unitTypeSelector.Type;
-            
-            //var cursorPosition = UiManager.Instance.CursorPosition;
-            //var cursorAsRay = UiManager.Instance.currentCamera.ScreenPointToRay(cursorPosition);
-            //// Get UI button that gives you the UnitTypes to spawn
-            //if (Physics.Raycast(cursorAsRay, out RaycastHit hitInfo, Mathf.Infinity))
-            //{
-            //    if (hitInfo.collider.CompareTag("Ground"))
-            //    {
-            //        GameManager.Instance?.SpawnUnit(CurrentCurrency, _spawningType, hitInfo.point, transform);
-            //        _spawningType = UnitType.Null;
-            //    }
-            //}
+            if (!_crosshairSpawn.activeInHierarchy)
+            {
+                StartCoroutine(MoveCrosshair());
+            }
         }
 
         private void OnSelectAndSpawnUnitPerformed(InputAction.CallbackContext callback)
         {
-            var cursorPosition = UiManager.Instance.CursorPosition;
-            var cursorAsRay = UiManager.Instance.currentCamera.ScreenPointToRay(cursorPosition);
-            RaycastHit hitInfo;
-
-            if (_spawningType != UnitType.Null)
+            if (_spawningType != UnitType.Null && _crosshairSpawn.activeInHierarchy)
             {
-                // Get UI button that gives you the UnitTypes to spawn
-                if (Physics.Raycast(cursorAsRay, out hitInfo, Mathf.Infinity))
+                SpawnUnit(_spawningType, _crosshairSpawn.transform.position);
+                _crosshairSpawn.transform.position = Vector3.zero;
+                _crosshairSpawn.SetActive(false);
+                _spawningType = UnitType.Null;
+            }
+        }
+        
+        private void SpawnUnit(UnitType type, Vector3 position)
+        {
+            if (GameManager.Instance)
+            {
+                var usedTypes = GameManager.Instance.TypesParameters[type];
+                var spawnerPosition = GameManager.Instance.Spawner.SpawnPosition.position;
+                var currencyAfterBuying = CurrentCurrency - (int)usedTypes.Cost;
+
+                if (currencyAfterBuying >= 0 && usedTypes.Prefab)
                 {
-                    if (hitInfo.collider.CompareTag("Ground"))
-                    {
-                        GameManager.Instance?.SpawnUnit(CurrentCurrency, _spawningType, hitInfo.point, transform);
-                        _spawningType = UnitType.Null;
-                    }
+                    CurrentCurrency = currencyAfterBuying;
+                    var unit = Instantiate(usedTypes.Prefab, spawnerPosition, Quaternion.identity, transform);
+                    GameManager.Instance.Spawner.ShootWithGravity(unit.transform, position);
+                    GameEventManager.Instance?.SpawnUnit(unit);
+                    SpawnedUnits.Add(unit);
                 }
             }
-
-            if (Physics.Raycast(cursorAsRay, out hitInfo, Mathf.Infinity, _unitLayerMask) && 
-                hitInfo.collider != null)
-            {
-                bool unitDraguable = true;
-                // Check if you find a UnitComponent in the hierarchy of the collider
-                Transform rootNotPlayer = hitInfo.collider.transform;
-                while (!rootNotPlayer.CompareTag("Player") || rootNotPlayer.parent != null)
-                {
-                    // it can't be this unit, then ignore itself
-                    if (rootNotPlayer.TryGetComponent(out Unit unit))
-                    {
-                        unitDraguable = unit.isDraguable;
-                        break;
-                    }
-                    // up the hierarchy
-                    rootNotPlayer = rootNotPlayer.parent;
-                }
-
-                if (unitDraguable) StartCoroutine(DragUpdate(rootNotPlayer));
-            }
-            
         }
 
-        private IEnumerator DragUpdate(Transform collidingObject)
+        private IEnumerator MoveCrosshair()
         {
-            float initialDistance = Vector3.Distance(collidingObject.position,
-                UiManager.Instance.currentCamera.transform.position);
-            
-            while (SelectAndSpawnUnitAction.action.ReadValue<float>() != 0)
+            yield return new WaitForSeconds(0.2f);
+            _crosshairSpawn.SetActive(true);
+
+            while (_spawningType != UnitType.Null)
             {
                 var cursorPosition = UiManager.Instance.CursorPosition;
                 var cursorAsRay = UiManager.Instance.currentCamera.ScreenPointToRay(cursorPosition);
+                var cursorEndPoint = cursorAsRay.origin + cursorAsRay.direction * 1000.0f;
+                // Get UI button that gives you the UnitTypes to spawn
+                if (Physics.Raycast(cursorAsRay, out RaycastHit hitInfo, Mathf.Infinity) &&
+                    hitInfo.collider.CompareTag("Ground"))
+                {
+                    cursorEndPoint = cursorAsRay.GetPoint(hitInfo.distance);
+                    _crosshairSpawn.transform.rotation = Quaternion.LookRotation(-Vector3.up);
+                    _crosshairSpawn.transform.position = Vector3.SmoothDamp(_crosshairSpawn.transform.position, 
+                        cursorEndPoint, ref _velocity, _dragSpeed);
+                }
                 
+                Debug.DrawLine(cursorAsRay.origin, cursorEndPoint, Color.red);
 
-                if (Physics.Raycast(cursorAsRay, out RaycastHit hit, Mathf.Infinity) && 
-                    hit.collider.CompareTag("Ground"))
-                {
-                    initialDistance = hit.distance;
-                }
-
-                Debug.DrawLine(cursorAsRay.origin, cursorAsRay.GetPoint(initialDistance), Color.red);
-
-
-                if (collidingObject == null) yield break;
-
-                if (collidingObject.TryGetComponent(out Rigidbody rb))
-                {
-                    Vector3 direction = cursorAsRay.GetPoint(initialDistance) - collidingObject.position;
-                    rb.velocity = direction * _dragPhysicsSpeed;
-                    yield return _waitForFixedUpdate;
-                }
-                else
-                {
-                    collidingObject.position = Vector3.SmoothDamp(collidingObject.position,
-                        cursorAsRay.GetPoint(initialDistance), ref _velocity, _dragSpeed);
-                    yield return null;
-                }
-            }
-
-            if (collidingObject.TryGetComponent(out Unit unit))
-            {
-                GameEventManager.Instance?.DropUnitInWorld(unit);
+                yield return _waitForFixedUpdate;
             }
         }
+        
     }
 }

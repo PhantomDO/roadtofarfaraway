@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,12 +13,15 @@ namespace Gameplay.UnitComponents
         
         private RadarComponent _radar;
         private NavMeshAgent _agent =null;
+        private bool _hasLanded;
 
         private Vector2 _target2D;
         private Vector2 _transform2D;
 
         private void Awake()
         {
+            _hasLanded = false;
+
             if (TryGetComponent(out _radar))
             {
                 _canMove = true;
@@ -28,7 +32,7 @@ namespace Gameplay.UnitComponents
         private void FixedUpdate()
         {
             _transform2D = new Vector2(transform.position.x, transform.position.z);
-            if (_radar.Target)
+            if (_radar.Target && _hasLanded)
             {
                 var targetPosition = _radar.Target.transform.position;
                 _target2D = new Vector2(targetPosition.x, targetPosition.z);
@@ -56,6 +60,25 @@ namespace Gameplay.UnitComponents
             var position = transform.position;
             var direction = (nextPosition - position).normalized;
             transform.position = Vector3.MoveTowards(position, direction, Time.deltaTime * (_moveSpeed));
+        }
+        
+        private IEnumerator UpdatePhysicsInAir(Rigidbody rb)
+        {
+            while (Physics.Raycast(rb.transform.position, -Vector3.up, out RaycastHit hit, Mathf.Infinity) &&
+                   hit.collider.CompareTag("Ground"))
+            {
+                if (hit.distance <= 0.02f)
+                {
+                    rb.drag = 1.0f;
+                    rb.angularDrag = 1.0f;
+                    yield break;
+                }
+                
+                rb.AddForce(Physics.gravity);
+                rb.drag = 1.0f;
+                rb.angularDrag = 1.0f;
+                yield return new WaitForFixedUpdate();
+            }
         }
     }
 }

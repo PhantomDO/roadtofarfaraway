@@ -9,7 +9,7 @@ namespace Managers
     {
         #region Unit Events
         
-        public delegate void SpawnUnitDelegate(int updateCurrency, Unit spawnedUnit);
+        public delegate void SpawnUnitDelegate(Unit spawnedUnit);
         public static event SpawnUnitDelegate OnSpawnUnit;
 
         public delegate void DamageUnitDelegate(float damage, Unit damagedUnit);
@@ -18,9 +18,9 @@ namespace Managers
         public delegate void KillUnitDelegate(Unit killedUnit);
         public static event KillUnitDelegate OnKillUnit;
 
-        public void SpawnUnit(int updateCurrency, Unit spawnedUnit)
+        public void SpawnUnit(Unit spawnedUnit)
         {
-            OnSpawnUnit?.Invoke(updateCurrency, spawnedUnit);
+            OnSpawnUnit?.Invoke(spawnedUnit);
         }
 
         public void DamageUnit(float damage, Unit damagedUnit)
@@ -39,17 +39,10 @@ namespace Managers
         
         public delegate void SelectSpawnableUnitDelegate(UnitTypeSelector unitTypeSelector);
         public static event SelectSpawnableUnitDelegate OnSelectSpawnableUnit;
-
-        public delegate void DropUnitInWorldDelegate(Unit unit);
-        public static event DropUnitInWorldDelegate OnDropUnitInWorld;
         
         public void SelectSpawnabUnit(UnitTypeSelector unitTypeSelector)
         {
             OnSelectSpawnableUnit?.Invoke(unitTypeSelector);
-        }
-        public void DropUnitInWorld(Unit unit)
-        {
-            OnDropUnitInWorld?.Invoke(unit);
         }
 
         #endregion
