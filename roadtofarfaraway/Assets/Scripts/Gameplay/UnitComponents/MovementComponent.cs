@@ -13,6 +13,7 @@ namespace Gameplay.UnitComponents
         
         private RadarComponent _radar;
         private NavMeshAgent _agent =null;
+        private Rigidbody _rigidbody = null;
         private bool _hasLanded;
 
         private Vector2 _target2D;
@@ -25,7 +26,11 @@ namespace Gameplay.UnitComponents
             if (TryGetComponent(out _radar))
             {
                 _canMove = true;
-                _agent = gameObject.AddComponent<NavMeshAgent>();
+            }
+
+            if (TryGetComponent(out _rigidbody))
+            {
+                StartCoroutine(UpdatePhysicsInAir(_rigidbody));
             }
         }
 
@@ -64,19 +69,30 @@ namespace Gameplay.UnitComponents
         
         private IEnumerator UpdatePhysicsInAir(Rigidbody rb)
         {
-            while (Physics.Raycast(rb.transform.position, -Vector3.up, out RaycastHit hit, Mathf.Infinity) &&
-                   hit.collider.CompareTag("Ground"))
+            while (!Physics.Raycast(rb.transform.position, -Vector3.up, out RaycastHit hit, Mathf.Infinity))
             {
+                yield return null;
+            }
+            
+            while (Physics.Raycast(rb.transform.position, -Vector3.up, out RaycastHit hit, Mathf.Infinity))       //hit.collider.CompareTag("Ground"))
+            {
+                Debug.DrawLine(rb.position, rb.position - Vector3.up * 100.0f, Color.red);
+
                 if (hit.distance <= 0.02f)
                 {
                     rb.drag = 1.0f;
                     rb.angularDrag = 1.0f;
+
+                    if (!_hasLanded)
+                    {
+                        _agent = gameObject.AddComponent<NavMeshAgent>();
+                        rb.AddForce(-rb.velocity * 2);
+                        _hasLanded = true;
+                    }
+
                     yield break;
                 }
-                
-                rb.AddForce(Physics.gravity);
-                rb.drag = 1.0f;
-                rb.angularDrag = 1.0f;
+                rb.AddForce(Physics.gravity * 2);
                 yield return new WaitForFixedUpdate();
             }
         }

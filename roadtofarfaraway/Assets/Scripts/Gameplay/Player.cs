@@ -28,6 +28,9 @@ namespace Gameplay
         private UnitType _spawningType = UnitType.Null;
         private GameObject _crosshairSpawn;
 
+        #region Unity Methods
+
+
         private void Awake()
         {
             _crosshairSpawn = GameObject.Instantiate(_crosshairPrefab, Vector3.zero, Quaternion.identity, transform);
@@ -68,6 +71,11 @@ namespace Gameplay
             GameEventManager.OnSelectSpawnableUnit -= SelectSpawnableUnit;
         }
 
+
+        #endregion
+
+        #region Event Methods
+        
         private void RemoveKilledUnitFromArmy(Unit killedUnit)
         {
             SpawnedUnits.Remove(killedUnit);
@@ -94,7 +102,9 @@ namespace Gameplay
             }
         }
         
-        private void SpawnUnit(UnitType type, Vector3 position)
+        #endregion
+
+        private void SpawnUnit(UnitType type, Vector3 spawnPosition)
         {
             if (GameManager.Instance)
             {
@@ -106,7 +116,12 @@ namespace Gameplay
                 {
                     CurrentCurrency = currencyAfterBuying;
                     var unit = Instantiate(usedTypes.Prefab, spawnerPosition, Quaternion.identity, transform);
-                    GameManager.Instance.Spawner.ShootWithGravity(unit.transform, position);
+                    
+                    if (unit.TryGetComponent(out Rigidbody rb))
+                    {
+                        GameManager.Instance.Spawner.ShootWithGravity(rb, spawnPosition);
+                    }
+
                     GameEventManager.Instance?.SpawnUnit(unit);
                     SpawnedUnits.Add(unit);
                 }

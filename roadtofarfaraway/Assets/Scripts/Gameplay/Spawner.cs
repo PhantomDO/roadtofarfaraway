@@ -7,7 +7,7 @@ namespace Gameplay
         [field: SerializeField] public Transform SpawnPosition { get; private set; }
         [field: SerializeField] public Transform HeightPosition { get; private set; }
 
-        public void ShootWithGravity(Transform shooted, Vector3 target)
+        public void ShootWithGravity(Rigidbody shooted, Vector3 target)
         {
             Vector3 offset = target - SpawnPosition.position;
 
@@ -17,12 +17,9 @@ namespace Gameplay
 
             float vy = Mathf.Sqrt(-2 * Physics.gravity.y * height);
             Vector3 vxz = -(halfRange * Physics.gravity.y) / vy;
-
-            if (shooted.TryGetComponent(out Rigidbody rb))
-            {
-                rb.velocity = new Vector3(vxz.x, vy, vxz.z);
-                rb.useGravity = true;
-            }
+            
+            shooted.velocity = new Vector3(vxz.x, vy, vxz.z);
+            shooted.useGravity = true;
         }
     }
 }
