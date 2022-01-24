@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Managers;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,19 +10,19 @@ namespace Gameplay.UnitComponents
     {
         [SerializeField] private bool _canMove = false;
         [SerializeField] private float _moveSpeed = 10;
-        [SerializeField] private float _threshold = 0.45f;
+        [SerializeField] private float _dragInAir = 0.1f;
         
         private RadarComponent _radar;
         private NavMeshAgent _agent =null;
         private Rigidbody _rigidbody = null;
-        private bool _hasLanded;
+        private bool _isGrounded;
 
         private Vector2 _target2D;
         private Vector2 _transform2D;
 
         private void Awake()
         {
-            _hasLanded = false;
+            _isGrounded = false;
 
             if (TryGetComponent(out _radar))
             {
@@ -30,27 +31,28 @@ namespace Gameplay.UnitComponents
 
             if (TryGetComponent(out _rigidbody))
             {
-                StartCoroutine(UpdatePhysicsInAir(_rigidbody));
+                // Get rigidbody
             }
         }
 
         private void FixedUpdate()
         {
             _transform2D = new Vector2(transform.position.x, transform.position.z);
-            if (_radar.Target && _hasLanded)
+
+            if (!_isGrounded)
             {
-                var targetPosition = _radar.Target.transform.position;
-                _target2D = new Vector2(targetPosition.x, targetPosition.z);
+                _rigidbody.velocity -= _rigidbody.velocity * _dragInAir * Time.fixedDeltaTime;
+                return;
+            }
 
-                if (Vector3.Distance(_agent.destination, targetPosition) > 0.05f)
-                {
-                    _agent.destination = targetPosition;
-                }
+            if (!_radar.Target) return;
 
-                if (Vector2.Distance(_transform2D, _target2D) >= _threshold)
-                {
-                    // move
-                }
+            var targetPosition = _radar.Target.transform.position;
+            _target2D = new Vector2(targetPosition.x, targetPosition.z);
+
+            if (Vector3.Distance(_agent.destination, targetPosition) > 0.05f)
+            {
+                _agent.destination = targetPosition;
             }
         }
 
@@ -66,34 +68,20 @@ namespace Gameplay.UnitComponents
             var direction = (nextPosition - position).normalized;
             transform.position = Vector3.MoveTowards(position, direction, Time.deltaTime * (_moveSpeed));
         }
-        
-        private IEnumerator UpdatePhysicsInAir(Rigidbody rb)
+
+        private void OnCollisionEnter(Collision collision)
         {
-            while (!Physics.Raycast(rb.transform.position, -Vector3.up, out RaycastHit hit, Mathf.Infinity))
+            if (!_isGrounded)
             {
-                yield return null;
-            }
-            
-            while (Physics.Raycast(rb.transform.position, -Vector3.up, out RaycastHit hit, Mathf.Infinity))       //hit.collider.CompareTag("Ground"))
-            {
-                Debug.DrawLine(rb.position, rb.position - Vector3.up * 100.0f, Color.red);
+                _agent = gameObject.AddComponent<NavMeshAgent>();
+                _rigidbody.velocity = Vector3.zero;
+                _rigidbody.angularVelocity = Vector3.zero;
+                _isGrounded = true;
 
-                if (hit.distance <= 0.02f)
+                if (TryGetComponent(out Unit unit))
                 {
-                    rb.drag = 1.0f;
-                    rb.angularDrag = 1.0f;
-
-                    if (!_hasLanded)
-                    {
-                        _agent = gameObject.AddComponent<NavMeshAgent>();
-                        rb.AddForce(-rb.velocity * 2);
-                        _hasLanded = true;
-                    }
-
-                    yield break;
+                    GameEventManager.Instance?.UnitLanded(unit);
                 }
-                rb.AddForce(Physics.gravity * 2);
-                yield return new WaitForFixedUpdate();
             }
         }
     }

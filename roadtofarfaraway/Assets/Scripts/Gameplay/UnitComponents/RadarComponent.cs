@@ -9,32 +9,33 @@ public class RadarComponent : MonoBehaviour
 {
     public Unit Target { get; private set; }
 
-    [SerializeField] private float _searchingRate = 0.5f;
-    [SerializeField] private float _fovRadius = 2 ;
-    [SerializeField] private float _smoothTime = 0.1f;
-    [SerializeField] private LayerMask _detectionLayer;
-    [SerializeField] private SearchingMethod _searchingMethod = SearchingMethod.LowLife;
+    [SerializeField] private float searchingRate = 0.5f;
+    [SerializeField] private float fovRadiusMin = 2;
+    [SerializeField] private float fovRadiusMax = 8;
+    [SerializeField] private float smoothTime = 0.1f;
+    [SerializeField] private LayerMask detectionLayer;
+    [SerializeField] private SearchingMethod searchingMethod = SearchingMethod.LowLife;
 
-    private float _baseRadius;
+    private float _currentRadius;
     private float _radiusVelocity;
     private float _rateSinceUpdateSearch;
 
     private void Awake()
     {
-        _baseRadius = _fovRadius;
+        _currentRadius = fovRadiusMin;
         _rateSinceUpdateSearch = 0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Time.time - _rateSinceUpdateSearch >= _searchingRate)
+        if (Time.time - _rateSinceUpdateSearch >= searchingRate)
         {
             Target = SearchForTarget();
             _rateSinceUpdateSearch = Time.time;
 
-            var targetRadius = Target == null ? _fovRadius * 1.5f : _baseRadius;
-            _fovRadius = Mathf.SmoothDamp(_fovRadius, targetRadius, ref _radiusVelocity, _smoothTime);
+            var targetRadius = Target == null ? Mathf.Min(_currentRadius * 1.5f, fovRadiusMax) : fovRadiusMin;
+            _currentRadius = Mathf.SmoothDamp(_currentRadius, targetRadius, ref _radiusVelocity, smoothTime);
         }
     }
 
@@ -42,9 +43,14 @@ public class RadarComponent : MonoBehaviour
     private void OnDrawGizmos()
     {
         UnityEditor.Handles.color = Color.red;
-        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, _fovRadius);
+        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, fovRadiusMin);
+        UnityEditor.Handles.color = Color.yellow;
+        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, _currentRadius);
+        UnityEditor.Handles.color = Color.magenta;
+        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, fovRadiusMax);
     }
 #endif
+
     /// <summary>
     /// Search nearest unit
     /// </summary>
@@ -71,7 +77,7 @@ public class RadarComponent : MonoBehaviour
     {
         // Find nearby collider, if they're units stock it in colliders[].
         Collider[] results = new Collider[4];
-        var size = Physics.OverlapSphereNonAlloc(transform.position, _fovRadius, results, _detectionLayer);
+        var size = Physics.OverlapSphereNonAlloc(transform.position, fovRadiusMin, results, detectionLayer);
 
         int index = -1;
         List<Unit> units = new List<Unit>();
@@ -100,7 +106,7 @@ public class RadarComponent : MonoBehaviour
         {
             float save;
             // nearest method
-            switch (_searchingMethod)
+            switch (searchingMethod)
             {
                 case SearchingMethod.Nearest:
                     save = Mathf.NegativeInfinity;

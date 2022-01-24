@@ -158,13 +158,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be8e86b7f6be0941b1c692fd488abec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _searchingRate: 0.5
-  _fovRadius: 2
-  _smoothTime: 0.1
-  _detectionLayer:
+  searchingRate: 0.5
+  fovRadiusMin: 2
+  fovRadiusMax: 8
+  smoothTime: 0.1
+  detectionLayer:
     serializedVersion: 2
     m_Bits: 64
-  _searchingMethod: 1
+  searchingMethod: 1
 --- !u!114 &723534003263975199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,7 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _canMove: 1
   _moveSpeed: 10
-  _threshold: 0.45
+  _dragInAir: 0.1
 --- !u!114 &8406222725612080621
 MonoBehaviour:
   m_ObjectHideFlags: 0

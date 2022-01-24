@@ -18,6 +18,9 @@ namespace Managers
         public delegate void KillUnitDelegate(Unit killedUnit);
         public static event KillUnitDelegate OnKillUnit;
 
+        public delegate void UnitLandedDelegate(Unit landedUnit);
+        public static event UnitLandedDelegate OnUnitLanded;
+
         public void SpawnUnit(Unit spawnedUnit)
         {
             OnSpawnUnit?.Invoke(spawnedUnit);
@@ -31,6 +34,11 @@ namespace Managers
         public void KillUnit(Unit unit)
         {
             OnKillUnit?.Invoke(unit);
+        }
+
+        public void UnitLanded(Unit unit)
+        {
+            OnUnitLanded?.Invoke(unit);
         }
 
         #endregion

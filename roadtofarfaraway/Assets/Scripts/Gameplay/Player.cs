@@ -109,7 +109,7 @@ namespace Gameplay
             if (GameManager.Instance)
             {
                 var usedTypes = GameManager.Instance.TypesParameters[type];
-                var spawnerPosition = GameManager.Instance.Spawner.SpawnPosition.position;
+                var spawnerPosition = GameManager.Instance.Spawner.SpawnTransform.position;
                 var currencyAfterBuying = CurrentCurrency - (int)usedTypes.Cost;
 
                 if (currencyAfterBuying >= 0 && usedTypes.Prefab)

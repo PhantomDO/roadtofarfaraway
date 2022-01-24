@@ -76,11 +76,16 @@ namespace Gameplay.UnitComponents
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            UnityEditor.Handles.color = Gizmos.color = Color.magenta;
-            Gizmos.DrawLine(transform.position, transform.position + (-transform.right + transform.forward) * _collider.radius);
-            Gizmos.DrawLine(transform.position, transform.position + (transform.right + transform.forward) * _collider.radius);
-            UnityEditor.Handles.DrawWireArc(transform.position, transform.up, 
-                (-transform.right + transform.forward), _fov, _collider.radius);   
+            if (_collider != null)
+            {
+                UnityEditor.Handles.color = Gizmos.color = Color.magenta;
+                Gizmos.DrawLine(transform.position,
+                    transform.position + (-transform.right + transform.forward) * _collider.radius);
+                Gizmos.DrawLine(transform.position,
+                    transform.position + (transform.right + transform.forward) * _collider.radius);
+                UnityEditor.Handles.DrawWireArc(transform.position, transform.up,
+                    (-transform.right + transform.forward), _fov, _collider.radius);
+            }
         }
 #endif
     }
