@@ -11,7 +11,7 @@ namespace Gameplay
 
         [SerializeField, Range(0.0f, 100.0f)] private float _gravity = 9.81f;
 
-        private Queue<Rigidbody> _launchedQueue;
+        private Queue<Unit> _launchedQueue;
         private LaunchData _latestLaunchData;
 
 
@@ -27,26 +27,29 @@ namespace Gameplay
 
         private void Start()
         {
-            _launchedQueue = new Queue<Rigidbody>();
+            _launchedQueue = new Queue<Unit>();
         }
 
-        public void ShootWithGravity(Rigidbody launch, Vector3 target)
+        public void ShootWithGravity(Unit launchUnit, Vector3 target)
         {
-            Debug.Log($"Shoot {launch.name}!!");
+            Debug.Log($"Shoot {launchUnit.name}!!");
 
-            _latestLaunchData = CalculateLaunchData(target, launch.position);
-            _launchedQueue.Enqueue(launch);
+            if (launchUnit.TryGetComponent(out Rigidbody rb))
+            {
+                _latestLaunchData = CalculateLaunchData(target, rb.position);
+                _launchedQueue.Enqueue(launchUnit);
 
-            Physics.gravity = Vector3.up * _gravity * -2;
-            launch.useGravity = true;
-            launch.velocity = _latestLaunchData.initialVelocity;
+                Physics.gravity = Vector3.up * _gravity * -2;
+                rb.useGravity = true;
+                rb.velocity = _latestLaunchData.initialVelocity;
+            }
         }
 
         #region Events
 
         private void OnUnitLanded(Unit landedUnit)
         {
-            if (landedUnit.TryGetComponent(out Rigidbody rb) && rb == _launchedQueue.Peek())
+            if (landedUnit == _launchedQueue.Peek())
             {
                 _launchedQueue.Dequeue();
             }

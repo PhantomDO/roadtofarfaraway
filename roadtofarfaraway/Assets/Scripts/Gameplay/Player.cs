@@ -116,12 +116,7 @@ namespace Gameplay
                 {
                     CurrentCurrency = currencyAfterBuying;
                     var unit = Instantiate(usedTypes.Prefab, spawnerPosition, Quaternion.identity, transform);
-                    
-                    if (unit.TryGetComponent(out Rigidbody rb))
-                    {
-                        GameManager.Instance.Spawner.ShootWithGravity(rb, spawnPosition);
-                    }
-
+                    GameManager.Instance.Spawner.ShootWithGravity(unit, spawnPosition);
                     GameEventManager.Instance?.SpawnUnit(unit);
                     SpawnedUnits.Add(unit);
                 }
