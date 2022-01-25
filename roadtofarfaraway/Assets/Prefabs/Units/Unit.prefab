@@ -165,6 +165,8 @@ MonoBehaviour:
   detectionLayer:
     serializedVersion: 2
     m_Bits: 64
+  targetTags:
+  - Tower
   searchingMethod: 1
 --- !u!114 &723534003263975199
 MonoBehaviour:

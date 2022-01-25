@@ -6,13 +6,6 @@ using UnityEngine;
 
 namespace Gameplay.UnitComponents
 {
-    public enum SearchingMethod : int
-    {
-        Nearest = 0,
-        LowLife = 1,
-        HighLife = 2,
-    }
-
     public class DamageComponent : MonoBehaviour
     {
         [SerializeField] private float _damage;

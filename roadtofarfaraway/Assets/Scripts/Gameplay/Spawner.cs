@@ -49,16 +49,18 @@ namespace Gameplay
 
         private void OnUnitLanded(Unit landedUnit)
         {
+            if (_launchedQueue.Count <= 0) return;
+
             if (landedUnit == _launchedQueue.Peek())
             {
                 _launchedQueue.Dequeue();
+                if (_launchedQueue.Count <= 0)
+                {
+                    Physics.gravity = Vector3.up * _gravity * -1;
+                    Debug.LogWarning($"No more rigidbody in the queue.");
+                }
             }
 
-            if (_launchedQueue.Count <= 0)
-            {
-                Physics.gravity = Vector3.up * _gravity * -1;
-                Debug.LogWarning($"No more rigidbody in the queue.");
-            }
         }
 
         #endregion

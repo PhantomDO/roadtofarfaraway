@@ -55,10 +55,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Donkey
       objectReference: {fileID: 0}
+    - target: {fileID: 5950127577575670744, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_TagString
+      value: Allies
+      objectReference: {fileID: 0}
     - target: {fileID: 7040570366754146707, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 28d699544e03400438de0e56c40ebfba, type: 2}
-    m_RemovedComponents:
-    - {fileID: 1166667022271524665, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Managers;
+using TMPro;
 using Tools;
 using UI;
 using UnityEngine;
@@ -9,18 +10,18 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.Managers
+namespace Managers
 {
     public class UiManager : MonoSingleton<UiManager>
     {
-        [field: SerializeField] public List<UnitTypeSelector> UnitTypeSelectors { get; private set; }
-
         [field: SerializeField] public InputActionReference PointAction {get; private set; }
         [field: SerializeField] public InputActionReference ClickAction {get; private set; }
-                
-        public Canvas playerCanvas;
+
         public Camera currentCamera;
         
+        [Header("Player UI")]
+        [SerializeField] private PlayerCanvasUI playerCanvasUI;
+
         private GraphicRaycaster _graphicRaycaster;
         private PointerEventData _clickData;
         private List<RaycastResult> _clickResults;
@@ -30,7 +31,7 @@ namespace Assets.Scripts.Managers
         private void Start()
         {
             if (currentCamera == null) currentCamera = Camera.main;
-            if (playerCanvas?.TryGetComponent(out _graphicRaycaster) == false) return;
+            if (playerCanvasUI?.TryGetComponent(out _graphicRaycaster) == false) return;
             _clickData = new PointerEventData(EventSystem.current);
             _clickResults = new List<RaycastResult>();
         }

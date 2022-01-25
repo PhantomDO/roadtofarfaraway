@@ -21,5 +21,6 @@ namespace Gameplay
     public class Unit : MonoBehaviour
     {
         [field: SerializeField] public UnitType Type { get; private set; }
+        [field: SerializeField] public Sprite ProfilePicture { get; private set; }
     }
 }

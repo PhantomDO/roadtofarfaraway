@@ -21,6 +21,9 @@ namespace Managers
         public delegate void UnitLandedDelegate(Unit landedUnit);
         public static event UnitLandedDelegate OnUnitLanded;
 
+        public delegate void UnitSelectedDelegate(Unit selectedUnit);
+        public static event UnitSelectedDelegate OnUnitSelected;
+
         public void SpawnUnit(Unit spawnedUnit)
         {
             OnSpawnUnit?.Invoke(spawnedUnit);
@@ -39,6 +42,11 @@ namespace Managers
         public void UnitLanded(Unit unit)
         {
             OnUnitLanded?.Invoke(unit);
+        }
+
+        public void UnitSelected(Unit unit)
+        {
+            OnUnitSelected?.Invoke(unit);
         }
 
         #endregion

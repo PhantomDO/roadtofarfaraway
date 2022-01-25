@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Managers;
 using Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using Object = UnityEngine.Object;
 
 namespace Gameplay
 {
@@ -15,7 +15,20 @@ namespace Gameplay
         [SerializeField] private int _startCurrency;
         [field: SerializeField] public int CurrentCurrency { get; private set; }
 
-        public List<Unit> SpawnedUnits { get; private set; }
+        [Header("Unit Management")] 
+        [SerializeField] private LayerMask unitSelectableLayerMask;
+        [field: SerializeField] public List<Unit> SpawnedUnits { get; private set; }
+
+        [SerializeField] private Unit _selectedUnit = null;
+        public Unit SelectedUnit
+        {
+            get => _selectedUnit;
+            private set
+            {
+                _selectedUnit = value;
+                GameEventManager.Instance?.UnitSelected(_selectedUnit);
+            }
+        }
 
         [Header("Spawn & Drag")]
         [SerializeField] private float _dragSpeed = .10f;
@@ -99,6 +112,35 @@ namespace Gameplay
                 _crosshairSpawn.transform.position = Vector3.zero;
                 _crosshairSpawn.SetActive(false);
                 _spawningType = UnitType.Null;
+            }
+            else
+            {
+                var cursorPosition = UiManager.Instance.CursorPosition;
+                var cursorAsRay = UiManager.Instance.currentCamera.ScreenPointToRay(cursorPosition);
+                if (!Physics.Raycast(cursorAsRay, out RaycastHit hitInfo, Mathf.Infinity, unitSelectableLayerMask))
+                {
+                    SelectedUnit = null;
+                }
+                else
+                {
+                    // Check if you find a UnitComponent in the hierarchy of the collider
+                    Transform rootNotPlayer = hitInfo.transform;
+                    while (!rootNotPlayer.CompareTag("Player"))
+                    {
+                        // it can't be this unit, then ignore itself
+                        if (rootNotPlayer.TryGetComponent(out Unit unit) &&
+                            rootNotPlayer.GetInstanceID() != SelectedUnit?.GetInstanceID())
+                        {
+                            // if it does not contains the unit add it to the list then break
+                            SelectedUnit = unit;
+                            break;
+                        }
+
+                        // up the hierarchy
+                        if (rootNotPlayer.parent == null) break;
+                        rootNotPlayer = rootNotPlayer.parent;
+                    }
+                }
             }
         }
         

@@ -5,9 +5,8 @@ namespace Gameplay.UnitComponents
 {
     public class HealthComponent : MonoBehaviour
     {
-        [Header("Health")]
-        [SerializeField] private float _maxHealth = 100f;
-        
+        [field: SerializeField] public float MaxHealth { get; private set; } = 100f;
+
         private float _currentHealth;
         public float CurrentHealth
         {
@@ -24,7 +23,7 @@ namespace Gameplay.UnitComponents
         
         private void Awake()
         {
-            CurrentHealth = _maxHealth;
+            CurrentHealth = MaxHealth;
 
             GameEventManager.OnKillUnit += KillUnit;
             GameEventManager.OnDamageUnit += DamageUnit; 
