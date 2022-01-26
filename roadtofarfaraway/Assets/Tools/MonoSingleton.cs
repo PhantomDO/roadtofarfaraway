@@ -8,7 +8,7 @@ namespace Tools
         public bool dontDestroyOnLoad = false;
         public static T Instance { get; protected set; }
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             if (Instance != null && Instance != this)
             {

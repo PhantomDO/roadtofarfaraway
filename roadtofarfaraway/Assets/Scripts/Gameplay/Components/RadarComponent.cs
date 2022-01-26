@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Gameplay;
-using Gameplay.UnitComponents;
+using Gameplay.Components;
 using UnityEngine;
 
-namespace Gameplay.UnitComponents
+namespace Gameplay.Components
 {
     public enum SearchingMethod : int
     {
@@ -18,31 +18,31 @@ namespace Gameplay.UnitComponents
     {
         public Unit Target { get; private set; }
 
-        [SerializeField] private float searchingRate = 0.5f;
+        [SerializeField] private float searchingRateInSecond = 0.5f;
         [SerializeField] private float fovRadiusMin = 2;
         [SerializeField] private float fovRadiusMax = 8;
         [SerializeField] private float smoothTime = 0.1f;
         [SerializeField] private LayerMask detectionLayer;
         [SerializeField] private string[] targetTags;
-        [SerializeField] private SearchingMethod searchingMethod = SearchingMethod.LowLife;
+        public SearchingMethod SearchingMethod = SearchingMethod.LowLife;
 
         private float _currentRadius;
         private float _radiusVelocity;
-        private float _rateSinceUpdateSearch;
+        private float _rateSinceUpdateSearchInSecond;
 
         private void Awake()
         {
             _currentRadius = fovRadiusMin;
-            _rateSinceUpdateSearch = 0f;
+            _rateSinceUpdateSearchInSecond = 0f;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (Time.time - _rateSinceUpdateSearch >= searchingRate)
+            if (Time.time - _rateSinceUpdateSearchInSecond >= searchingRateInSecond)
             {
                 Target = SearchForTarget();
-                _rateSinceUpdateSearch = Time.time;
+                _rateSinceUpdateSearchInSecond = Time.time;
 
                 var targetRadius = Target == null ? Mathf.Min(_currentRadius * 1.5f, fovRadiusMax) : fovRadiusMin;
                 _currentRadius = Mathf.SmoothDamp(_currentRadius, targetRadius, ref _radiusVelocity, smoothTime);
@@ -87,7 +87,7 @@ namespace Gameplay.UnitComponents
         {
             // Find nearby collider, if they're units stock it in colliders[].
             Collider[] results = new Collider[4];
-            var size = Physics.OverlapSphereNonAlloc(transform.position, fovRadiusMin, results, detectionLayer);
+            var size = Physics.OverlapSphereNonAlloc(transform.position, _currentRadius, results, detectionLayer);
 
             int index = -1;
             List<Unit> units = new List<Unit>();
@@ -125,7 +125,7 @@ namespace Gameplay.UnitComponents
             {
                 float save;
                 // nearest method
-                switch (searchingMethod)
+                switch (SearchingMethod)
                 {
                     case SearchingMethod.Nearest:
                         save = Mathf.NegativeInfinity;
@@ -142,10 +142,10 @@ namespace Gameplay.UnitComponents
                         save = Mathf.Infinity;
                         index = SearchParameter(units, (i) =>
                         {
-                            if (!units[i].TryGetComponent(out HealthComponent health) || save <= health.CurrentHealth)
+                            if (!units[i].TryGetComponent(out HealthComponent health) || save <= health.Current)
                                 return -1;
 
-                            save = health.CurrentHealth;
+                            save = health.Current;
                             return i;
                         });
                         break;
@@ -153,10 +153,10 @@ namespace Gameplay.UnitComponents
                         save = Mathf.NegativeInfinity;
                         index = SearchParameter(units, (i) =>
                         {
-                            if (!units[i].TryGetComponent(out HealthComponent health) || save >= health.CurrentHealth)
+                            if (!units[i].TryGetComponent(out HealthComponent health) || save >= health.Current)
                                 return -1;
 
-                            save = health.CurrentHealth;
+                            save = health.Current;
                             return i;
                         });
                         break;

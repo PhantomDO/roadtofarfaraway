@@ -4,10 +4,13 @@ using Managers;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Gameplay.UnitComponents
+namespace Gameplay.Components
 {
     public class MovementComponent : MonoBehaviour
     {
+        public delegate void DLandedComplete(MovementComponent component);
+        public static event DLandedComplete OnLandingComplete;
+
         [SerializeField] private bool _canMove = false;
         [SerializeField] private float _moveSpeed = 10;
         [SerializeField] private float _dragInAir = 0.1f;
@@ -41,7 +44,7 @@ namespace Gameplay.UnitComponents
 
             if (!_isGrounded)
             {
-                _rigidbody.velocity -= _rigidbody.velocity * _dragInAir * Time.fixedDeltaTime;
+                _rigidbody.velocity -= _rigidbody.velocity * (_dragInAir * Time.fixedDeltaTime);
                 return;
             }
 
@@ -77,11 +80,7 @@ namespace Gameplay.UnitComponents
                 _rigidbody.velocity = Vector3.zero;
                 _rigidbody.angularVelocity = Vector3.zero;
                 _isGrounded = true;
-
-                if (TryGetComponent(out Unit unit))
-                {
-                    GameEventManager.Instance?.UnitLanded(unit);
-                }
+                OnLandingComplete?.Invoke(this);
             }
         }
     }

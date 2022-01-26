@@ -146,6 +146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Type>k__BackingField: -1
+  <ProfilePicture>k__BackingField: {fileID: 0}
 --- !u!114 &-2777550692428188803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,16 +159,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be8e86b7f6be0941b1c692fd488abec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  searchingRate: 0.5
+  searchingRateInSecond: 0.5
   fovRadiusMin: 2
   fovRadiusMax: 8
   smoothTime: 0.1
   detectionLayer:
     serializedVersion: 2
     m_Bits: 64
-  targetTags:
-  - Tower
-  searchingMethod: 1
+  targetTags: []
+  SearchingMethod: 1
 --- !u!114 &723534003263975199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b16a625129cbdd4d88188c08c135034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 100
+  max: 100
 --- !u!114 &3713097260883734016
 MonoBehaviour:
   m_ObjectHideFlags: 0

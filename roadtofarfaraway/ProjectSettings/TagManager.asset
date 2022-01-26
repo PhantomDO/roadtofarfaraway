@@ -8,6 +8,7 @@ TagManager:
   - Tower
   - Allies
   - Ennemies
+  - UnitContainer
   layers:
   - Default
   - TransparentFX

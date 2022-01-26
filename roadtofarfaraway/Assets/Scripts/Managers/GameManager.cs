@@ -1,36 +1,55 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Tools;
 using Gameplay;
+using Gameplay.Components;
 using UnityEngine;
 
 namespace Managers
 {
     public class GameManager : MonoSingleton<GameManager>
     {
-        [field: SerializeField] public GenericDictionary<UnitType, UnitParameters> TypesParameters { get; private set; }
+        [SerializeField] private Player playerPrefab;
         [field: SerializeField] public Player Player { get; private set; }
-        [field: SerializeField] public Spawner Spawner { get; private set; }
+        [field: SerializeField] public GenericDictionary<UnitType, UnitParameters> TypesParameters { get; private set; }
+        [field: SerializeField] public List<SpawnerComponent> Spawners { get; private set; }
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            Spawners = new List<SpawnerComponent>();
+
+            SpawnerComponent.OnRegisterSpawner += RegisterSpawner;
+        }
+
+        private void OnDestroy()
+        {
+            SpawnerComponent.OnRegisterSpawner -= RegisterSpawner;
+        }
 
         private void Start()
         {
             if (Player == null)
             {
-                Player = GameObject.FindObjectOfType<Player>();
-                if (Player == null)
+                Player = FindObjectOfType<Player>();
+                if (Player == null && playerPrefab != null)
                 {
-                    GameObject go = new GameObject("Player", typeof(Player));
-                    if (go.TryGetComponent(out Player player)) Player = player;
+                    Player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
                 }
             }
+        }
 
-            if (Spawner == null)
+        private void RegisterSpawner(SpawnerComponent spawner)
+        {
+            if (!Spawners.Contains(spawner))
             {
-                Spawner = GameObject.FindObjectOfType<Spawner>();
-                if (Player == null)
-                {
-                    GameObject go = new GameObject("Spawner", typeof(Spawner));
-                    if (go.TryGetComponent(out Spawner spawner)) Spawner = spawner;
-                }
+                Spawners.Add(spawner);
+            }
+            else
+            {
+                Debug.LogWarning($"OwnerSpawnerDictionary already contains: {spawner}");
             }
         }
     }

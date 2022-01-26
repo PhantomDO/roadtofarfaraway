@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gameplay.Components;
 using Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,28 +12,27 @@ namespace Gameplay
 {
     public class Player : MonoBehaviour
     {
-        [Header("Currency")]
-        [SerializeField] private int _startCurrency;
-        [field: SerializeField] public int CurrentCurrency { get; private set; }
+        public delegate void UnitSelectedDelegate(Unit selectedUnit);
+        public static event UnitSelectedDelegate OnUnitSelected;
 
-        [Header("Unit Management")] 
+        [Header("Unit Selection")] 
         [SerializeField] private LayerMask unitSelectableLayerMask;
-        [field: SerializeField] public List<Unit> SpawnedUnits { get; private set; }
-
-        [SerializeField] private Unit _selectedUnit = null;
+        
+        private Unit _selectedUnit = null;
         public Unit SelectedUnit
         {
             get => _selectedUnit;
             private set
             {
                 _selectedUnit = value;
-                GameEventManager.Instance?.UnitSelected(_selectedUnit);
+                OnUnitSelected?.Invoke(_selectedUnit);
             }
         }
 
         [Header("Spawn & Drag")]
         [SerializeField] private float _dragSpeed = .10f;
         [SerializeField] private GameObject _crosshairPrefab;
+        [field: SerializeField] public  SpawnerComponent Spawner { get; private set; }
         [field: SerializeField] public InputActionReference SelectAndSpawnUnitAction { get; private set; }
 
         private Vector3 _velocity = Vector3.zero;
@@ -40,7 +40,7 @@ namespace Gameplay
 
         private UnitType _spawningType = UnitType.Null;
         private GameObject _crosshairSpawn;
-
+        
         #region Unity Methods
 
 
@@ -49,11 +49,19 @@ namespace Gameplay
             _crosshairSpawn = GameObject.Instantiate(_crosshairPrefab, Vector3.zero, Quaternion.identity, transform);
             _crosshairSpawn.SetActive(false);
 
-            SpawnedUnits = new List<Unit>();
-            CurrentCurrency = _startCurrency;
-            
-            GameEventManager.OnKillUnit += RemoveKilledUnitFromArmy;
-            GameEventManager.OnSelectSpawnableUnit += SelectSpawnableUnit;
+            if (Spawner == null)
+            {
+                foreach (Transform child in transform)
+                {
+                    if (child.TryGetComponent(out SpawnerComponent spawner))
+                    {
+                        Spawner = spawner;
+                        break;
+                    }
+                }
+            }
+
+            UiManager.OnSelectSpawnableUnit += SelectSpawnableUnit;
         }
 
         private void OnEnable()
@@ -63,10 +71,6 @@ namespace Gameplay
                 SelectAndSpawnUnitAction.action.Enable();
                 SelectAndSpawnUnitAction.action.performed += OnSelectAndSpawnUnitPerformed;
             }
-        }
-
-        private void Update()
-        {
         }
 
         private void OnDisable()
@@ -80,19 +84,13 @@ namespace Gameplay
 
         private void OnDestroy()
         {
-            GameEventManager.OnKillUnit -= RemoveKilledUnitFromArmy;
-            GameEventManager.OnSelectSpawnableUnit -= SelectSpawnableUnit;
+            UiManager.OnSelectSpawnableUnit -= SelectSpawnableUnit;
         }
 
 
         #endregion
 
         #region Event Methods
-        
-        private void RemoveKilledUnitFromArmy(Unit killedUnit)
-        {
-            SpawnedUnits.Remove(killedUnit);
-        }
 
         private void SelectSpawnableUnit(UI.UnitTypeSelector unitTypeSelector)
         {
@@ -106,17 +104,17 @@ namespace Gameplay
 
         private void OnSelectAndSpawnUnitPerformed(InputAction.CallbackContext callback)
         {
-            if (_spawningType != UnitType.Null && _crosshairSpawn.activeInHierarchy)
+            if (_spawningType != UnitType.Null && _crosshairSpawn.activeInHierarchy && Spawner != null)
             {
-                SpawnUnit(_spawningType, _crosshairSpawn.transform.position);
+                Spawner.SpawnUnit(_spawningType, _crosshairSpawn.transform.position);
                 _crosshairSpawn.transform.position = Vector3.zero;
                 _crosshairSpawn.SetActive(false);
                 _spawningType = UnitType.Null;
             }
-            else
+
+            if (callback.ReadValueAsButton() && UiManager.Instance != null)
             {
-                var cursorPosition = UiManager.Instance.CursorPosition;
-                var cursorAsRay = UiManager.Instance.currentCamera.ScreenPointToRay(cursorPosition);
+                var cursorAsRay = UiManager.Instance.CursorAsRay;
                 if (!Physics.Raycast(cursorAsRay, out RaycastHit hitInfo, Mathf.Infinity, unitSelectableLayerMask))
                 {
                     SelectedUnit = null;
@@ -124,8 +122,8 @@ namespace Gameplay
                 else
                 {
                     // Check if you find a UnitComponent in the hierarchy of the collider
-                    Transform rootNotPlayer = hitInfo.transform;
-                    while (!rootNotPlayer.CompareTag("Player"))
+                    var rootNotPlayer = hitInfo.transform;
+                    while (!rootNotPlayer.CompareTag(Spawner.UnitContainer.tag))
                     {
                         // it can't be this unit, then ignore itself
                         if (rootNotPlayer.TryGetComponent(out Unit unit) &&
@@ -141,39 +139,23 @@ namespace Gameplay
                         rootNotPlayer = rootNotPlayer.parent;
                     }
                 }
+
+                Debug.Log($"Raycast collider :  {hitInfo.collider}");
             }
         }
         
         #endregion
 
-        private void SpawnUnit(UnitType type, Vector3 spawnPosition)
-        {
-            if (GameManager.Instance)
-            {
-                var usedTypes = GameManager.Instance.TypesParameters[type];
-                var spawnerPosition = GameManager.Instance.Spawner.SpawnTransform.position;
-                var currencyAfterBuying = CurrentCurrency - (int)usedTypes.Cost;
-
-                if (currencyAfterBuying >= 0 && usedTypes.Prefab)
-                {
-                    CurrentCurrency = currencyAfterBuying;
-                    var unit = Instantiate(usedTypes.Prefab, spawnerPosition, Quaternion.identity, transform);
-                    GameManager.Instance.Spawner.ShootWithGravity(unit, spawnPosition);
-                    GameEventManager.Instance?.SpawnUnit(unit);
-                    SpawnedUnits.Add(unit);
-                }
-            }
-        }
-
         private IEnumerator MoveCrosshair()
         {
+            if (!UiManager.Instance) yield break;
+
             yield return new WaitForSeconds(0.2f);
             _crosshairSpawn.SetActive(true);
 
             while (_spawningType != UnitType.Null)
             {
-                var cursorPosition = UiManager.Instance.CursorPosition;
-                var cursorAsRay = UiManager.Instance.currentCamera.ScreenPointToRay(cursorPosition);
+                var cursorAsRay = UiManager.Instance.CursorAsRay;
                 var cursorEndPoint = cursorAsRay.origin + cursorAsRay.direction * 1000.0f;
                 // Get UI button that gives you the UnitTypes to spawn
                 if (Physics.Raycast(cursorAsRay, out RaycastHit hitInfo, Mathf.Infinity) &&
@@ -181,10 +163,10 @@ namespace Gameplay
                 {
                     cursorEndPoint = cursorAsRay.GetPoint(hitInfo.distance);
                     _crosshairSpawn.transform.rotation = Quaternion.LookRotation(-Vector3.up);
-                    _crosshairSpawn.transform.position = Vector3.SmoothDamp(_crosshairSpawn.transform.position, 
+                    _crosshairSpawn.transform.position = Vector3.SmoothDamp(_crosshairSpawn.transform.position,
                         cursorEndPoint, ref _velocity, _dragSpeed);
                 }
-                
+
                 Debug.DrawLine(cursorAsRay.origin, cursorEndPoint, Color.red);
 
                 yield return _waitForFixedUpdate;

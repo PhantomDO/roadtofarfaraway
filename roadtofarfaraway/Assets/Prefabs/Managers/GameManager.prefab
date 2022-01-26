@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6049141229376958293}
   - component: {fileID: 9154753810549484537}
-  - component: {fileID: 6630338379699878881}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -45,6 +44,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
+  playerPrefab: {fileID: 7264612644995849870, guid: f4e6ab11f00464f43bb5c6ec899a91e1, type: 3}
+  <Player>k__BackingField: {fileID: 0}
   <TypesParameters>k__BackingField:
     list:
     - Key: 0
@@ -53,18 +54,9 @@ MonoBehaviour:
       Value: {fileID: 11400000, guid: 5d901cb3e3dd551449184f7953e15d62, type: 2}
     - Key: 1
       Value: {fileID: 11400000, guid: 64d8a10c38d26b749ae77710c03aa113, type: 2}
+    - Key: 5
+      Value: {fileID: 11400000, guid: 1bb341c20ae01fd4aa2919f787d6752d, type: 2}
+    - Key: 6
+      Value: {fileID: 11400000, guid: 7ba474cddcd094f458e8de7006c7b6a3, type: 2}
     keyCollision: 0
-  <Player>k__BackingField: {fileID: 0}
---- !u!114 &6630338379699878881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8795487634523428467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fca109f83b936747bd6d855ea110327, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dontDestroyOnLoad: 0
+  <Spawners>k__BackingField: []

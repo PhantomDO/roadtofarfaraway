@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Gameplay;
-using Gameplay.UnitComponents;
+using Gameplay.Components;
 using Managers;
 using TMPro;
 using UnityEngine;
@@ -22,24 +22,35 @@ namespace UI
         
         private void Awake()
         {
-            GameEventManager.OnUnitSelected += UnitSelected;
-            GameEventManager.OnDamageUnit += UnitDamaged;
+            Player.OnUnitSelected += UnitSelected;
+            HealthComponent.OnCurrencyUpdate += HealthUpdate;
+            
+            if (UnitInformationRadarSearchType != null)
+            {
+                var optionNames = new List<string>();
+                foreach (var name in Enum.GetNames(typeof(SearchingMethod)))
+                {
+                    optionNames.Add(name);
+                }
+
+                UnitInformationRadarSearchType.ClearOptions();
+                UnitInformationRadarSearchType.AddOptions(optionNames);
+            }
         }
 
         private void OnDestroy()
         {
-            GameEventManager.OnUnitSelected -= UnitSelected;
-            GameEventManager.OnDamageUnit -= UnitDamaged;
+            Player.OnUnitSelected -= UnitSelected;
+            HealthComponent.OnCurrencyUpdate -= HealthUpdate;
         }
 
-        private void UnitDamaged(float damage, Unit damagedUnit)
+        private void HealthUpdate(HealthComponent healthComponent, float update)
         {
-            if (GameManager.Instance && GameManager.Instance.Player)
+            if (GameManager.Instance && GameManager.Instance.Player && 
+                healthComponent.TryGetComponent(out Unit damagedUnit) && 
+                GameManager.Instance.Player.SelectedUnit == damagedUnit)
             {
-                if (GameManager.Instance.Player.SelectedUnit == damagedUnit && damagedUnit.TryGetComponent(out HealthComponent healthComponent))
-                {
-                    StartCoroutine(LerpHealthValue(healthComponent));
-                }
+                StartCoroutine(LerpHealthValue(healthComponent));
             }
         }
 
@@ -48,7 +59,13 @@ namespace UI
             if (selectedUnit == null)
             {
                 // cancel all the update and fade
+                UnitInformationHealthBar.value = 1;
+                UnitInformationProfilePicture.sprite = null;
+                UnitInformationRadarSearchType.onValueChanged.RemoveAllListeners();
+                return;
             }
+
+            UnitInformationProfilePicture.sprite = selectedUnit.ProfilePicture;
 
             if (selectedUnit.TryGetComponent(out HealthComponent health))
             {
@@ -58,6 +75,11 @@ namespace UI
             if (selectedUnit.TryGetComponent(out RadarComponent radar))
             {
                 // set the current radar parameter, when the value change change it also on the unit
+                UnitInformationRadarSearchType.value = (int)radar.SearchingMethod;
+                UnitInformationRadarSearchType.onValueChanged.AddListener(val =>
+                {
+                    radar.SearchingMethod = (SearchingMethod)val;
+                });
             }
         }
 
@@ -65,7 +87,7 @@ namespace UI
         {
             yield return new WaitForEndOfFrame();
 
-            float newHealth = healthComponent.CurrentHealth / healthComponent.MaxHealth;
+            float newHealth = healthComponent.CurrentPercent;
             float healthValueInProgress = UnitInformationHealthBar.value;
 
             while (UnitInformationHealthBar.value > newHealth)
@@ -74,6 +96,9 @@ namespace UI
                 UnitInformationHealthBar.value = healthValueInProgress;
                 yield return null;
             }
+
+            yield break;
         }
+        
     }
 }

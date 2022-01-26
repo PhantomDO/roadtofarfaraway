@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b7f2f72c85a2474d88ab2e844b9740e, type: 3}
+  m_Name: HighEnnemyParameters
+  m_EditorClassIdentifier: 
+  Cost: 20
+  Prefab: {fileID: 1292140262886734892, guid: c4c630df2a044824484f1c25a24c85ef, type: 3}

@@ -14,6 +14,9 @@ namespace Managers
 {
     public class UiManager : MonoSingleton<UiManager>
     {
+        public delegate void SelectSpawnableUnitDelegate(UnitTypeSelector unitTypeSelector);
+        public static event SelectSpawnableUnitDelegate OnSelectSpawnableUnit;
+
         [field: SerializeField] public InputActionReference PointAction {get; private set; }
         [field: SerializeField] public InputActionReference ClickAction {get; private set; }
 
@@ -27,6 +30,7 @@ namespace Managers
         private List<RaycastResult> _clickResults;
 
         public Vector2 CursorPosition { get; private set; }
+        public Ray CursorAsRay { get; private set; }
 
         private void Start()
         {
@@ -66,12 +70,22 @@ namespace Managers
             }
         }
 
-        private void ReadPoint(InputAction.CallbackContext obj)
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
         {
-            CursorPosition = obj.ReadValue<Vector2>();
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(CursorAsRay.origin, CursorAsRay.origin + 
+                CursorAsRay.direction * currentCamera.farClipPlane);
+        }
+#endif
+
+        private void ReadPoint(InputAction.CallbackContext callbackContext)
+        {
+            CursorPosition = callbackContext.ReadValue<Vector2>();
+            CursorAsRay = currentCamera.ScreenPointToRay(CursorPosition);
         }
 
-        private void MouseClick(InputAction.CallbackContext obj)
+        private void MouseClick(InputAction.CallbackContext callbackContext)
         {
             _clickData.position = CursorPosition;
             _clickResults.Clear();
@@ -83,7 +97,7 @@ namespace Managers
                 if (result.gameObject.TryGetComponent(out UnitTypeSelector selector))
                 {
                     Debug.Log($"RaycastHit: {result.gameObject.name}");
-                    GameEventManager.Instance?.SelectSpawnabUnit(selector);
+                    OnSelectSpawnableUnit?.Invoke(selector);
                     break;
                 }
             }

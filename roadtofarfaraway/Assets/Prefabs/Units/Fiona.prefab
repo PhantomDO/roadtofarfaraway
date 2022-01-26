@@ -7,6 +7,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2777550692428188803, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: targetTags.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -2777550692428188803, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: targetTags.Array.data[0]
+      value: Tower
+      objectReference: {fileID: 0}
+    - target: {fileID: -2777550692428188803, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: targetTags.Array.data[1]
+      value: Ennemies
+      objectReference: {fileID: 0}
     - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
       propertyPath: m_RootOrder
       value: 0
