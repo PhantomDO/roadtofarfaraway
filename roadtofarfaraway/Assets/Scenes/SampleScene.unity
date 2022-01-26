@@ -1335,5 +1335,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7264612644995849870, guid: f4e6ab11f00464f43bb5c6ec899a91e1, type: 3}
+      propertyPath: unitSelectableLayerMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4e6ab11f00464f43bb5c6ec899a91e1, type: 3}
