@@ -120,12 +120,19 @@ namespace Gameplay
                 // !!! IMPORTANT !!!
                 // If you have a navmeshcomponent and a rigidbody,
                 // you need the rigidbody detection to be Continuous, if not raycast will go throught
-                if (!Physics.Raycast(cursorAsRay, out RaycastHit hitInfo, farClip, unitSelectableLayerMask, QueryTriggerInteraction.UseGlobal))
+                var rayCastAll = Physics.RaycastAll(cursorAsRay, farClip);
+                Array.Sort(rayCastAll, (x, y) => x.distance.CompareTo(y.distance));
+
+                for (int i = 0; i < rayCastAll.Length; i++)
                 {
-                    SelectedUnit = null;
-                }
-                else
-                {
+                    var hitInfo = rayCastAll[i];
+
+                    Debug.Log($"{hitInfo.transform.name}, distance : {hitInfo.distance}");
+
+                    if (hitInfo.transform.gameObject.CompareTag("Ground") && UiManager.Instance.ClickResults.Count <= 0)
+                    {
+                        Debug.Log($"Unit Raycasted {hitInfo.transform}");
+                    }
                     // Check if you find a UnitComponent in the hierarchy of the collider
                     var rootNotPlayer = hitInfo.transform;
 
@@ -149,8 +156,6 @@ namespace Gameplay
                         rootNotPlayer = rootNotPlayer.parent;
                     }
                 }
-
-                Debug.Log($"Raycast collider :  {(hitInfo.collider ? hitInfo.collider.ToString() : "NULL")}");
             }
         }
         

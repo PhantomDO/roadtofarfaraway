@@ -12,6 +12,7 @@ using UnityEngine.UI;
 
 namespace Managers
 {
+    [DefaultExecutionOrder(-1)]
     public class UiManager : MonoSingleton<UiManager>
     {
         public delegate void SelectSpawnableUnitDelegate(UnitTypeSelector unitTypeSelector);
@@ -27,7 +28,7 @@ namespace Managers
 
         private GraphicRaycaster _graphicRaycaster;
         private PointerEventData _clickData;
-        private List<RaycastResult> _clickResults;
+        public List<RaycastResult> ClickResults { get; private set; }
 
         public Vector2 CursorPosition { get; private set; }
         public Ray CursorAsRay { get; private set; }
@@ -37,7 +38,7 @@ namespace Managers
             if (currentCamera == null) currentCamera = Camera.main;
             if (playerCanvasUI?.TryGetComponent(out _graphicRaycaster) == false) return;
             _clickData = new PointerEventData(EventSystem.current);
-            _clickResults = new List<RaycastResult>();
+            ClickResults = new List<RaycastResult>();
         }
 
         private void OnEnable()
@@ -88,12 +89,19 @@ namespace Managers
         private void MouseClick(InputAction.CallbackContext callbackContext)
         {
             _clickData.position = CursorPosition;
-            _clickResults.Clear();
+            ClickResults.Clear();
 
-            _graphicRaycaster.Raycast(_clickData, _clickResults);
+            _graphicRaycaster.Raycast(_clickData, ClickResults);
 
-            foreach (var result in _clickResults)
+            foreach (var result in ClickResults)
             {
+                if (result.gameObject == playerCanvasUI.UnitInformationRadarSearchType.gameObject ||
+                    result.gameObject == playerCanvasUI.UnitInformationProfilePicture.gameObject ||
+                    result.gameObject == playerCanvasUI.UnitInformationHealthBar.gameObject)
+                {
+                    break;
+                }
+
                 if (result.gameObject.TryGetComponent(out UnitTypeSelector selector))
                 {
                     Debug.Log($"RaycastHit: {result.gameObject.name}");

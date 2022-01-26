@@ -76,10 +76,7 @@ namespace UI
             {
                 // set the current radar parameter, when the value change change it also on the unit
                 UnitInformationRadarSearchType.value = (int)radar.SearchingMethod;
-                UnitInformationRadarSearchType.onValueChanged.AddListener(val =>
-                {
-                    radar.SearchingMethod = (SearchingMethod)val;
-                });
+                UnitInformationRadarSearchType.onValueChanged.AddListener(val => radar.SearchingMethod = (SearchingMethod)val);
             }
         }
 

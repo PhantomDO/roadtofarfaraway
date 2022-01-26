@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace Managers
 {
+    [DefaultExecutionOrder(-1)]
     public class GameManager : MonoSingleton<GameManager>
     {
         [SerializeField] private Player playerPrefab;
