@@ -62,11 +62,11 @@ namespace Gameplay.Components
                     var direction = (_target2D - _transform2D).normalized;
                     var dot = Vector3.Dot(direction, transform.forward);
 #if UNITY_EDITOR
-                    Debug.DrawLine(_transform2D, transform.position + direction * _collider.radius, Color.magenta);
-                    Debug.DrawLine(_transform2D, transform.position + transform.forward * _collider.radius, Color.cyan);
+                    //Debug.DrawLine(_transform2D, transform.position + direction * _collider.radius, Color.magenta);
+                    //Debug.DrawLine(_transform2D, transform.position + transform.forward * _collider.radius, Color.cyan);
 
-                    Debug.Log($"Distance: {Vector3.Distance(_transform2D, _target2D)}");
-                    Debug.Log($"Dot (direction, forward): {dot}, Angle: {angle}");
+                    //Debug.Log($"Distance: {Vector3.Distance(_transform2D, _target2D)}");
+                    //Debug.Log($"Dot (direction, forward): {dot}, Angle: {angle}");
 #endif
                     // Attack the nearest target
                     if (Time.time - _rateSinceAttack >= _fireRate && Mathf.Abs(dot) > angle &&

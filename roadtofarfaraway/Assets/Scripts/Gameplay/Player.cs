@@ -94,7 +94,7 @@ namespace Gameplay
 
         private void SelectSpawnableUnit(UI.UnitTypeSelector unitTypeSelector)
         {
-            if (unitTypeSelector == null) return;
+            if (unitTypeSelector == null || Spawner.Money.Current <= 0) return;
             _spawningType = unitTypeSelector.Type;
             if (!_crosshairSpawn.activeInHierarchy)
             {
@@ -104,7 +104,7 @@ namespace Gameplay
 
         private void OnSelectAndSpawnUnitPerformed(InputAction.CallbackContext callback)
         {
-            if (_spawningType != UnitType.Null && _crosshairSpawn.activeInHierarchy && Spawner != null)
+            if (_spawningType != UnitType.Null && _crosshairSpawn.activeInHierarchy)
             {
                 Spawner.SpawnUnit(_spawningType, _crosshairSpawn.transform.position);
                 _crosshairSpawn.transform.position = Vector3.zero;
@@ -115,7 +115,12 @@ namespace Gameplay
             if (callback.ReadValueAsButton() && UiManager.Instance != null)
             {
                 var cursorAsRay = UiManager.Instance.CursorAsRay;
-                if (!Physics.Raycast(cursorAsRay, out RaycastHit hitInfo, Mathf.Infinity, unitSelectableLayerMask))
+                var farClip = UiManager.Instance.currentCamera.farClipPlane;
+
+                // !!! IMPORTANT !!!
+                // If you have a navmeshcomponent and a rigidbody,
+                // you need the rigidbody detection to be Continuous, if not raycast will go throught
+                if (!Physics.Raycast(cursorAsRay, out RaycastHit hitInfo, farClip, unitSelectableLayerMask, QueryTriggerInteraction.UseGlobal))
                 {
                     SelectedUnit = null;
                 }
@@ -123,15 +128,20 @@ namespace Gameplay
                 {
                     // Check if you find a UnitComponent in the hierarchy of the collider
                     var rootNotPlayer = hitInfo.transform;
-                    while (!rootNotPlayer.CompareTag(Spawner.UnitContainer.tag))
+
+                    while (rootNotPlayer != Spawner.UnitContainer)
                     {
                         // it can't be this unit, then ignore itself
-                        if (rootNotPlayer.TryGetComponent(out Unit unit) &&
-                            rootNotPlayer.GetInstanceID() != SelectedUnit?.GetInstanceID())
+                        if (rootNotPlayer.TryGetComponent(out Unit unit))
                         {
-                            // if it does not contains the unit add it to the list then break
-                            SelectedUnit = unit;
-                            break;
+                            Debug.LogWarning($"SelectedUnit : {SelectedUnit}, FindUnit : {unit}");
+                            if (SelectedUnit == null || 
+                               (SelectedUnit != null && rootNotPlayer.GetInstanceID() != SelectedUnit.GetInstanceID()))
+                            {
+                                // if it does not contains the unit add it to the list then break
+                                SelectedUnit = unit;
+                                break;
+                            }
                         }
 
                         // up the hierarchy
@@ -140,7 +150,7 @@ namespace Gameplay
                     }
                 }
 
-                Debug.Log($"Raycast collider :  {hitInfo.collider}");
+                Debug.Log($"Raycast collider :  {(hitInfo.collider ? hitInfo.collider.ToString() : "NULL")}");
             }
         }
         

@@ -19,6 +19,10 @@ PrefabInstance:
       propertyPath: targetTags.Array.data[1]
       value: Ennemies
       objectReference: {fileID: 0}
+    - target: {fileID: 4056751978586007775, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: <Type>k__BackingField
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
       propertyPath: m_RootOrder
       value: 0

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: HighEnnemyParameters
   m_EditorClassIdentifier: 
   Cost: 20
-  Prefab: {fileID: 1292140262886734892, guid: c4c630df2a044824484f1c25a24c85ef, type: 3}
+  Prefab: {fileID: 856649220771542707, guid: 3899bd983fafda647aaca76835bf3bdd, type: 3}

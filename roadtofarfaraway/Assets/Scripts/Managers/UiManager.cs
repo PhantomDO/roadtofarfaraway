@@ -73,9 +73,9 @@ namespace Managers
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawLine(CursorAsRay.origin, CursorAsRay.origin + 
-                CursorAsRay.direction * currentCamera.farClipPlane);
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(CursorAsRay.origin, CursorAsRay.direction.normalized * currentCamera.farClipPlane);
+            Gizmos.DrawWireSphere(CursorAsRay.origin + CursorAsRay.direction.normalized * currentCamera.farClipPlane, 0.5f);
         }
 #endif
 

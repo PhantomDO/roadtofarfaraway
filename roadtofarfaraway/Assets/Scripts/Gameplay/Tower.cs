@@ -68,10 +68,12 @@ namespace Gameplay
                     }
                 }
                 
-                Debug.Log($"RDM : {rdmValue}, Spawning tower percentage : {minPercentage}, Type {PercentSpawningTypes[minPercentage]}");
+                //Debug.Log($"RDM : {rdmValue}, Spawning tower percentage : {minPercentage}, Type {PercentSpawningTypes[minPercentage]}");
 
-                var rdmInUnitSphere = transform.position + Random.insideUnitSphere * radiusSpawn;
-                rdmInUnitSphere.y = 0;
+                var randomSphere = Random.insideUnitSphere * radiusSpawn;
+                randomSphere.y = 0;
+                randomSphere.z = Mathf.Abs(randomSphere.z);
+                var rdmInUnitSphere = Spawner.LaunchTransform.position + Spawner.LaunchTransform.forward + randomSphere;
 
                 Spawner.SpawnUnit(PercentSpawningTypes[minPercentage], rdmInUnitSphere);
                 yield return _waitForNextSpawn;
