@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Controls;
 using Gameplay.Components;
 using Managers;
 using UnityEngine;
@@ -33,7 +34,7 @@ namespace Gameplay
         [SerializeField] private float _dragSpeed = .10f;
         [SerializeField] private GameObject _crosshairPrefab;
         [field: SerializeField] public  SpawnerComponent Spawner { get; private set; }
-        [field: SerializeField] public InputActionReference SelectAndSpawnUnitAction { get; private set; }
+        [field: SerializeField] public PlayerControls PlayerControls { get; private set; }
 
         private Vector3 _velocity = Vector3.zero;
         private WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
@@ -46,6 +47,8 @@ namespace Gameplay
 
         private void Awake()
         {
+            PlayerControls = new PlayerControls();
+
             _crosshairSpawn = GameObject.Instantiate(_crosshairPrefab, Vector3.zero, Quaternion.identity, transform);
             _crosshairSpawn.SetActive(false);
 
@@ -66,19 +69,19 @@ namespace Gameplay
 
         private void OnEnable()
         {
-            if (SelectAndSpawnUnitAction != null)
+            if (PlayerControls != null)
             {
-                SelectAndSpawnUnitAction.action.Enable();
-                SelectAndSpawnUnitAction.action.performed += OnSelectAndSpawnUnitPerformed;
+                PlayerControls.Enable();
+                PlayerControls.Player.SelectAndSpawnUnit.performed += OnSelectAndSpawnUnitPerformed;
             }
         }
 
         private void OnDisable()
         {
-            if (SelectAndSpawnUnitAction != null)
+            if (PlayerControls != null)
             {
-                SelectAndSpawnUnitAction.action.performed -= OnSelectAndSpawnUnitPerformed;
-                SelectAndSpawnUnitAction.action.Disable();
+                PlayerControls.Player.SelectAndSpawnUnit.performed -= OnSelectAndSpawnUnitPerformed;
+                PlayerControls.Disable();
             }
         }
 
@@ -104,6 +107,8 @@ namespace Gameplay
 
         private void OnSelectAndSpawnUnitPerformed(InputAction.CallbackContext callback)
         {
+            if (UiManager.Instance?.IsOverUi == true) return;
+
             if (_spawningType != UnitType.Null && _crosshairSpawn.activeInHierarchy)
             {
                 Spawner.SpawnUnit(_spawningType, _crosshairSpawn.transform.position);
@@ -112,7 +117,7 @@ namespace Gameplay
                 _spawningType = UnitType.Null;
             }
 
-            if (callback.ReadValueAsButton() && UiManager.Instance != null)
+            if (callback.ReadValueAsButton())
             {
                 var cursorAsRay = UiManager.Instance.CursorAsRay;
                 var farClip = UiManager.Instance.currentCamera.farClipPlane;
@@ -120,45 +125,60 @@ namespace Gameplay
                 // !!! IMPORTANT !!!
                 // If you have a navmeshcomponent and a rigidbody,
                 // you need the rigidbody detection to be Continuous, if not raycast will go throught
-                var rayCastAll = Physics.RaycastAll(cursorAsRay, farClip);
-                Array.Sort(rayCastAll, (x, y) => x.distance.CompareTo(y.distance));
+                var rayCastAll = new RaycastHit[3];
+                var size = Physics.RaycastNonAlloc(cursorAsRay, rayCastAll, farClip);
 
-                for (int i = 0; i < rayCastAll.Length; i++)
+                if (size > 1) Array.Sort(rayCastAll, (x, y) => x.distance.CompareTo(y.distance));
+                
+                for (int i = 0; i < size; i++)
                 {
                     var hitInfo = rayCastAll[i];
-
-                    Debug.Log($"{hitInfo.transform.name}, distance : {hitInfo.distance}");
-
-                    if (hitInfo.transform.gameObject.CompareTag("Ground") && UiManager.Instance.ClickResults.Count <= 0)
+                    if (TryGetHitUnitSelectable(hitInfo, out Unit selectedUnit))
                     {
-                        Debug.Log($"Unit Raycasted {hitInfo.transform}");
-                    }
-                    // Check if you find a UnitComponent in the hierarchy of the collider
-                    var rootNotPlayer = hitInfo.transform;
-
-                    while (rootNotPlayer != Spawner.UnitContainer)
-                    {
-                        // it can't be this unit, then ignore itself
-                        if (rootNotPlayer.TryGetComponent(out Unit unit))
-                        {
-                            Debug.LogWarning($"SelectedUnit : {SelectedUnit}, FindUnit : {unit}");
-                            if (SelectedUnit == null || 
-                               (SelectedUnit != null && rootNotPlayer.GetInstanceID() != SelectedUnit.GetInstanceID()))
-                            {
-                                // if it does not contains the unit add it to the list then break
-                                SelectedUnit = unit;
-                                break;
-                            }
-                        }
-
-                        // up the hierarchy
-                        if (rootNotPlayer.parent == null) break;
-                        rootNotPlayer = rootNotPlayer.parent;
+                        SelectedUnit = selectedUnit;
+                        break;
                     }
                 }
             }
         }
-        
+
+        private bool TryGetHitUnitSelectable(RaycastHit hitInfo, out Unit selectableUnit)
+        {
+            selectableUnit = null;
+
+            if (hitInfo.collider != null)
+            {
+                // Check if you find a UnitComponent in the hierarchy of the collider
+                var rootUnderParent = hitInfo.transform;
+
+                if (rootUnderParent.CompareTag("Ground"))
+                {
+                    SelectedUnit = null;
+                }
+
+                while (rootUnderParent != Spawner.UnitContainer)
+                {
+                    // it can't be this unit, then ignore itself
+                    if (rootUnderParent.TryGetComponent(out Unit unit))
+                    {
+                        Debug.LogWarning($"SelectedUnit : {SelectedUnit}, FindUnit : {unit}");
+                        if (SelectedUnit == null || (SelectedUnit != null && rootUnderParent.GetInstanceID() != SelectedUnit.GetInstanceID()))
+                        {
+                            // if it does not contains the unit add it to the list then break
+                            selectableUnit = unit;
+                            break;
+                        }
+                    }
+
+                    // up the hierarchy
+                    if (rootUnderParent.parent == null) break;
+                    rootUnderParent = rootUnderParent.parent;
+                }
+            }
+
+            return selectableUnit != null;
+        }
+
         #endregion
 
         private IEnumerator MoveCrosshair()

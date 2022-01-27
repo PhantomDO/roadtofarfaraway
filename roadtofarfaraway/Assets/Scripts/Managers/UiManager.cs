@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Controls;
+using Gameplay.Components;
 using Managers;
 using TMPro;
 using Tools;
@@ -15,11 +17,13 @@ namespace Managers
     [DefaultExecutionOrder(-1)]
     public class UiManager : MonoSingleton<UiManager>
     {
+        public delegate void DSelectRadarSearchingType(SearchingMethod searchingMethod);
+        public static event DSelectRadarSearchingType OnSelectRadarSearchingType;
+
         public delegate void SelectSpawnableUnitDelegate(UnitTypeSelector unitTypeSelector);
         public static event SelectSpawnableUnitDelegate OnSelectSpawnableUnit;
 
-        [field: SerializeField] public InputActionReference PointAction {get; private set; }
-        [field: SerializeField] public InputActionReference ClickAction {get; private set; }
+        [field: SerializeField] public Controls.BaseUIControls BaseUiControls {get; private set; }
 
         public Camera currentCamera;
         
@@ -33,6 +37,23 @@ namespace Managers
         public Vector2 CursorPosition { get; private set; }
         public Ray CursorAsRay { get; private set; }
 
+        public bool IsOverUi
+        {
+            get
+            {
+                _clickData.position = CursorPosition;
+                ClickResults.Clear();
+                EventSystem.current.RaycastAll(_clickData, ClickResults);
+                return ClickResults.Count > 0;
+            }
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            BaseUiControls = new BaseUIControls();
+        }
+
         private void Start()
         {
             if (currentCamera == null) currentCamera = Camera.main;
@@ -43,31 +64,21 @@ namespace Managers
 
         private void OnEnable()
         {
-            if (PointAction != null)
+            if (BaseUiControls != null)
             {
-                PointAction.action.Enable();
-                PointAction.action.performed += ReadPoint;
-            }
-
-            if (ClickAction != null)
-            {
-                ClickAction.action.Enable();
-                ClickAction.action.started += MouseClick;
+                BaseUiControls.Enable();
+                BaseUiControls.UI.Point.performed += ReadPoint;
+                BaseUiControls.UI.Click.started += MouseClick;
             }
         }
 
         private void OnDisable()
         {
-            if (PointAction != null)
+            if (BaseUiControls != null)
             {
-                PointAction.action.performed -= ReadPoint;
-                PointAction.action.Disable();
-            }
-
-            if (ClickAction != null)
-            {
-                ClickAction.action.started -= MouseClick;
-                ClickAction.action.Disable();
+                BaseUiControls.UI.Point.performed -= ReadPoint;
+                BaseUiControls.UI.Click.started -= MouseClick;
+                BaseUiControls.Disable();
             }
         }
 
@@ -88,25 +99,16 @@ namespace Managers
 
         private void MouseClick(InputAction.CallbackContext callbackContext)
         {
-            _clickData.position = CursorPosition;
-            ClickResults.Clear();
-
-            _graphicRaycaster.Raycast(_clickData, ClickResults);
-
-            foreach (var result in ClickResults)
+            if (IsOverUi)
             {
-                if (result.gameObject == playerCanvasUI.UnitInformationRadarSearchType.gameObject ||
-                    result.gameObject == playerCanvasUI.UnitInformationProfilePicture.gameObject ||
-                    result.gameObject == playerCanvasUI.UnitInformationHealthBar.gameObject)
+                foreach (var result in ClickResults)
                 {
-                    break;
-                }
-
-                if (result.gameObject.TryGetComponent(out UnitTypeSelector selector))
-                {
-                    Debug.Log($"RaycastHit: {result.gameObject.name}");
-                    OnSelectSpawnableUnit?.Invoke(selector);
-                    break;
+                    if (result.gameObject.TryGetComponent(out UnitTypeSelector selector))
+                    {
+                        Debug.Log($"RaycastHit: {result.gameObject.name}");
+                        OnSelectSpawnableUnit?.Invoke(selector);
+                        break;
+                    }
                 }
             }
         }
