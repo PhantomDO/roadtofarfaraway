@@ -209,8 +209,15 @@ public class MapBrain : MonoBehaviour
     public void DestroyTower()
     {
         if (IsAlgorithmRunning || BestMap.Towers.Count == 0) { return; }
-        mapVisualizer.DestroyGameObject(BestMap.Towers[0], BestMap.ReturnMapData());
+
+        Vector3 towerPosition = BestMap.Towers[0];
+        mapVisualizer.DestroyGameObject(towerPosition, BestMap.ReturnMapData());
         BestMap.Towers.RemoveAt(0);
+        foreach (Vector3 position in BestMap.Towers)
+        {
+            Tower tower = mapVisualizer.gameObjects[position].GetComponent<Tower>();
+            tower.Upgrade();
+        }
     }
 
     private void ShowResults()

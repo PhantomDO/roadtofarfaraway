@@ -11,7 +11,7 @@ public class MapVisualizer : MonoBehaviour
     public GameObject roadStraightTile, roadCornerTile, towerTile, emptyTile, startTile, endTile;
     public GameObject[] environmentTiles;
 
-    private readonly Dictionary<Vector3, GameObject> _gameObjects = new Dictionary<Vector3, GameObject>();
+    public readonly Dictionary<Vector3, GameObject> gameObjects = new Dictionary<Vector3, GameObject>();
 
     private void Awake()
     {
@@ -151,7 +151,7 @@ public class MapVisualizer : MonoBehaviour
         Vector3 worldPosition = position + new Vector3(0.5f, 0f, 0.5f);
         GameObject element = Instantiate(prefab, worldPosition, rotation);
         element.transform.parent = _parent;
-        _gameObjects.Add(position, element);
+        gameObjects.Add(position, element);
         
         if (!animate) return;
         element.AddComponent<DropTween>();
@@ -160,10 +160,10 @@ public class MapVisualizer : MonoBehaviour
 
     public void DestroyGameObject(Vector3 position, MapData data)
     {
-        if (_gameObjects.ContainsKey(position))
+        if (gameObjects.ContainsKey(position))
         {
-            Destroy(_gameObjects[position]);
-            _gameObjects.Remove(position);
+            Destroy(gameObjects[position]);
+            gameObjects.Remove(position);
             Direction previousDirection = GetPreviousDirection(position, data);
             Direction nextDirection = GetNextDirection(position, data);
             CalculatePrefabAndRotationFromDirections(previousDirection, nextDirection, out var roadPrefab, out var roadRotation);
@@ -173,11 +173,11 @@ public class MapVisualizer : MonoBehaviour
 
     public void ClearMap()
     {
-        foreach (GameObject go in _gameObjects.Values)
+        foreach (GameObject go in gameObjects.Values)
         {
             Destroy(go);
         }
-        _gameObjects.Clear();
+        gameObjects.Clear();
         if (animate) { DropTween.ResetTime(); }
         _parent.transform.position = Vector3.zero;
     }

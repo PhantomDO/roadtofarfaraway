@@ -60,8 +60,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6126091556477775235, guid: 32fd4d87bc4699f4a93427f0c9df4b0c, type: 3}
-  - {fileID: -7796859627820213912, guid: 32fd4d87bc4699f4a93427f0c9df4b0c, type: 3}
+  - {fileID: 2100000, guid: daa22bf6a4f5d8745a6a91ba5cdc5a55, type: 2}
+  - {fileID: 2100000, guid: bbd3e15dd45e7fc48b8bd03c8b2308f8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -95,8 +95,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d07b6c9b5a84aa4ab4e65c23a206a4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameObjectsPool:
-  - {fileID: 659409976806704960, guid: b1e9b6903d1234948b149335ea4c1fc0, type: 3}
-  - {fileID: 439276543989561935, guid: dd917efbe5593fc4e85262b11f897013, type: 3}
-  - {fileID: 4903490646895771460, guid: d65f4de31dae17c46a0298bfdbe280ef, type: 3}
-  - {fileID: 1218312148550916250, guid: ec83f77ed121def4c98681b4b87cccec, type: 3}
+  RandomizingRules: []
