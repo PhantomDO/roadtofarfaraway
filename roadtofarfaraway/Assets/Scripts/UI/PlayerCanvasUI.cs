@@ -22,7 +22,7 @@ namespace UI
         
         private void Awake()
         {
-            Player.OnUnitSelected += UnitSelected;
+            Player.OnSelectUnit += UnitSelected;
             HealthComponent.OnCurrencyUpdate += HealthUpdate;
             
             if (UnitInformationRadarSearchType != null)
@@ -40,18 +40,17 @@ namespace UI
 
         private void OnDestroy()
         {
-            Player.OnUnitSelected -= UnitSelected;
+            Player.OnSelectUnit -= UnitSelected;
             HealthComponent.OnCurrencyUpdate -= HealthUpdate;
         }
 
         private void HealthUpdate(HealthComponent healthComponent, float update)
         {
-            if (GameManager.Instance && GameManager.Instance.Player && 
-                healthComponent.TryGetComponent(out Unit damagedUnit) && 
-                GameManager.Instance.Player.SelectedUnit == damagedUnit)
+            if (healthComponent.TryGetComponent(out Unit damagedUnit) &&  
+                GameManager.Instance?.Player?.SelectedUnit == damagedUnit)
             {
                 StartCoroutine(LerpHealthValue(healthComponent));
-            }
+            } 
         }
 
         private void UnitSelected(Unit selectedUnit)

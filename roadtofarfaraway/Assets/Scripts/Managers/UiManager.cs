@@ -41,7 +41,6 @@ namespace Managers
         {
             get
             {
-                _clickData.position = CursorPosition;
                 ClickResults.Clear();
                 EventSystem.current.RaycastAll(_clickData, ClickResults);
                 return ClickResults.Count > 0;
@@ -68,7 +67,7 @@ namespace Managers
             {
                 BaseUiControls.Enable();
                 BaseUiControls.UI.Point.performed += ReadPoint;
-                BaseUiControls.UI.Click.started += MouseClick;
+                BaseUiControls.UI.PressOnly.started += MouseClick;
             }
         }
 
@@ -77,7 +76,7 @@ namespace Managers
             if (BaseUiControls != null)
             {
                 BaseUiControls.UI.Point.performed -= ReadPoint;
-                BaseUiControls.UI.Click.started -= MouseClick;
+                BaseUiControls.UI.PressOnly.started -= MouseClick;
                 BaseUiControls.Disable();
             }
         }
@@ -93,19 +92,20 @@ namespace Managers
 
         private void ReadPoint(InputAction.CallbackContext callbackContext)
         {
-            CursorPosition = callbackContext.ReadValue<Vector2>();
+            CursorPosition = _clickData.position = callbackContext.ReadValue<Vector2>();
             CursorAsRay = currentCamera.ScreenPointToRay(CursorPosition);
         }
 
         private void MouseClick(InputAction.CallbackContext callbackContext)
         {
+            Debug.Log($"Mouse click");
             if (IsOverUi)
             {
                 foreach (var result in ClickResults)
                 {
+                    Debug.Log($"RaycastHit: {result.gameObject.name}");
                     if (result.gameObject.TryGetComponent(out UnitTypeSelector selector))
                     {
-                        Debug.Log($"RaycastHit: {result.gameObject.name}");
                         OnSelectSpawnableUnit?.Invoke(selector);
                         break;
                     }

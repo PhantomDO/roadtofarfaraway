@@ -14,6 +14,7 @@ namespace Managers
         [SerializeField] private Player playerPrefab;
         [field: SerializeField] public Player Player { get; private set; }
         [field: SerializeField] public GenericDictionary<UnitType, UnitParameters> TypesParameters { get; private set; }
+        [field: SerializeField] public GenericDictionary<int, Unit> InstanceIDUnits { get; private set; }
         [field: SerializeField] public List<SpawnerComponent> Spawners { get; private set; }
 
         protected override void Awake()
@@ -21,8 +22,11 @@ namespace Managers
             base.Awake();
 
             Spawners = new List<SpawnerComponent>();
+            InstanceIDUnits = new GenericDictionary<int, Unit>();
 
             SpawnerComponent.OnRegisterSpawner += RegisterSpawner;
+            SpawnerComponent.OnRegisterUnit += RegisterUnit;
+            SpawnerComponent.OnUnregisterUnit += UnregisterUnit;
         }
 
         private void OnDestroy()
@@ -51,6 +55,22 @@ namespace Managers
             else
             {
                 Debug.LogWarning($"OwnerSpawnerDictionary already contains: {spawner}");
+            }
+        }
+
+        private void RegisterUnit(SpawnerComponent spawner, Unit unit)
+        {
+            if (!InstanceIDUnits.ContainsKey(unit.GetInstanceID()))
+            {
+                InstanceIDUnits.Add(unit.GetInstanceID(), unit);
+            }
+        }
+
+        private void UnregisterUnit(SpawnerComponent spawner, Unit unit)
+        {
+            if (InstanceIDUnits.ContainsKey(unit.GetInstanceID()))
+            {
+                InstanceIDUnits.Remove(unit.GetInstanceID());
             }
         }
     }

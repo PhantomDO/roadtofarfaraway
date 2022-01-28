@@ -47,10 +47,11 @@ MonoBehaviour:
   unitSelectableLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  unitSelectedColor: {r: 16, g: 0, b: 0, a: 1}
+  unitHoverColor: {r: 0.1254902, g: 8, b: 0, a: 1}
   _dragSpeed: 0.1
   _crosshairPrefab: {fileID: 3845261919497583159, guid: 70cf906b81bac4a44812c0008d24e374, type: 3}
   <Spawner>k__BackingField: {fileID: 379647687304331721}
-  <SelectAndSpawnUnitAction>k__BackingField: {fileID: 7662088366741014342, guid: aed30760abe006a489a35fba1e43822f, type: 3}
 --- !u!1001 &1662981178149725682
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -105,6 +106,38 @@ PrefabInstance:
     - target: {fileID: 2065338494055408607, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
       propertyPath: m_Name
       value: Spawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 6302797146421540513, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6302797146421540513, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6302797146421540513, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6302797146421540513, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -57.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6302797146421540513, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 57.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6302797146421540513, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.38268343
+      objectReference: {fileID: 0}
+    - target: {fileID: 6302797146421540513, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.92387956
+      objectReference: {fileID: 0}
+    - target: {fileID: 6302797146421540513, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 135
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}

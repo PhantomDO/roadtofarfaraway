@@ -27,6 +27,7 @@ namespace Gameplay.Components
 
         private Queue<Unit> _launchedQueue;
         private LaunchData _latestLaunchData;
+        private int spawnCount = 0;
 
         private void Awake()
         {
@@ -61,6 +62,7 @@ namespace Gameplay.Components
                 {
                     spawnedUnit = Instantiate(parameters.Prefab, LaunchTransform.position,
                         Quaternion.identity, UnitContainer);
+                    spawnedUnit.name = $"{parameters.Prefab.name} ({spawnCount++})";
                     ShootWithGravity(spawnedUnit, position);
                 }
             }
