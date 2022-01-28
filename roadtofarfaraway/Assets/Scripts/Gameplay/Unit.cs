@@ -47,25 +47,6 @@ namespace Gameplay
             Outline.OutlineWidth = 0.0f;
         }
 
-        private void Update()
-        {
-            switch (_isCurrentlySelected)
-            {
-                case true:
-                    Outline.OutlineColor = Color.red;
-                    Outline.OutlineWidth = 10.0f;
-                    break;
-                case false when _isCursorHover:
-                    Outline.OutlineColor = Color.green;
-                    Outline.OutlineWidth = 10.0f;
-                    break;
-                case false when !_isCursorHover:
-                    Outline.OutlineColor = Color.white;
-                    Outline.OutlineWidth = 0.0f;
-                    break;
-            }
-        }
-
         protected virtual void OnDestroy()
         {
             SpawnerComponent.OnRegisterUnit -= RegisterUnit;
@@ -90,11 +71,32 @@ namespace Gameplay
         protected void HoverUnit(Unit hoverUnit)
         {
             _isCursorHover = this == hoverUnit;
+            UpdateOutline();
         }
 
         protected void SelectUnit(Unit selectedUnit)
         {
             _isCurrentlySelected = this == selectedUnit;
+            UpdateOutline();
+        }
+
+        private void UpdateOutline()
+        {
+            switch (_isCurrentlySelected)
+            {
+                case true:
+                    Outline.OutlineColor = Color.red;
+                    Outline.OutlineWidth = 10.0f;
+                    break;
+                case false when _isCursorHover:
+                    Outline.OutlineColor = Color.green;
+                    Outline.OutlineWidth = 10.0f;
+                    break;
+                case false when !_isCursorHover:
+                    Outline.OutlineColor = Color.white;
+                    Outline.OutlineWidth = 0.0f;
+                    break;
+            }
         }
     }
 }
