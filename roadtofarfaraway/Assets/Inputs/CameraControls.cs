@@ -228,7 +228,7 @@ namespace Controls
                 {
                     ""name"": ""negative"",
                     ""id"": ""7d74c0fc-8751-459c-8b04-a02306581ee4"",
-                    ""path"": """",
+                    ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -239,7 +239,7 @@ namespace Controls
                 {
                     ""name"": ""positive"",
                     ""id"": ""20a39453-3947-4e4d-8634-76c09f19ef51"",
-                    ""path"": """",
+                    ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

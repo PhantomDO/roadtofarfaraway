@@ -20,8 +20,8 @@ namespace Managers
         public delegate void DSelectRadarSearchingType(SearchingMethod searchingMethod);
         public static event DSelectRadarSearchingType OnSelectRadarSearchingType;
 
-        public delegate void SelectSpawnableUnitDelegate(UnitTypeSelector unitTypeSelector);
-        public static event SelectSpawnableUnitDelegate OnSelectSpawnableUnit;
+        public delegate void DSelectSpawnableUnit(UnitTypeSelector unitTypeSelector);
+        public static event DSelectSpawnableUnit OnSelectSpawnableUnit;
 
         [field: SerializeField] public Controls.BaseUIControls BaseUiControls {get; private set; }
 

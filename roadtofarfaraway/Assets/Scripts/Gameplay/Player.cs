@@ -13,11 +13,11 @@ namespace Gameplay
 {
     public class Player : MonoBehaviour
     {
-        public delegate void UnitSelectedDelegate(Unit selectedUnit);
-        public static event UnitSelectedDelegate OnSelectUnit;
+        public delegate void DUnitSelected(Unit selectedUnit);
+        public static event DUnitSelected OnSelectUnit;
 
-        public delegate void UnitHoverDelegate(Unit hoverUnit);
-        public static event UnitHoverDelegate OnHoverUnit;
+        public delegate void DUnitHover(Unit hoverUnit);
+        public static event DUnitHover OnHoverUnit;
 
         [Header("Unit Selection")] 
 

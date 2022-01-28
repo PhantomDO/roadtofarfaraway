@@ -32,6 +32,8 @@ namespace Managers
         private void OnDestroy()
         {
             SpawnerComponent.OnRegisterSpawner -= RegisterSpawner;
+            SpawnerComponent.OnRegisterUnit -= RegisterUnit;
+            SpawnerComponent.OnUnregisterUnit -= UnregisterUnit;
         }
 
         private void Start()
