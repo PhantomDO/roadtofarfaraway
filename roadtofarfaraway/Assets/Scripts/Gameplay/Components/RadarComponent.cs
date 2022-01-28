@@ -142,10 +142,10 @@ namespace Gameplay.Components
                         save = Mathf.Infinity;
                         index = SearchParameter(units, (i) =>
                         {
-                            if (!units[i].TryGetComponent(out HealthComponent health) || save <= health.Current)
+                            if (!units[i].Health || save <= units[i].Health.Current)
                                 return -1;
 
-                            save = health.Current;
+                            save = units[i].Health.Current;
                             return i;
                         });
                         break;
@@ -153,10 +153,10 @@ namespace Gameplay.Components
                         save = Mathf.NegativeInfinity;
                         index = SearchParameter(units, (i) =>
                         {
-                            if (!units[i].TryGetComponent(out HealthComponent health) || save >= health.Current)
+                            if (!units[i].Health || save >= units[i].Health.Current)
                                 return -1;
 
-                            save = health.Current;
+                            save = units[i].Health.Current;
                             return i;
                         });
                         break;

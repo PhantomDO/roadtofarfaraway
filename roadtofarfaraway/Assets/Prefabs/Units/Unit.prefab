@@ -148,6 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Type>k__BackingField: -1
   <ProfilePicture>k__BackingField: {fileID: 0}
+  <Outline>k__BackingField: {fileID: 0}
 --- !u!114 &-2777550692428188803
 MonoBehaviour:
   m_ObjectHideFlags: 0

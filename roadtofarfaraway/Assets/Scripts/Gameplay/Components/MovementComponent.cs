@@ -15,9 +15,10 @@ namespace Gameplay.Components
         [SerializeField] private float _moveSpeed = 10;
         [SerializeField] private float _dragInAir = 0.1f;
         
+        public Rigidbody Rigidbody { get; private set; }
+        public NavMeshAgent Agent { get; private set; }
+
         private RadarComponent _radar;
-        private NavMeshAgent _agent =null;
-        private Rigidbody _rigidbody = null;
         private bool _isGrounded;
 
         private Vector2 _target2D;
@@ -32,9 +33,9 @@ namespace Gameplay.Components
                 _canMove = true;
             }
 
-            if (TryGetComponent(out _rigidbody))
+            if (TryGetComponent(out Rigidbody rb))
             {
-                // Get rigidbody
+                Rigidbody = rb;
             }
         }
 
@@ -44,7 +45,7 @@ namespace Gameplay.Components
 
             if (!_isGrounded)
             {
-                _rigidbody.velocity -= _rigidbody.velocity * (_dragInAir * Time.fixedDeltaTime);
+                Rigidbody.velocity -= Rigidbody.velocity * (_dragInAir * Time.fixedDeltaTime);
                 return;
             }
 
@@ -53,9 +54,9 @@ namespace Gameplay.Components
             var targetPosition = _radar.Target.transform.position;
             _target2D = new Vector2(targetPosition.x, targetPosition.z);
 
-            if (Vector3.Distance(_agent.destination, targetPosition) > 0.05f)
+            if (Vector3.Distance(Agent.destination, targetPosition) > 0.05f)
             {
-                _agent.destination = targetPosition;
+                Agent.destination = targetPosition;
             }
         }
 
@@ -76,9 +77,9 @@ namespace Gameplay.Components
         {
             if (!_isGrounded)
             {
-                _agent = gameObject.AddComponent<NavMeshAgent>();
-                _rigidbody.velocity = Vector3.zero;
-                _rigidbody.angularVelocity = Vector3.zero;
+                Agent = gameObject.AddComponent<NavMeshAgent>();
+                Rigidbody.velocity = Vector3.zero;
+                Rigidbody.angularVelocity = Vector3.zero;
                 _isGrounded = true;
                 OnLandingComplete?.Invoke(this);
             }

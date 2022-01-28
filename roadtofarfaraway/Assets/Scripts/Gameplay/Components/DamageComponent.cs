@@ -29,7 +29,6 @@ namespace Gameplay.Components
 
             if (TryGetComponent(out _radar))
             {
-                Debug.Log($"Got a radar");
             }
 
             _collider = gameObject.AddComponent<SphereCollider>();
@@ -47,13 +46,13 @@ namespace Gameplay.Components
                 {
                     _latestTarget = _radar.Target;
                     _latestHealthComponent = null;
-                    if (_latestTarget != null && _latestTarget.TryGetComponent(out _latestHealthComponent))
+                    if (_latestTarget != null && _latestTarget.Health != null)
                     {
-                        // nothing to do
+                        _latestHealthComponent = _latestTarget.Health;
                     }
                 }
 
-                if (_collider != null && _latestTarget != null)
+                if (_latestTarget != null)
                 {
                     var targetPosition = _latestTarget.transform.position;
                     _target2D = new Vector3(targetPosition.x, 0, targetPosition.z);

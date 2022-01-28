@@ -81,7 +81,8 @@ namespace Gameplay.Components
             SpawnedUnits.Add(unit);
             OnRegisterUnit?.Invoke(this, unit);
 
-            if (unit.TryGetComponent(out Rigidbody rb))
+            var rb = unit.Movement.Rigidbody;
+            if (rb)
             {
                 _latestLaunchData = CalculateLaunchData(target, rb.position);
                 _launchedQueue.Enqueue(unit);

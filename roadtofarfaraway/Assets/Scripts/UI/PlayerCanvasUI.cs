@@ -35,6 +35,7 @@ namespace UI
 
                 UnitInformationRadarSearchType.ClearOptions();
                 UnitInformationRadarSearchType.AddOptions(optionNames);
+                UnitInformationRadarSearchType.interactable = false;
             }
         }
 
@@ -46,8 +47,7 @@ namespace UI
 
         private void HealthUpdate(HealthComponent healthComponent, float update)
         {
-            if (healthComponent.TryGetComponent(out Unit damagedUnit) &&  
-                GameManager.Instance?.Player?.SelectedUnit == damagedUnit)
+            if (GameManager.Instance?.Player?.SelectedUnit?.Health == healthComponent)
             {
                 StartCoroutine(LerpHealthValue(healthComponent));
             } 
@@ -66,16 +66,29 @@ namespace UI
 
             UnitInformationProfilePicture.sprite = selectedUnit.ProfilePicture;
 
-            if (selectedUnit.TryGetComponent(out HealthComponent health))
+            if (selectedUnit.Health != null)
             {
-                StartCoroutine(LerpHealthValue(health));
+                StartCoroutine(LerpHealthValue(selectedUnit.Health));
             }
 
-            if (selectedUnit.TryGetComponent(out RadarComponent radar))
+            if (selectedUnit.Radar != null)
             {
                 // set the current radar parameter, when the value change change it also on the unit
-                UnitInformationRadarSearchType.value = (int)radar.SearchingMethod;
-                UnitInformationRadarSearchType.onValueChanged.AddListener(val => radar.SearchingMethod = (SearchingMethod)val);
+                UnitInformationRadarSearchType.value = (int)selectedUnit.Radar.SearchingMethod;
+                UnitInformationRadarSearchType.interactable = selectedUnit.CompareTag("Allies");
+                if (UnitInformationRadarSearchType.interactable)
+                {
+                    UnitInformationRadarSearchType.onValueChanged.AddListener(RadarSearchingChange);
+                }
+            }
+        }
+
+        private void RadarSearchingChange(int val)
+        {
+            var selectedUnit = GameManager.Instance?.Player?.SelectedUnit;
+            if (selectedUnit?.Radar != null)
+            {
+                GameManager.Instance.Player.SelectedUnit.Radar.SearchingMethod = (SearchingMethod) val;
             }
         }
 

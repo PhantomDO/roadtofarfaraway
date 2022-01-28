@@ -26,7 +26,13 @@ namespace Gameplay
     {
         [field: SerializeField] public UnitType Type { get; protected set; }
         [field: SerializeField] public Sprite ProfilePicture { get; protected set; }
-        [field: SerializeField] public Outline Outline { get; protected set; }
+
+        public Outline Outline { get; protected set; }
+
+        public HealthComponent Health { get; protected set; }
+        public DamageComponent Damage { get; protected set; }
+        public MovementComponent Movement { get; protected set; }
+        public RadarComponent Radar { get; protected set; }
 
         private bool _isCursorHover = false;
         private bool _isCurrentlySelected = false;
@@ -38,12 +44,9 @@ namespace Gameplay
             Player.OnHoverUnit += HoverUnit;
             Player.OnSelectUnit += SelectUnit;
 
-            if (Outline == null )
-            {
-                if (TryGetComponent(out Outline outline)) Outline = outline;
-                if (Outline == null) Outline = gameObject.AddComponent<Outline>();
-            }
+            CheckComponentOnUnit();
 
+            if (Outline == null ) Outline = gameObject.AddComponent<Outline>();
             Outline.OutlineWidth = 0.0f;
         }
 
@@ -97,6 +100,15 @@ namespace Gameplay
                     Outline.OutlineWidth = 0.0f;
                     break;
             }
+        }
+
+        private void CheckComponentOnUnit()
+        {
+            if (TryGetComponent(out Outline outline)) Outline = outline;
+            if (TryGetComponent(out HealthComponent healthComponent)) Health = healthComponent;
+            if (TryGetComponent(out DamageComponent damageComponent)) Damage = damageComponent;
+            if (TryGetComponent(out MovementComponent movementComponent)) Movement = movementComponent;
+            if (TryGetComponent(out RadarComponent radarComponent)) Radar = radarComponent;
         }
     }
 }
