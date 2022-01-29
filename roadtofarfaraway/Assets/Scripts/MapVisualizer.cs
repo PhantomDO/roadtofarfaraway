@@ -8,7 +8,7 @@ public class MapVisualizer : MonoBehaviour
     private Transform _parent;
     public bool animate = true;
 
-    public GameObject roadStraightTile, roadCornerTile, towerTile, emptyTile, startTile, endTile;
+    public GameObject roadStraightTile, roadCornerTile, towerTile, emptyTile;
     public GameObject[] environmentTiles;
 
     public readonly Dictionary<Vector3, GameObject> gameObjects = new Dictionary<Vector3, GameObject>();
@@ -18,13 +18,13 @@ public class MapVisualizer : MonoBehaviour
         _parent = this.transform;
     }
 
-    public void VisualizeMap(MapGrid grid, MapData data)
+    public void VisualizeMap(MapGrid grid, MapData data, Direction startEdge, Direction endEdge)
     {
-        VisualizeUsingPrefabs(grid, data);
+        VisualizeUsingPrefabs(grid, data, startEdge, endEdge);
         //_parent.transform.position = new Vector3(-grid.Length/2, 0, -grid.Width/2);
     }
 
-    private void VisualizeUsingPrefabs(MapGrid grid, MapData data)
+    private void VisualizeUsingPrefabs(MapGrid grid, MapData data, Direction startEdge, Direction endEdge)
     {
         // Setting towers
         foreach (Vector3 towerPosition in data.towers)
@@ -72,18 +72,22 @@ public class MapVisualizer : MonoBehaviour
                         CreateIndicator(position, towerTile);
                         break;
                     case CellObjectType.Start:
-                        Quaternion startRotation = Quaternion.identity;
                         if (data.path.Count > 0)
                         {
                             nextDirection = GetDirectionFromVectors(position, data.path[0]);
-                            if (nextDirection == Direction.Right) { startRotation = Quaternion.Euler(0, 90, 0); }
-                            else if (nextDirection == Direction.Left) { startRotation = Quaternion.Euler(0, -90, 0); }
-                            else if (nextDirection == Direction.Down) { startRotation = Quaternion.Euler(0, 180, 0); }
                         }
-                        CreateIndicator(position, startTile, startRotation);
+                        
+                        CalculatePrefabAndRotationFromDirections(startEdge, nextDirection, out var startPrefab, out var startRotation);
+                        CreateIndicator(position, startPrefab, startRotation);
                         break;
                     case CellObjectType.End:
-                        CreateIndicator(position, endTile);
+                        if (data.path.Count > 0)
+                        {
+                            previousDirection = GetPreviousDirection(position, data);
+                        }
+                        
+                        CalculatePrefabAndRotationFromDirections(previousDirection, endEdge, out var endPrefab, out var endRotation);
+                        CreateIndicator(position, endPrefab, endRotation);
                         break;
                 }
             }
@@ -168,6 +172,26 @@ public class MapVisualizer : MonoBehaviour
             Direction nextDirection = GetNextDirection(position, data);
             CalculatePrefabAndRotationFromDirections(previousDirection, nextDirection, out var roadPrefab, out var roadRotation);
             CreateIndicator(position, roadPrefab, roadRotation);
+        }
+    }
+    
+    public void DestroyTower(Tower tower, MapData data, out Vector3 towerPosition)
+    {
+        towerPosition = new Vector3();
+        var positions = gameObjects.Where(item => item.Value.GetComponent<Tower>() != null).Select(item => item.Key);
+        foreach (Vector3 position in positions)
+        {
+            if (gameObjects[position].GetComponent<Tower>().GetInstanceID() == tower.GetInstanceID())
+            {
+                towerPosition = position;
+                Destroy(gameObjects[position]);
+                gameObjects.Remove(position);
+                Direction previousDirection = GetPreviousDirection(position, data);
+                Direction nextDirection = GetNextDirection(position, data);
+                CalculatePrefabAndRotationFromDirections(previousDirection, nextDirection, out var roadPrefab, out var roadRotation);
+                CreateIndicator(position, roadPrefab, roadRotation);
+                break;
+            }
         }
     }
 

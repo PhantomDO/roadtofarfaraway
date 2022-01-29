@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class MapHelper
 {
-    public static void SetStartAndEndPositions(MapGrid grid, ref Vector3 startPosition, ref Vector3 endPosition, bool randomPlacement, Direction startPositionEdge = Direction.Left, Direction endPositionEdge = Direction.Right)
+    public static void SetStartAndEndPositions(MapGrid grid, ref Vector3 startPosition, out Vector3 endPosition, bool randomPlacement, Direction startPositionEdge = Direction.Left, Direction endPositionEdge = Direction.Right)
     {
         if (randomPlacement)
         {

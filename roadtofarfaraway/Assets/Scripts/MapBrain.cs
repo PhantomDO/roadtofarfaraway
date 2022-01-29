@@ -64,6 +64,16 @@ public class MapBrain : MonoBehaviour
         _crossoverRatePercent = crossoverRate / 100D;
         _mutationRatePercent = mutationRate / 100D;
     }
+    
+    private void OnEnable()
+    {
+        Tower.OnDestroyTower += DestroyTower;
+    }
+
+    private void OnDisable()
+    {
+        Tower.OnDestroyTower -= DestroyTower;
+    }
 
     public void RunAlgorithm()
     {
@@ -71,7 +81,7 @@ public class MapBrain : MonoBehaviour
         ResetAlgorithmVariables();
         mapVisualizer.ClearMap();
         _grid = new MapGrid(mapLength, mapWidth);
-        MapHelper.SetStartAndEndPositions(_grid, ref _startPosition, ref _endPosition, randomStartAndEnd, startEdge, endEdge);
+        MapHelper.SetStartAndEndPositions(_grid, ref _startPosition, out _endPosition, randomStartAndEnd, startEdge, endEdge);
 
         IsAlgorithmRunning = true;
         _startDate = DateTime.Now;
@@ -206,17 +216,19 @@ public class MapBrain : MonoBehaviour
         }
     }
 
-    public void DestroyTower()
+    private void DestroyTower(Tower tower)
     {
-        if (IsAlgorithmRunning || BestMap.Towers.Count == 0) { return; }
+        mapVisualizer.DestroyTower(tower, BestMap.ReturnMapData(), out Vector3 position);
+        int index = BestMap.Towers.FindIndex(pos => pos == position);
+        BestMap.Towers.RemoveAt(index);
+        UpgradeTowers();
+    }
 
-        Vector3 towerPosition = BestMap.Towers[0];
-        mapVisualizer.DestroyGameObject(towerPosition, BestMap.ReturnMapData());
-        BestMap.Towers.RemoveAt(0);
+    private void UpgradeTowers()
+    {
         foreach (Vector3 position in BestMap.Towers)
         {
-            Tower tower = mapVisualizer.gameObjects[position].GetComponent<Tower>();
-            tower.Upgrade();
+            mapVisualizer.gameObjects[position].GetComponent<Tower>().Upgrade();
         }
     }
 
@@ -226,7 +238,7 @@ public class MapBrain : MonoBehaviour
         Debug.Log("Best solution at generation " + _bestMapGenerationNumber + " with score: " + _bestFitnessAllTime);
 
         MapData data = BestMap.ReturnMapData();
-        mapVisualizer.VisualizeMap(BestMap.Grid, data);
+        mapVisualizer.VisualizeMap(BestMap.Grid, data, startEdge, endEdge);
         //bestMap.DebugCellObjectType();
 
         UIController.instance.HideLoadingScreen();

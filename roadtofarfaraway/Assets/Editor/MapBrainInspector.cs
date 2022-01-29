@@ -26,9 +26,9 @@ namespace Editor
 
                 if (_mapBrain.BestMap != null) { GUI.enabled = _mapBrain.BestMap.Towers.Count > 0; }
                 else { GUI.enabled = false; }
-                if (GUILayout.Button("Destroy tower"))
+                if (GUILayout.Button("Apply damage"))
                 {
-                    _mapBrain.DestroyTower();
+                    FindObjectsOfType<Tower>()[0].ApplyDamage(50.0f);
                 }
             }
         }
