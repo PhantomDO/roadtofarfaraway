@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &3268878905858169833
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -2777550692428188803, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: targetTags.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -2777550692428188803, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: targetTags.Array.data[0]
+      value: Tower
+      objectReference: {fileID: 0}
+    - target: {fileID: -2777550692428188803, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: targetTags.Array.data[1]
+      value: Ennemies
+      objectReference: {fileID: 0}
+    - target: {fileID: 3713097260883734016, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: _detectionLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 4056751978586007775, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: <Type>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438798130697827267, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5950127577575670744, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_Name
+      value: Shrek
+      objectReference: {fileID: 0}
+    - target: {fileID: 5950127577575670744, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_TagString
+      value: Allies
+      objectReference: {fileID: 0}
+    - target: {fileID: 7040570366754146707, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c026c0c9782361f4a9c30267f4c72ac5, type: 2}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
