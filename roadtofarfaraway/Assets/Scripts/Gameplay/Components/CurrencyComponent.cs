@@ -8,6 +8,7 @@ namespace Gameplay.Components
     {
         Increase,
         Decrease,
+        Define,
     }
 
     public abstract class CurrencyComponent<T> : MonoBehaviour where T : CurrencyComponent<T>

@@ -1,17 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
+using Gameplay;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public class MapVisualizer : MonoBehaviour
 {
     private Transform _parent;
     public bool animate = true;
+    [Range(1, 20)] public float scaleAtEnd = 10.0f;
 
     public GameObject roadStraightTile, roadCornerTile, towerTile, emptyTile;
     public GameObject[] environmentTiles;
 
     public readonly Dictionary<Vector3, GameObject> gameObjects = new Dictionary<Vector3, GameObject>();
+
+    [SerializeField] private List<NavMeshSurface> _tileSurfaces;
 
     private void Awake()
     {
@@ -21,6 +26,21 @@ public class MapVisualizer : MonoBehaviour
     public void VisualizeMap(MapGrid grid, MapData data, Direction startEdge, Direction endEdge)
     {
         VisualizeUsingPrefabs(grid, data, startEdge, endEdge);
+        transform.localScale = Vector3.one * scaleAtEnd;
+
+
+        foreach (var tile in gameObjects)
+        {
+            if (tile.Value.TryGetComponent(out NavMeshSurface navMeshSurface) && !_tileSurfaces.Contains(navMeshSurface))
+            { 
+                _tileSurfaces.Add(navMeshSurface);
+            }
+        }
+        
+        foreach (var surface in _tileSurfaces)
+        {
+            surface.BuildNavMesh();
+        }
         //_parent.transform.position = new Vector3(-grid.Length/2, 0, -grid.Width/2);
     }
 
@@ -69,7 +89,11 @@ public class MapVisualizer : MonoBehaviour
                         CreateIndicator(position, environmentTiles[randomIndex]);
                         break;
                     case CellObjectType.Tower:
-                        CreateIndicator(position, towerTile);
+                        var tile = CreateIndicator(position, towerTile);
+                        if (tile.TryGetComponent(out Tower tower))
+                        {
+                            tower.Spawner.UnitContainer.localScale /= scaleAtEnd;
+                        }
                         break;
                     case CellObjectType.Start:
                         if (data.path.Count > 0)
@@ -150,16 +174,20 @@ public class MapVisualizer : MonoBehaviour
         return GetDirectionFromVectors(position, previousPosition);
     }
 
-    private void CreateIndicator(Vector3 position, GameObject prefab, Quaternion rotation = new Quaternion())
+    private GameObject CreateIndicator(Vector3 position, GameObject prefab, Quaternion rotation = new Quaternion())
     {
         Vector3 worldPosition = position + new Vector3(0.5f, 0f, 0.5f);
         GameObject element = Instantiate(prefab, worldPosition, rotation);
         element.transform.parent = _parent;
         gameObjects.Add(position, element);
-        
-        if (!animate) return;
-        element.AddComponent<DropTween>();
-        DropTween.IncreaseDropTime();
+
+        if (animate)
+        {
+            element.AddComponent<DropTween>();
+            DropTween.IncreaseDropTime();
+        }
+
+        return element;
     }
 
     public void DestroyGameObject(Vector3 position, MapData data)
@@ -178,10 +206,10 @@ public class MapVisualizer : MonoBehaviour
     public void DestroyTower(Tower tower, MapData data, out Vector3 towerPosition)
     {
         towerPosition = new Vector3();
-        var positions = gameObjects.Where(item => item.Value.GetComponent<Tower>() != null).Select(item => item.Key);
+        var positions = gameObjects.Where(item => item.Value.TryGetComponent(out Tower tower)).Select(item => item.Key);
         foreach (Vector3 position in positions)
         {
-            if (gameObjects[position].GetComponent<Tower>().GetInstanceID() == tower.GetInstanceID())
+            if (gameObjects[position].TryGetComponent(out Tower t) && t == tower)
             {
                 towerPosition = position;
                 Destroy(gameObjects[position]);

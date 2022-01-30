@@ -177,7 +177,7 @@ namespace Gameplay
         
         private Unit GetUnitFromId(int instanceId = int.MinValue)
         {
-            return GameManager.Instance && _selectedUnitId > int.MinValue
+            return _selectedUnitId > int.MinValue && GameManager.Instance?.InstanceIDUnits?.ContainsKey(_selectedUnitId) == true
                 ? GameManager.Instance.InstanceIDUnits[_selectedUnitId] : null;
         }
 

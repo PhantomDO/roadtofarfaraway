@@ -70,9 +70,10 @@ namespace Managers
 
         private void UnregisterUnit(SpawnerComponent spawner, Unit unit)
         {
-            if (InstanceIDUnits.ContainsKey(unit.GetInstanceID()))
+            if (unit != null && InstanceIDUnits.ContainsKey(unit.GetInstanceID()))
             {
                 InstanceIDUnits.Remove(unit.GetInstanceID());
+                Destroy(unit.gameObject);
             }
         }
     }

@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Gameplay;
+using Gameplay.Components;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -63,16 +65,18 @@ public class MapBrain : MonoBehaviour
     {
         _crossoverRatePercent = crossoverRate / 100D;
         _mutationRatePercent = mutationRate / 100D;
+
+        RunAlgorithm();
     }
     
     private void OnEnable()
     {
-        Tower.OnDestroyTower += DestroyTower;
+        HealthComponent.OnDestroyUnit += DestroyTower;
     }
 
     private void OnDisable()
     {
-        Tower.OnDestroyTower -= DestroyTower;
+        HealthComponent.OnDestroyUnit -= DestroyTower;
     }
 
     public void RunAlgorithm()
@@ -216,12 +220,15 @@ public class MapBrain : MonoBehaviour
         }
     }
 
-    private void DestroyTower(Tower tower)
+    private void DestroyTower(Unit unit)
     {
-        mapVisualizer.DestroyTower(tower, BestMap.ReturnMapData(), out Vector3 position);
-        int index = BestMap.Towers.FindIndex(pos => pos == position);
-        BestMap.Towers.RemoveAt(index);
-        UpgradeTowers();
+        if (unit is Tower tower)
+        {
+            mapVisualizer.DestroyTower(tower, BestMap.ReturnMapData(), out Vector3 position);
+            int index = BestMap.Towers.FindIndex(pos => pos == position);
+            BestMap.Towers.RemoveAt(index);
+            UpgradeTowers();
+        }
     }
 
     private void UpgradeTowers()

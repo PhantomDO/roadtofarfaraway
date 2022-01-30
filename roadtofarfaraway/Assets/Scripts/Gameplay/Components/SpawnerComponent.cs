@@ -32,7 +32,7 @@ namespace Gameplay.Components
         private void Awake()
         {
             MovementComponent.OnLandingComplete += LandingComplete;
-            HealthComponent.OnCurrencyUpdate += HealthUpdate;
+            HealthComponent.OnDestroyUnit += DestroyUnit;
 
             Money = GetComponent<MoneyComponent>();
         }
@@ -40,7 +40,7 @@ namespace Gameplay.Components
         private void OnDestroy()
         {
             MovementComponent.OnLandingComplete -= LandingComplete;
-            HealthComponent.OnCurrencyUpdate -= HealthUpdate;
+            HealthComponent.OnDestroyUnit -= DestroyUnit;
         }
 
         private void Start()
@@ -95,10 +95,9 @@ namespace Gameplay.Components
 
         #region Events
 
-        private void HealthUpdate(HealthComponent healthComponent, float update)
+        private void DestroyUnit(Unit unit)
         {
-            if (healthComponent.TryGetComponent(out Unit unit) && 
-                SpawnedUnits.Contains(unit) && update <= 0.0f)
+            if (SpawnedUnits.Contains(unit))
             {
                 SpawnedUnits.Remove(unit);
                 OnUnregisterUnit?.Invoke(this, unit);

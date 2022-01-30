@@ -42,7 +42,7 @@ namespace Gameplay.Components
             _transform2D = new Vector3(transform.position.x, 0, transform.position.z);
             if (_radar != null)
             {
-                if (_latestTarget != _radar.Target)
+                if (_latestTarget != _radar.Target || _latestTarget == null)
                 {
                     _latestTarget = _radar.Target;
                     _latestHealthComponent = null;

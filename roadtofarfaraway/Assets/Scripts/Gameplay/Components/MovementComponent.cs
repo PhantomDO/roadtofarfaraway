@@ -49,7 +49,11 @@ namespace Gameplay.Components
                 return;
             }
 
-            if (!_radar.Target) return;
+            if (!_radar.Target)
+            {
+                Agent.velocity = Vector3.zero;
+                return;
+            }
 
             var targetPosition = _radar.Target.transform.position;
             _target2D = new Vector2(targetPosition.x, targetPosition.z);

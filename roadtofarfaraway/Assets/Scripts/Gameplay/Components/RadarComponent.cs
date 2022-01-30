@@ -24,6 +24,7 @@ namespace Gameplay.Components
         [SerializeField] private float smoothTime = 0.1f;
         [SerializeField] private LayerMask detectionLayer;
         [SerializeField] private string[] targetTags;
+        [SerializeField] private Collider[] colliderResults;
         public SearchingMethod SearchingMethod = SearchingMethod.LowLife;
 
         private float _currentRadius;
@@ -32,6 +33,7 @@ namespace Gameplay.Components
 
         private void Awake()
         {
+            colliderResults = new Collider[4] { null, null, null, null };
             _currentRadius = fovRadiusMin;
             _rateSinceUpdateSearchInSecond = 0f;
         }
@@ -44,7 +46,9 @@ namespace Gameplay.Components
                 Target = SearchForTarget();
                 _rateSinceUpdateSearchInSecond = Time.time;
 
-                var targetRadius = Target == null ? Mathf.Min(_currentRadius * 1.5f, fovRadiusMax) : fovRadiusMin;
+                var targetRadius = Target == null 
+                    ? Mathf.Min(_currentRadius * 1.5f, fovRadiusMax) 
+                    : Mathf.Max(_currentRadius / 1.5f, fovRadiusMin);
                 _currentRadius = Mathf.SmoothDamp(_currentRadius, targetRadius, ref _radiusVelocity, smoothTime);
             }
         }
@@ -86,38 +90,65 @@ namespace Gameplay.Components
         private Unit SearchForTarget()
         {
             // Find nearby collider, if they're units stock it in colliders[].
-            Collider[] results = new Collider[4];
-            var size = Physics.OverlapSphereNonAlloc(transform.position, _currentRadius, results, detectionLayer);
-
+            var size = Physics.OverlapSphereNonAlloc(transform.position, _currentRadius, colliderResults, detectionLayer);
+            
             int index = -1;
             List<Unit> units = new List<Unit>();
 
-            for (int i = 0; i < size; i++)
+            if (size > 0)
             {
-                // Check if you find a UnitComponent in the hierarchy of the collider
-                Transform rootNotPlayer = results[i].transform;
-                while (!rootNotPlayer.CompareTag("Player"))
+                //if (size > 1)
+                //{
+                //    Debug.LogWarning($"[{gameObject.name}] overlapsphere size: {size}");
+
+                //    Array.Sort(colliderResults, (x, y) =>
+                //    {
+                //        if (x == null)
+                //        {
+                //            Debug.LogWarning($"Sort null var {x.name}");
+                //            return 0;
+                //        }
+
+                //        if (y == null)
+                //        {
+                //            Debug.LogWarning($"Sort null var {y.name}");
+                //            return 0;
+                //        }
+
+                //        var dx = Vector3.Distance(transform.position, x.transform.position);
+                //        var dy = Vector3.Distance(transform.position, y.transform.position);
+
+                //        return dx.CompareTo(dy);
+                //    });
+                //}
+
+                for (int i = 0; i < size; i++)
                 {
-                    // it can't be this unit, then ignore itself
-                    if (rootNotPlayer.TryGetComponent(out Unit unit) &&
-                        rootNotPlayer.GetInstanceID() != transform.GetInstanceID())
+                    // Check if you find a UnitComponent in the hierarchy of the collider
+                    Transform rootNotPlayer = colliderResults[i].transform;
+                    while (!rootNotPlayer.CompareTag("Player"))
                     {
-                        // if it does not contains the unit add it to the list then break
-                        foreach (var targetTag in targetTags)
+                        // it can't be this unit, then ignore itself
+                        if (rootNotPlayer.TryGetComponent(out Unit unit) &&
+                            rootNotPlayer.GetInstanceID() != transform.GetInstanceID())
                         {
-                            if (!units.Contains(unit) && unit.CompareTag(targetTag))
+                            // if it does not contains the unit add it to the list then break
+                            foreach (var targetTag in targetTags)
                             {
-                                units.Add(unit);
-                                break;
+                                if (!units.Contains(unit) && unit.CompareTag(targetTag))
+                                {
+                                    units.Add(unit);
+                                    break;
+                                }
                             }
+
+                            break;
                         }
 
-                        break;
+                        // up the hierarchy
+                        if (rootNotPlayer.parent == null) break;
+                        rootNotPlayer = rootNotPlayer.parent;
                     }
-
-                    // up the hierarchy
-                    if (rootNotPlayer.parent == null) break;
-                    rootNotPlayer = rootNotPlayer.parent;
                 }
             }
 

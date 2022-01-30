@@ -1,3 +1,5 @@
+using Gameplay;
+using Gameplay.Components;
 using UnityEditor;
 using UnityEngine;
 
@@ -28,7 +30,7 @@ namespace Editor
                 else { GUI.enabled = false; }
                 if (GUILayout.Button("Apply damage"))
                 {
-                    FindObjectsOfType<Tower>()[0].ApplyDamage(50.0f);
+                    FindObjectsOfType<Tower>()[0].Health?.UpdateCurrency(50.0f, CurrencyOperation.Decrease);
                 }
             }
         }
