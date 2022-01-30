@@ -29,11 +29,6 @@ namespace Gameplay.Components
             return Current;
         }
 
-        protected override void Start()
-        {
-            base.Start();
-        }
-
         private void OnEnable()
         {
             OnCurrencyUpdate += CurrencyUpdate;
@@ -51,6 +46,7 @@ namespace Gameplay.Components
                 if (Current <= 0.0f && TryGetComponent(out Unit unit))
                 {
                     OnDestroyUnit?.Invoke(unit);
+                    Destroy(unit.gameObject);
                 }
             }
         }

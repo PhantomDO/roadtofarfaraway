@@ -87,7 +87,7 @@ namespace Gameplay
                 var rdmInUnitSphere = Spawner.LaunchTransform.position + Spawner.LaunchTransform.forward + randomSphere;
 
                 Spawner.SpawnUnit(PercentSpawningTypes[minPercentage], rdmInUnitSphere);
-                Debug.LogWarning($"Wait next spawn..");
+                //Debug.LogWarning($"Wait next spawn..");
                 yield return _waitForNextSpawn;
             }
         }

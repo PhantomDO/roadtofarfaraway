@@ -25,6 +25,7 @@ namespace Gameplay.Components
         [SerializeField] private LayerMask detectionLayer;
         [SerializeField] private string[] targetTags;
         [SerializeField] private Collider[] colliderResults;
+        [SerializeField] private List<Unit> nearbyUnits;
         public SearchingMethod SearchingMethod = SearchingMethod.LowLife;
 
         private float _currentRadius;
@@ -33,7 +34,8 @@ namespace Gameplay.Components
 
         private void Awake()
         {
-            colliderResults = new Collider[4] { null, null, null, null };
+            colliderResults = new Collider[8];
+            nearbyUnits = new List<Unit>();
             _currentRadius = fovRadiusMin;
             _rateSinceUpdateSearchInSecond = 0f;
         }
@@ -43,7 +45,7 @@ namespace Gameplay.Components
         {
             if (Time.time - _rateSinceUpdateSearchInSecond >= searchingRateInSecond)
             {
-                Target = SearchForTarget();
+                if (Target == null) Target = SearchForTarget();
                 _rateSinceUpdateSearchInSecond = Time.time;
 
                 var targetRadius = Target == null 
@@ -54,7 +56,7 @@ namespace Gameplay.Components
         }
 
 #if UNITY_EDITOR
-        private void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         {
             UnityEditor.Handles.color = Color.red;
             UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, fovRadiusMin);
@@ -90,38 +92,13 @@ namespace Gameplay.Components
         private Unit SearchForTarget()
         {
             // Find nearby collider, if they're units stock it in colliders[].
-            var size = Physics.OverlapSphereNonAlloc(transform.position, _currentRadius, colliderResults, detectionLayer);
+            var size = Physics.OverlapSphereNonAlloc(transform.position, _currentRadius, colliderResults, detectionLayer, QueryTriggerInteraction.Ignore);
             
             int index = -1;
-            List<Unit> units = new List<Unit>();
+            nearbyUnits.Clear();
 
             if (size > 0)
             {
-                //if (size > 1)
-                //{
-                //    Debug.LogWarning($"[{gameObject.name}] overlapsphere size: {size}");
-
-                //    Array.Sort(colliderResults, (x, y) =>
-                //    {
-                //        if (x == null)
-                //        {
-                //            Debug.LogWarning($"Sort null var {x.name}");
-                //            return 0;
-                //        }
-
-                //        if (y == null)
-                //        {
-                //            Debug.LogWarning($"Sort null var {y.name}");
-                //            return 0;
-                //        }
-
-                //        var dx = Vector3.Distance(transform.position, x.transform.position);
-                //        var dy = Vector3.Distance(transform.position, y.transform.position);
-
-                //        return dx.CompareTo(dy);
-                //    });
-                //}
-
                 for (int i = 0; i < size; i++)
                 {
                     // Check if you find a UnitComponent in the hierarchy of the collider
@@ -135,9 +112,9 @@ namespace Gameplay.Components
                             // if it does not contains the unit add it to the list then break
                             foreach (var targetTag in targetTags)
                             {
-                                if (!units.Contains(unit) && unit.CompareTag(targetTag))
+                                if (!nearbyUnits.Contains(unit) && unit.CompareTag(targetTag))
                                 {
-                                    units.Add(unit);
+                                    nearbyUnits.Add(unit);
                                     break;
                                 }
                             }
@@ -152,7 +129,7 @@ namespace Gameplay.Components
                 }
             }
 
-            if (units.Count > 0)
+            if (nearbyUnits.Count > 0)
             {
                 float save;
                 // nearest method
@@ -160,9 +137,9 @@ namespace Gameplay.Components
                 {
                     case SearchingMethod.Nearest:
                         save = Mathf.NegativeInfinity;
-                        index = SearchParameter(units, (i) =>
+                        index = SearchParameter(nearbyUnits, (i) =>
                         {
-                            var dist = Vector3.Distance(transform.position, units[i].transform.position);
+                            var dist = Vector3.Distance(transform.position, nearbyUnits[i].transform.position);
                             if (save >= dist) return -1;
 
                             save = dist;
@@ -171,23 +148,23 @@ namespace Gameplay.Components
                         break;
                     case SearchingMethod.LowLife:
                         save = Mathf.Infinity;
-                        index = SearchParameter(units, (i) =>
+                        index = SearchParameter(nearbyUnits, (i) =>
                         {
-                            if (!units[i].Health || save <= units[i].Health.Current)
+                            if (!nearbyUnits[i].Health || save <= nearbyUnits[i].Health.Current)
                                 return -1;
 
-                            save = units[i].Health.Current;
+                            save = nearbyUnits[i].Health.Current;
                             return i;
                         });
                         break;
                     case SearchingMethod.HighLife:
                         save = Mathf.NegativeInfinity;
-                        index = SearchParameter(units, (i) =>
+                        index = SearchParameter(nearbyUnits, (i) =>
                         {
-                            if (!units[i].Health || save >= units[i].Health.Current)
+                            if (!nearbyUnits[i].Health || save >= nearbyUnits[i].Health.Current)
                                 return -1;
 
-                            save = units[i].Health.Current;
+                            save = nearbyUnits[i].Health.Current;
                             return i;
                         });
                         break;
@@ -197,7 +174,7 @@ namespace Gameplay.Components
             }
 
             // Set the target only if she's near the unit
-            return index != -1 && units[index] ? units[index] : null;
+            return index != -1 && nearbyUnits[index] ? nearbyUnits[index] : null;
         }
     }
 }

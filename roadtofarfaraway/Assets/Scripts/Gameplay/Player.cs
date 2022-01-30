@@ -228,7 +228,7 @@ namespace Gameplay
                     // if you can't find a Unit component, then ignore
                     if (rootUnderParent.TryGetComponent(out Unit unit))
                     {
-                        Debug.LogWarning($"Selected Unit : {(selectedUnit?selectedUnit.name:"Null")}, Found Unit : {unit}");
+                        //Debug.LogWarning($"Selected Unit : {(selectedUnit?selectedUnit.name:"Null")}, Found Unit : {unit}");
                         if (selectedUnit == null || (selectedUnit != null && unit != selectedUnit))
                         {
                             // if it does not contains the unit add it to the list then break

@@ -69,9 +69,9 @@ namespace Gameplay.Components
 #endif
                     // Attack the nearest target
                     if (Time.time - _rateSinceAttack >= _fireRate && Mathf.Abs(dot) > angle &&
-                        _latestHealthComponent != null && Vector3.Distance(_transform2D, _target2D) <= _collider.radius)
+                        _latestHealthComponent != null && Vector3.Distance(_transform2D, _target2D) <= _collider.radius &&
+                        _latestHealthComponent.TryUpdateCurrency(_damage, CurrencyOperation.Decrease, out float updated))
                     {
-                        _latestHealthComponent.UpdateCurrency(_damage, CurrencyOperation.Decrease);
                         _rateSinceAttack = Time.time;
                     }
                 }

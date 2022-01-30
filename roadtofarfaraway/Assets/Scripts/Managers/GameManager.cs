@@ -14,7 +14,7 @@ namespace Managers
         [SerializeField] private Player playerPrefab;
         [field: SerializeField] public Player Player { get; private set; }
         [field: SerializeField] public GenericDictionary<UnitType, UnitParameters> TypesParameters { get; private set; }
-        [field: SerializeField] public GenericDictionary<int, Unit> InstanceIDUnits { get; private set; }
+        [field: SerializeField] public Dictionary<int, Unit> InstanceIDUnits { get; private set; }
         [field: SerializeField] public List<SpawnerComponent> Spawners { get; private set; }
 
         protected override void Awake()
@@ -22,7 +22,7 @@ namespace Managers
             base.Awake();
 
             Spawners = new List<SpawnerComponent>();
-            InstanceIDUnits = new GenericDictionary<int, Unit>();
+            InstanceIDUnits = new Dictionary<int, Unit>();
 
             SpawnerComponent.OnRegisterSpawner += RegisterSpawner;
             SpawnerComponent.OnRegisterUnit += RegisterUnit;
@@ -62,19 +62,14 @@ namespace Managers
 
         private void RegisterUnit(SpawnerComponent spawner, Unit unit)
         {
-            if (!InstanceIDUnits.ContainsKey(unit.GetInstanceID()))
-            {
-                InstanceIDUnits.Add(unit.GetInstanceID(), unit);
-            }
+            int key = unit.GetInstanceID();
+            if (!InstanceIDUnits.ContainsKey(key)) InstanceIDUnits.Add(key, unit);
         }
 
         private void UnregisterUnit(SpawnerComponent spawner, Unit unit)
         {
-            if (unit != null && InstanceIDUnits.ContainsKey(unit.GetInstanceID()))
-            {
-                InstanceIDUnits.Remove(unit.GetInstanceID());
-                Destroy(unit.gameObject);
-            }
+            int key = unit.GetInstanceID();
+            if (InstanceIDUnits.ContainsKey(key)) InstanceIDUnits.Remove(key);
         }
     }
 }
