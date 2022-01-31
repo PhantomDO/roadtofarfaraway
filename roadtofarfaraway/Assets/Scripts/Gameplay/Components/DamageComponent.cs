@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GameState;
 using Managers;
 using UnityEngine;
 
@@ -35,6 +36,12 @@ namespace Gameplay.Components
             _collider.center = new Vector3(0, 1, 0);
             _collider.radius = _range;
             _collider.isTrigger = true;
+            GameStateManager.OnGameStateChanged += OnGameStateChanged;
+        }
+
+        private void OnDestroy()
+        {
+            GameStateManager.OnGameStateChanged -= OnGameStateChanged;
         }
 
         private void Update()
@@ -93,5 +100,10 @@ namespace Gameplay.Components
             }
         }
 #endif
+
+        public void OnGameStateChanged(GameState.GameState newGameState)
+        {
+            enabled = GameStateManager.Instance.CurrentGameState == GameState.GameState.Gameplay;
+        }
     }
 }

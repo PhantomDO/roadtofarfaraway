@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Controls;
 using Gameplay.Components;
+using GameState;
 using Managers;
 using TMPro;
 using Tools;
@@ -100,12 +101,12 @@ namespace Managers
 
         private void MouseClick(InputAction.CallbackContext callbackContext)
         {
-            Debug.Log($"Mouse click");
-            if (IsOverUi)
+            //Debug.Log($"Mouse click");
+            if (IsOverUi && GameStateManager.Instance.CurrentGameState == GameState.GameState.Gameplay)
             {
                 foreach (var result in ClickResults)
                 {
-                    Debug.Log($"RaycastHit: {result.gameObject.name}");
+                    //Debug.Log($"RaycastHit: {result.gameObject.name}");
                     if (result.gameObject.TryGetComponent(out UnitTypeSelector selector))
                     {
                         OnSelectSpawnableUnit?.Invoke(selector);

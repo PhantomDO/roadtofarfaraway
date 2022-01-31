@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GameState;
 using Managers;
 using UnityEngine;
 
@@ -29,12 +30,14 @@ namespace Gameplay.Components
             HealthComponent.OnDestroyUnit += DestroyUnit;
 
             Money = GetComponent<MoneyComponent>();
+            GameStateManager.OnGameStateChanged += OnGameStateChanged;
         }
 
         private void OnDestroy()
         {
             MovementComponent.OnLandingComplete -= LandingComplete;
             HealthComponent.OnDestroyUnit -= DestroyUnit;
+            GameStateManager.OnGameStateChanged -= OnGameStateChanged;
         }
 
         private void Start()
@@ -146,5 +149,10 @@ namespace Gameplay.Components
         }
 
         #endregion
+        
+        public void OnGameStateChanged(GameState.GameState newGameState)
+        {
+            enabled = GameStateManager.Instance.CurrentGameState == GameState.GameState.Gameplay;
+        }
     }
 }
