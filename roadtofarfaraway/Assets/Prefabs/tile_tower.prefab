@@ -149,17 +149,17 @@ MonoBehaviour:
   <Type>k__BackingField: 4
   <ProfilePicture>k__BackingField: {fileID: 0}
   upgrades:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 3186953087920399638}
+  - {fileID: 4581301533171624651}
+  - {fileID: 6491566106412803549}
   tierAnimators:
     list:
     - Key: 0
-      Value: {fileID: 0}
+      Value: {fileID: 1211124298430840059}
     - Key: 1
-      Value: {fileID: 0}
+      Value: {fileID: 3824165572337282504}
     - Key: 2
-      Value: {fileID: 0}
+      Value: {fileID: 575037503155532064}
     keyCollision: 0
   <PercentSpawningTypes>k__BackingField:
     list:

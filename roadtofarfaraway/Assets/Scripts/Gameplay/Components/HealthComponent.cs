@@ -46,7 +46,6 @@ namespace Gameplay.Components
                 if (Current <= 0.0f && TryGetComponent(out Unit unit))
                 {
                     OnDestroyUnit?.Invoke(unit);
-                    Destroy(unit.gameObject);
                 }
             }
         }

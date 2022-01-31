@@ -24,6 +24,12 @@ namespace Gameplay
 
     public class Unit : MonoBehaviour
     {
+        public delegate void DRegisterUnit(Unit unit);
+        public static event DRegisterUnit OnRegisterUnit;
+
+        public delegate void DUnregisterUnit(Unit unit);
+        public static event DUnregisterUnit OnUnregisterUnit;
+
         [field: SerializeField] public UnitType Type { get; protected set; }
         [field: SerializeField] public Sprite ProfilePicture { get; protected set; }
 
@@ -39,10 +45,10 @@ namespace Gameplay
 
         protected virtual void Awake()
         {
-            SpawnerComponent.OnRegisterUnit += RegisterUnit;
-            SpawnerComponent.OnUnregisterUnit += UnregisterUnit;
+            OnRegisterUnit?.Invoke(this);
             Player.OnHoverUnit += HoverUnit;
             Player.OnSelectUnit += SelectUnit;
+            HealthComponent.OnDestroyUnit += DestroyUnit;
 
             CheckComponentOnUnit();
 
@@ -52,35 +58,29 @@ namespace Gameplay
 
         protected virtual void OnDestroy()
         {
-            SpawnerComponent.OnRegisterUnit -= RegisterUnit;
-            SpawnerComponent.OnUnregisterUnit -= UnregisterUnit;
             Player.OnHoverUnit -= HoverUnit;
             Player.OnSelectUnit -= SelectUnit;
+            HealthComponent.OnDestroyUnit -= DestroyUnit;
         }
         
-        protected virtual void RegisterUnit(SpawnerComponent spawner, Unit unit)
-        {
-            if (this != unit) return;
-            Debug.Log($"{unit.name} spawned from {spawner.name}");
-        }
-
-        protected virtual void UnregisterUnit(SpawnerComponent spawner, Unit unit)
-        {
-            if (this != unit) return;
-            Debug.Log($"{unit.name} destroyed from {spawner.name}");
-            Destroy(gameObject);
-        }
-        
-        protected void HoverUnit(Unit hoverUnit)
+        protected virtual void HoverUnit(Unit hoverUnit)
         {
             _isCursorHover = this == hoverUnit;
             UpdateOutline();
         }
 
-        protected void SelectUnit(Unit selectedUnit)
+        protected virtual void SelectUnit(Unit selectedUnit)
         {
             _isCurrentlySelected = this == selectedUnit;
             UpdateOutline();
+        }
+        protected virtual void DestroyUnit(Unit unit)
+        {
+            if (this != unit) return;
+            
+            OnUnregisterUnit?.Invoke(this);
+            Debug.Log($"{name} destroyed");
+            Destroy(gameObject);
         }
 
         private void UpdateOutline()

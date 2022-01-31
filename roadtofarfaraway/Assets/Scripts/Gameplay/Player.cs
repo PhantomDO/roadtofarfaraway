@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Controls;
 using Gameplay.Components;
 using Managers;
+using UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -130,7 +131,7 @@ namespace Gameplay
 
         #region Event Methods
 
-        private void SelectSpawnableUnit(UI.UnitTypeSelector unitTypeSelector)
+        private void SelectSpawnableUnit(UnitTypeSelector unitTypeSelector)
         {
             if (unitTypeSelector == null || Spawner.Money.Current <= 0) return;
             _spawningType = unitTypeSelector.Type;

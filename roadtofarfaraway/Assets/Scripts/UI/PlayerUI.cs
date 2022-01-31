@@ -10,21 +10,23 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class PlayerCanvasUI : MonoBehaviour
+    public class PlayerUI : MonoBehaviour
     {
         [field: SerializeField] public ScrollRect UnitSelectionScrollView { get; private set; }
-        
         [field: SerializeField] public Image UnitInformationProfilePicture { get; private set; }
         [field: SerializeField] public Scrollbar UnitInformationHealthBar { get; private set; }
         [field: SerializeField] public Dropdown UnitInformationRadarSearchType { get; private set; }
 
         [SerializeField] private float healthBarLerpSpeed = 0.02f;
-        
+
+        [SerializeField] private List<UnitTypeSelector> unitTypeSelectors;
+
         private void Awake()
         {
             Player.OnSelectUnit += UnitSelected;
             HealthComponent.OnCurrencyUpdate += HealthUpdate;
-            
+            Unit.OnRegisterUnit += RegisterUnit;
+
             if (UnitInformationRadarSearchType != null)
             {
                 var optionNames = new List<string>();
@@ -37,12 +39,25 @@ namespace UI
                 UnitInformationRadarSearchType.AddOptions(optionNames);
                 UnitInformationRadarSearchType.interactable = false;
             }
+
+            // save spawning buttons
+            unitTypeSelectors = new List<UnitTypeSelector>();
+            for (int i = 0; i < UnitSelectionScrollView.content.childCount; i++)
+            {
+                var child = UnitSelectionScrollView.content.GetChild(i);
+                if (child.TryGetComponent(out UnitTypeSelector unitTypeSelector))
+                {
+                    unitTypeSelectors.Add(unitTypeSelector);
+                    unitTypeSelector.OnButtonClicked += UnitButtonClicked; ;
+                }
+            }
         }
 
         private void OnDestroy()
         {
             Player.OnSelectUnit -= UnitSelected;
             HealthComponent.OnCurrencyUpdate -= HealthUpdate;
+            Unit.OnRegisterUnit -= RegisterUnit;
         }
 
         private void HealthUpdate(HealthComponent healthComponent, float update)
@@ -108,6 +123,24 @@ namespace UI
 
             yield break;
         }
-        
+        private void UnitButtonClicked(Button button, UnitType type)
+        {
+            foreach (var unitTypeSelector in unitTypeSelectors)
+            {
+                unitTypeSelector.PressableButton.interactable = unitTypeSelector.Type != type;
+            }
+        }
+        private void RegisterUnit(Unit unit)
+        {
+            foreach (var unitTypeSelector in unitTypeSelectors)
+            {
+                if (unit.Type == unitTypeSelector.Type)
+                {
+                    unitTypeSelector.PressableButton.interactable = true;
+                    break;
+                }
+            }
+        }
+
     }
 }

@@ -10,12 +10,6 @@ namespace Gameplay.Components
         public delegate void DRegisterSpawner(SpawnerComponent component);
         public static event DRegisterSpawner OnRegisterSpawner;
         
-        public delegate void DRegisterUnit(SpawnerComponent spawner, Unit unit);
-        public static event DRegisterUnit OnRegisterUnit;
-        
-        public delegate void DUnregisterUnit(SpawnerComponent spawner, Unit unit);
-        public static event DUnregisterUnit OnUnregisterUnit;
-        
         [field: SerializeField] public Transform UnitContainer { get; private set; }
         [field: SerializeField] public Transform LaunchTransform { get; private set; }
         [field: SerializeField] public float Height { get; private set; }
@@ -79,7 +73,6 @@ namespace Gameplay.Components
         private void ShootWithGravity(Unit unit, Vector3 target)
         {
             SpawnedUnits.Add(unit);
-            OnRegisterUnit?.Invoke(this, unit);
 
             var rb = unit.Movement.Rigidbody;
             if (rb)
@@ -100,7 +93,6 @@ namespace Gameplay.Components
             if (SpawnedUnits.Contains(unit))
             {
                 SpawnedUnits.Remove(unit);
-                OnUnregisterUnit?.Invoke(this, unit);
             }
         }
 

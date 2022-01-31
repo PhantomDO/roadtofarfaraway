@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gameplay;
@@ -7,6 +8,8 @@ using Random = UnityEngine.Random;
 
 public class MapVisualizer : MonoBehaviour
 {
+    public static event Action OnMapLoaded;
+
     private Transform _parent;
     public bool animate = true;
     [Range(1, 20)] public float scaleAtEnd = 10.0f;
@@ -41,6 +44,8 @@ public class MapVisualizer : MonoBehaviour
         {
             surface.BuildNavMesh();
         }
+
+        OnMapLoaded?.Invoke();
         //_parent.transform.position = new Vector3(-grid.Length/2, 0, -grid.Width/2);
     }
 

@@ -92,7 +92,7 @@ namespace Gameplay.Components
                 Time.deltaTime * _rotateDegreeSpeed, 0.0f);
             var lookRotation = Quaternion.LookRotation(rotateTowards);
             transform.rotation = lookRotation;
-            Debug.Log($"[{name}] rotate toward: {rotateTowards}, lookrotation: {lookRotation}, tr.rot: {transform.rotation}");
+            //Debug.Log($"[{name}] rotate toward: {rotateTowards}, lookrotation: {lookRotation}, tr.rot: {transform.rotation}");
         }
 
         private void OnCollisionEnter(Collision collision)

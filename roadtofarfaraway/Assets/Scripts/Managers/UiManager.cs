@@ -26,9 +26,11 @@ namespace Managers
         [field: SerializeField] public Controls.BaseUIControls BaseUiControls {get; private set; }
 
         public Camera currentCamera;
+
         
         [Header("Player UI")]
-        [SerializeField] private PlayerCanvasUI playerCanvasUI;
+        [SerializeField] private PlayerUI playerUI;
+        [SerializeField] private EndGameUI endGameUI;
 
         private GraphicRaycaster _graphicRaycaster;
         private PointerEventData _clickData;
@@ -56,7 +58,7 @@ namespace Managers
         private void Start()
         {
             if (currentCamera == null) currentCamera = Camera.main;
-            if (playerCanvasUI?.TryGetComponent(out _graphicRaycaster) == false) return;
+            if (playerUI?.TryGetComponent(out _graphicRaycaster) == false) return;
             _clickData = new PointerEventData(EventSystem.current);
             ClickResults = new List<RaycastResult>();
         }
