@@ -23,6 +23,10 @@ PrefabInstance:
       propertyPath: targetTags.Array.data[1]
       value: Ennemies
       objectReference: {fileID: 0}
+    - target: {fileID: 3713097260883734016, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: _damage
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4056751978586007775, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
       propertyPath: <Type>k__BackingField
       value: 1
@@ -95,5 +99,13 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 28d699544e03400438de0e56c40ebfba, type: 2}
+    - target: {fileID: 8406222725612080621, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: max
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 8406222725612080621, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: <Max>k__BackingField
+      value: 60
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}

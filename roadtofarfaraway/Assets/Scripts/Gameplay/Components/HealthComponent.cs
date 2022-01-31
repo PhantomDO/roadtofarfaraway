@@ -7,7 +7,7 @@ namespace Gameplay.Components
         public delegate void DDestroyUnit(Unit unit);
         public static event DDestroyUnit OnDestroyUnit;
 
-        public float CurrentPercent => Current / max;
+        public float CurrentPercent => Current / Max;
         
         public override float UpdateCurrency(float val, CurrencyOperation operation)
         {
@@ -20,7 +20,7 @@ namespace Gameplay.Components
                     Current -= val;
                     break;
                 case CurrencyOperation.Define:
-                    Current = max = val;
+                    Current = Max = val;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(operation), operation, null);

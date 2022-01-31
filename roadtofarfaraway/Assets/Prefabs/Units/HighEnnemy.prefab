@@ -59,10 +59,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1884038044124707571, guid: c4c630df2a044824484f1c25a24c85ef, type: 3}
+      propertyPath: _damage
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 5194833611331296608, guid: c4c630df2a044824484f1c25a24c85ef, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 40a0fee75dd7efa46a57528c94379834, type: 2}
+    - target: {fileID: 6704179588160821534, guid: c4c630df2a044824484f1c25a24c85ef, type: 3}
+      propertyPath: max
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6704179588160821534, guid: c4c630df2a044824484f1c25a24c85ef, type: 3}
+      propertyPath: <Max>k__BackingField
+      value: 90
+      objectReference: {fileID: 0}
     - target: {fileID: 8877150492540262187, guid: c4c630df2a044824484f1c25a24c85ef, type: 3}
       propertyPath: m_Name
       value: HighEnnemy

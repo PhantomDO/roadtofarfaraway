@@ -26,7 +26,8 @@ namespace Gameplay.Components
                     }
                     break;
                 case CurrencyOperation.Define:
-                    Current = max = val;
+                    Current = Max = val;
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(operation), operation, null);

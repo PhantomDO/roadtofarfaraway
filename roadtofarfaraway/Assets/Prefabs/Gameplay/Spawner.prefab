@@ -76,7 +76,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e5e015ab5966e446891e627eaa077f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max: 100
+  <Max>k__BackingField: 100
+  <CanGainMoney>k__BackingField: 0
 --- !u!114 &1319800008384750651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,7 +90,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 678faec589700c34d9edcdeca77f19d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <UnitContainer>k__BackingField: {fileID: 239804353078439604}
   <LaunchTransform>k__BackingField: {fileID: 619200707961331243}
   <Height>k__BackingField: 2
   _gravity: 9.81

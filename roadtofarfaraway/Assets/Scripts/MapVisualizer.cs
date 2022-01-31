@@ -217,7 +217,7 @@ public class MapVisualizer : MonoBehaviour
                 Direction nextDirection = GetNextDirection(position, data);
                 CalculatePrefabAndRotationFromDirections(previousDirection, nextDirection, out var roadPrefab, out var roadRotation);
                 GameObject go = CreateIndicator(tower.transform.position, roadPrefab, roadRotation);
-                Debug.Log(go.transform.position);
+                //Debug.Log(go.transform.position);
                 go.transform.localScale *= scaleAtEnd;
                 Destroy(gameObjects[position]);
                 gameObjects.Remove(position);

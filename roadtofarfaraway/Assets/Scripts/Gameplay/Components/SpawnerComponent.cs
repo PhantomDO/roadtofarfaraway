@@ -108,7 +108,7 @@ namespace Gameplay.Components
                 if (_launchedQueue.Count <= 0)
                 {
                     Physics.gravity = Vector3.up * _gravity * -1;
-                    Debug.LogWarning($"No more rigidbody in the queue.");
+                    //Debug.LogWarning($"No more rigidbody in the queue.");
                 }
             }
         }

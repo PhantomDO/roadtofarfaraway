@@ -14,7 +14,7 @@ namespace UI
         public event DUnitButtonClicked OnButtonClicked;
 
         [field: SerializeField] public Button PressableButton { get; private set; }
-        [field: SerializeField] public UnitType Type { get; private set; }
+        [field: SerializeField] public UnitParameters Parameters { get; private set; }
 
         private void Awake()
         {
@@ -23,7 +23,7 @@ namespace UI
                 PressableButton = btn;
                 PressableButton.onClick.AddListener(() =>
                 {
-                    OnButtonClicked?.Invoke(PressableButton, Type);
+                    OnButtonClicked?.Invoke(PressableButton, Parameters.UnitType);
                 });
             }
         }

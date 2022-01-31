@@ -106,15 +106,16 @@ namespace Gameplay
             _currentTier++;
 
             Health?.UpdateCurrency(_healthTiers[_currentTier], CurrencyOperation.Define);
+            Spawner?.Money?.UpdateCurrency(Spawner.Money.Max, CurrencyOperation.Define);
         
             upgrades[_currentTier].SetActive(true);
             
             tierAnimators[_currentTier].SetTrigger(UpgradeTrigger);
 
-            StartCoroutine(Something(tierAnimators[_currentTier]));
+            StartCoroutine(TestAnimationEnded(tierAnimators[_currentTier]));
         }
 
-        private IEnumerator Something(Animator animator)
+        private IEnumerator TestAnimationEnded(Animator animator)
         {
             yield return null;
 
@@ -124,6 +125,8 @@ namespace Gameplay
                 yield return new WaitUntil(() => stateInfo.length > stateInfo.normalizedTime);
                 surface.BuildNavMesh();
             }
+
+            //yield return SpawnAfterTime();
         }
     }
 }

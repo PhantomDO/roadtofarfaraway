@@ -12,6 +12,7 @@ namespace UI
 {
     public class PlayerUI : MonoBehaviour
     {
+        [field: SerializeField] public TMP_Text PlayerMoneyText { get; private set; }
         [field: SerializeField] public ScrollRect UnitSelectionScrollView { get; private set; }
         [field: SerializeField] public Image UnitInformationProfilePicture { get; private set; }
         [field: SerializeField] public Scrollbar UnitInformationHealthBar { get; private set; }
@@ -26,6 +27,7 @@ namespace UI
             Player.OnSelectUnit += UnitSelected;
             HealthComponent.OnCurrencyUpdate += HealthUpdate;
             Unit.OnRegisterUnit += RegisterUnit;
+            MoneyComponent.OnCurrencyUpdate += MoneyUpdate;
 
             if (UnitInformationRadarSearchType != null)
             {
@@ -59,6 +61,7 @@ namespace UI
             Player.OnSelectUnit -= UnitSelected;
             HealthComponent.OnCurrencyUpdate -= HealthUpdate;
             Unit.OnRegisterUnit -= RegisterUnit;
+            MoneyComponent.OnCurrencyUpdate -= MoneyUpdate;
         }
 
         private void HealthUpdate(HealthComponent healthComponent, float update)
@@ -66,7 +69,14 @@ namespace UI
             if (GameManager.Instance?.Player?.SelectedUnit?.Health == healthComponent)
             {
                 StartCoroutine(LerpHealthValue(healthComponent));
-            } 
+            }
+        }
+        
+        private void MoneyUpdate(MoneyComponent component, float update)
+        {
+            if (component != GameManager.Instance.Player.Spawner.Money) return;
+
+            PlayerMoneyText.text = $"Gold: {update}";
         }
 
         private void UnitSelected(Unit selectedUnit)
@@ -128,14 +138,14 @@ namespace UI
         {
             foreach (var unitTypeSelector in unitTypeSelectors)
             {
-                unitTypeSelector.PressableButton.interactable = unitTypeSelector.Type != type;
+                unitTypeSelector.PressableButton.interactable = unitTypeSelector.Parameters.UnitType != type;
             }
         }
         private void RegisterUnit(Unit unit)
         {
             foreach (var unitTypeSelector in unitTypeSelectors)
             {
-                if (unit.Parameters.UnitType == unitTypeSelector.Type)
+                if (unit.Parameters.UnitType == unitTypeSelector.Parameters.UnitType)
                 {
                     unitTypeSelector.PressableButton.interactable = true;
                     break;

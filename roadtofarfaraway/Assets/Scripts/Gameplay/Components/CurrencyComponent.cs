@@ -16,7 +16,7 @@ namespace Gameplay.Components
         public delegate void DCurrencyUpdate(T component, float update);
         public static event DCurrencyUpdate OnCurrencyUpdate;
         
-        [SerializeField] protected float max;
+        [field: SerializeField] public float Max { get; protected set; }
         
         protected float _current;
         public float Current
@@ -24,7 +24,7 @@ namespace Gameplay.Components
             get => _current;
             protected set
             {
-                _current = Mathf.Max(0, Mathf.Min(value, max));
+                _current = Mathf.Max(0, Mathf.Min(value, Max));
                 OnCurrencyUpdate?.Invoke((T)this, _current);
             }
         }
@@ -40,7 +40,7 @@ namespace Gameplay.Components
         
         protected virtual void Start()
         {
-            Current = max;
+            Current = Max;
         }
     }
 }

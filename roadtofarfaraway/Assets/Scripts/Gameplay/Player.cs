@@ -135,7 +135,7 @@ namespace Gameplay
         private void SelectSpawnableUnit(UnitTypeSelector unitTypeSelector)
         {
             if (unitTypeSelector == null || Spawner.Money.Current <= 0) return;
-            _spawningType = unitTypeSelector.Type;
+            _spawningType = unitTypeSelector.Parameters.UnitType;
             if (!_crosshairSpawn.activeInHierarchy)
             {
                 StartCoroutine(MoveCrosshair());
@@ -220,13 +220,6 @@ namespace Gameplay
 
                 while (true)
                 {
-                    if (rootUnderParent.parent == null) break;
-                    if (!rootUnderParent.parent.CompareTag("UnitContainer"))
-                    {
-                        rootUnderParent = rootUnderParent.parent;
-                        continue;
-                    }
-
                     // if you can't find a Unit component, then ignore
                     if (rootUnderParent.TryGetComponent(out Unit unit))
                     {
@@ -235,10 +228,12 @@ namespace Gameplay
                         {
                             // if it does not contains the unit add it to the list then break
                             selectableUnit = unit;
+                            break;
                         }
                     }
-                    
-                    break;
+
+                    rootUnderParent = rootUnderParent.parent;
+                    if (rootUnderParent == null) break;
                 }
             }
 

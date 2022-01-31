@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitSelectableLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 384
   unitSelectedColor: {r: 16, g: 0, b: 0, a: 1}
   unitHoverColor: {r: 0.1254902, g: 8, b: 0, a: 1}
   _dragSpeed: 0.1

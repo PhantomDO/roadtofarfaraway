@@ -146,8 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 286c0e399f26270479a5229456bdbd72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Type>k__BackingField: -1
-  <ProfilePicture>k__BackingField: {fileID: 0}
+  <Parameters>k__BackingField: {fileID: 0}
 --- !u!114 &-2777550692428188803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,7 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b16a625129cbdd4d88188c08c135034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max: 100
+  <Max>k__BackingField: 100
 --- !u!114 &3713097260883734016
 MonoBehaviour:
   m_ObjectHideFlags: 0
