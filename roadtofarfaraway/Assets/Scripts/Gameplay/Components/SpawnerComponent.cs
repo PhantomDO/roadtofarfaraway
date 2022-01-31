@@ -26,10 +26,11 @@ namespace Gameplay.Components
 
         private void Awake()
         {
+            Money = GetComponent<MoneyComponent>();
+
             MovementComponent.OnLandingComplete += LandingComplete;
             HealthComponent.OnDestroyUnit += DestroyUnit;
 
-            Money = GetComponent<MoneyComponent>();
             GameStateManager.OnGameStateChanged += OnGameStateChanged;
         }
 
@@ -61,6 +62,7 @@ namespace Gameplay.Components
                         Quaternion.identity, UnitContainer);
                     spawnedUnit.name = $"{parameters.Prefab.name} ({spawnCount++})";
                     ShootWithGravity(spawnedUnit, position);
+                    SpawnedUnits.Add(spawnedUnit);
                 }
             }
 
@@ -75,8 +77,6 @@ namespace Gameplay.Components
 
         private void ShootWithGravity(Unit unit, Vector3 target)
         {
-            SpawnedUnits.Add(unit);
-
             var rb = unit.Movement.Rigidbody;
             if (rb)
             {

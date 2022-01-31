@@ -55,6 +55,7 @@ public class UIController : MonoBehaviour
 
     public void OnClickRestartButton()
     {
+        GameStateManager.Instance.CurrentGameState = GameState.GameState.Gameplay;
         SceneManager.LoadScene(0);
     }
 

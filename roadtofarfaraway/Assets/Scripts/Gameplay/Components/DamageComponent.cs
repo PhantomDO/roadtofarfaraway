@@ -37,11 +37,13 @@ namespace Gameplay.Components
             _collider.radius = _range;
             _collider.isTrigger = true;
             GameStateManager.OnGameStateChanged += OnGameStateChanged;
+            HealthComponent.OnDestroyUnit += DestroyUnit;
         }
 
         private void OnDestroy()
         {
             GameStateManager.OnGameStateChanged -= OnGameStateChanged;
+            HealthComponent.OnDestroyUnit -= DestroyUnit;
         }
 
         private void Update()
@@ -100,6 +102,13 @@ namespace Gameplay.Components
             }
         }
 #endif
+        private void DestroyUnit(Unit unit)
+        {
+            if (unit == _latestTarget)
+            {
+                // gain money
+            }
+        }
 
         public void OnGameStateChanged(GameState.GameState newGameState)
         {

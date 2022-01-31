@@ -50,6 +50,9 @@ namespace Gameplay.Components
             if (!_isGrounded)
             {
                 Rigidbody.velocity -= Rigidbody.velocity * (_dragInAir * Time.fixedDeltaTime);
+
+                CheckCapsuleCastCollisionOnGround();
+
                 return;
             }
 
@@ -69,6 +72,12 @@ namespace Gameplay.Components
             }
 
             //MoveTo(Agent.nextPosition);
+        }
+
+        private bool CheckCapsuleCastCollisionOnGround()
+        {
+            //if (Physics.CapsuleCast())
+            return true;
         }
 
         /// <summary>
@@ -102,6 +111,8 @@ namespace Gameplay.Components
             transform.rotation = lookRotation;
             //Debug.Log($"[{name}] rotate toward: {rotateTowards}, lookrotation: {lookRotation}, tr.rot: {transform.rotation}");
         }
+
+
 
         private void OnCollisionEnter(Collision collision)
         {
