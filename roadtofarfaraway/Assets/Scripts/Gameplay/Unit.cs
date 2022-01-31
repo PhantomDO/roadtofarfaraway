@@ -33,7 +33,6 @@ namespace Gameplay
 
         [field: SerializeField] public UnitType Type { get; protected set; }
         [field: SerializeField] public Sprite ProfilePicture { get; protected set; }
-        [field: SerializeField] public Collider MeshCollider { get; protected set; }
 
         public Outline Outline { get; protected set; }
 

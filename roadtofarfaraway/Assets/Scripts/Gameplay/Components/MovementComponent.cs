@@ -16,7 +16,8 @@ namespace Gameplay.Components
         [SerializeField] private float _moveSpeed = 10;
         [SerializeField] private float _rotateDegreeSpeed = 15;
         [SerializeField] private float _dragInAir = 0.1f;
-        
+
+        [field: SerializeField] public CapsuleCollider MeshCollider { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
         public NavMeshAgent Agent { get; private set; }
 
@@ -37,6 +38,8 @@ namespace Gameplay.Components
                 Rigidbody = rb;
             }
 
+            MeshCollider.isTrigger = true;
+
             GameStateManager.OnGameStateChanged += OnGameStateChanged;
         }
 
@@ -51,7 +54,7 @@ namespace Gameplay.Components
             {
                 Rigidbody.velocity -= Rigidbody.velocity * (_dragInAir * Time.fixedDeltaTime);
 
-                CheckCapsuleCastCollisionOnGround();
+                MeshCollider.isTrigger = !CheckCapsuleCastCollisionOnGround();
 
                 return;
             }
@@ -76,8 +79,10 @@ namespace Gameplay.Components
 
         private bool CheckCapsuleCastCollisionOnGround()
         {
-            //if (Physics.CapsuleCast())
-            return true;
+            var pStart = MeshCollider.transform.position + MeshCollider.center + Vector3.up * -MeshCollider.height * .25f;
+            var pEnd = pStart + Vector3.up * MeshCollider.height * .5f;
+            var cast = Physics.CapsuleCast(pStart, pEnd, MeshCollider.radius, -transform.up, out RaycastHit hit, 1);
+            return hit.collider?.CompareTag("Ground") == true;
         }
 
         /// <summary>
@@ -112,8 +117,6 @@ namespace Gameplay.Components
             //Debug.Log($"[{name}] rotate toward: {rotateTowards}, lookrotation: {lookRotation}, tr.rot: {transform.rotation}");
         }
 
-
-
         private void OnCollisionEnter(Collision collision)
         {
             if (!_isGrounded)
@@ -130,6 +133,19 @@ namespace Gameplay.Components
                 _isGrounded = true;
                 OnLandingComplete?.Invoke(this);
             }
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (!MeshCollider) return;
+
+            Gizmos.color = Color.green;
+
+            var pStart = MeshCollider.transform.position + MeshCollider.center + Vector3.up * -MeshCollider.height * .25f;
+            var pEnd = pStart + Vector3.up * MeshCollider.height *.5f;
+            
+            Gizmos.DrawWireSphere(pStart, MeshCollider.radius);
+            Gizmos.DrawWireSphere(pEnd, MeshCollider.radius);
         }
 
         public void OnGameStateChanged(GameState.GameState newGameState)
