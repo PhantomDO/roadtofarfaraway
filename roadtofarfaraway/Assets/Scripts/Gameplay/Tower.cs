@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Gameplay.Components;
+using GameState;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -15,6 +16,7 @@ namespace Gameplay
         private readonly List<float> _healthTiers = new List<float>() { 100.0f, 150.0f, 200.0f };
         private static readonly int UpgradeTrigger = Animator.StringToHash("Upgrade");
         private int _currentTier;
+        private Coroutine _spawningCoroutine;
 
         [field: SerializeField] public GenericDictionary<int, UnitType> PercentSpawningTypes { get; private set; }
         [field: SerializeField] public SpawnerComponent Spawner { get; private set; }
@@ -45,15 +47,16 @@ namespace Gameplay
             _currentTier = 0;
         }
 
+
         private void Start()
         {
             Health?.UpdateCurrency(_healthTiers[_currentTier], CurrencyOperation.Define);
-            StartCoroutine(SpawnAfterTime());
+            _spawningCoroutine = StartCoroutine(SpawnAfterTime());
         }
 
         private IEnumerator SpawnAfterTime()
         {
-            yield return null;
+            yield return _waitForNextSpawn;
 
             if (PercentSpawningTypes.Count <= 0) yield break;
             
@@ -68,6 +71,8 @@ namespace Gameplay
 
             while (Spawner.Money.Current > 0.0f)
             {
+                while (GameStateManager.Instance?.CurrentGameState == GameState.GameState.Paused)
+                    yield return null;
                 var rdmValue = Mathf.Min(Random.Range(minInclusive, 100), 100);
 
                 int minPercentage = 0;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Controls;
 using Gameplay.Components;
+using GameState;
 using Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -252,6 +253,8 @@ namespace Gameplay
 
             while (_spawningType != UnitType.Null)
             {
+                while (GameStateManager.Instance.CurrentGameState == GameState.GameState.Paused)
+                    yield return null;
                 var cursorAsRay = UiManager.Instance.CursorAsRay;
                 var cursorEndPoint = cursorAsRay.origin + cursorAsRay.direction * 1000.0f;
                 // Get UI button that gives you the UnitTypes to spawn

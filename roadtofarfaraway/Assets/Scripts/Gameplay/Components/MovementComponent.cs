@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using GameState;
 using Managers;
 using UnityEngine;
 using UnityEngine.AI;
@@ -35,6 +36,13 @@ namespace Gameplay.Components
             {
                 Rigidbody = rb;
             }
+
+            GameStateManager.OnGameStateChanged += OnGameStateChanged;
+        }
+
+        private void OnDestroy()
+        {
+            GameStateManager.OnGameStateChanged -= OnGameStateChanged;
         }
 
         private void FixedUpdate()
@@ -110,6 +118,15 @@ namespace Gameplay.Components
                 }
                 _isGrounded = true;
                 OnLandingComplete?.Invoke(this);
+            }
+        }
+
+        public void OnGameStateChanged(GameState.GameState newGameState)
+        {
+            enabled = GameStateManager.Instance.CurrentGameState == GameState.GameState.Gameplay;
+            if (Agent)
+            {
+                Agent.enabled = enabled;
             }
         }
     }

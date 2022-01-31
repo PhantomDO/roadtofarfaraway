@@ -6,6 +6,7 @@ using UnityEngine;
 
 using Managers;
 using Gameplay.Components;
+using GameState;
 
 namespace Gameplay
 {
@@ -36,6 +37,7 @@ namespace Gameplay
 
         private bool _isCursorHover = false;
         private bool _isCurrentlySelected = false;
+        private Vector3 _cachedVelocity = Vector3.zero;
 
         protected virtual void Awake()
         {
@@ -48,6 +50,7 @@ namespace Gameplay
 
             if (Outline == null ) Outline = gameObject.AddComponent<Outline>();
             Outline.OutlineWidth = 0.0f;
+            GameStateManager.OnGameStateChanged += OnGameStateChanged;
         }
 
         protected virtual void OnDestroy()
@@ -56,18 +59,19 @@ namespace Gameplay
             SpawnerComponent.OnUnregisterUnit -= UnregisterUnit;
             Player.OnHoverUnit -= HoverUnit;
             Player.OnSelectUnit -= SelectUnit;
+            GameStateManager.OnGameStateChanged -= OnGameStateChanged;
         }
         
         protected virtual void RegisterUnit(SpawnerComponent spawner, Unit unit)
         {
             if (this != unit) return;
-            Debug.Log($"{unit.name} spawned from {spawner.name}");
+            //Debug.Log($"{unit.name} spawned from {spawner.name}");
         }
 
         protected virtual void UnregisterUnit(SpawnerComponent spawner, Unit unit)
         {
             if (this != unit) return;
-            Debug.Log($"{unit.name} destroyed from {spawner.name}");
+            //Debug.Log($"{unit.name} destroyed from {spawner.name}");
             Destroy(gameObject);
         }
         
@@ -109,6 +113,23 @@ namespace Gameplay
             if (TryGetComponent(out DamageComponent damageComponent)) Damage = damageComponent;
             if (TryGetComponent(out MovementComponent movementComponent)) Movement = movementComponent;
             if (TryGetComponent(out RadarComponent radarComponent)) Radar = radarComponent;
+        }
+        
+        public void OnGameStateChanged(GameState.GameState newGameState)
+        {
+            if (TryGetComponent<Rigidbody>(out var rb))
+            {
+                if (GameStateManager.Instance.CurrentGameState == GameState.GameState.Paused)
+                {
+                    _cachedVelocity = rb.velocity;
+                    rb.isKinematic = true;
+                }
+                else
+                {
+                    rb.isKinematic = false;
+                    rb.velocity = _cachedVelocity;
+                }
+            }
         }
     }
 }

@@ -143,7 +143,7 @@ public class MapBrain : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         UIController.instance.SetLoadingValue(_generationNumber / (float)generationLimit);
-        Debug.Log("Current generation " + _generationNumber + " score: " + bestFitnessCurrentGeneration);
+        //Debug.Log("Current generation " + _generationNumber + " score: " + bestFitnessCurrentGeneration);
         _generationNumber++;
 
         if (_generationNumber < generationLimit)
@@ -242,7 +242,7 @@ public class MapBrain : MonoBehaviour
     private void ShowResults()
     {
         IsAlgorithmRunning = false;
-        Debug.Log("Best solution at generation " + _bestMapGenerationNumber + " with score: " + _bestFitnessAllTime);
+        //Debug.Log("Best solution at generation " + _bestMapGenerationNumber + " with score: " + _bestFitnessAllTime);
 
         MapData data = BestMap.ReturnMapData();
         mapVisualizer.VisualizeMap(BestMap.Grid, data, startEdge, endEdge);
@@ -250,12 +250,12 @@ public class MapBrain : MonoBehaviour
 
         UIController.instance.HideLoadingScreen();
 
-        Debug.Log("Path length: " + data.path.Count);
-        Debug.Log("Corners count: " + data.cornersPosition.Count);
+        //Debug.Log("Path length: " + data.path.Count);
+        //Debug.Log("Corners count: " + data.cornersPosition.Count);
 
         _endDate = DateTime.Now;
         long elapsedTicks = _endDate.Ticks - _startDate.Ticks;
         TimeSpan elapsedSpan = new TimeSpan(elapsedTicks);
-        Debug.Log("Time needed to run this genetic optimisation: " + elapsedSpan.TotalSeconds + "s");
+        //Debug.Log("Time needed to run this genetic optimisation: " + elapsedSpan.TotalSeconds + "s");
     }
 }
