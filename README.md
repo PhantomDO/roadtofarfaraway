@@ -1,7 +1,6 @@
 # Road to Far Far Away
 
-[report](https://1drv.ms/w/s!AtdMxyMzK-l-g_kEWnpO7mp2dDkOTQ?e=5Zqbrh)
-[RoadMap](https://ticktick.com/pub/project/collaboration/invite/203cd3041ae44906886097e0191378bc?u=b8023e19ec5447aeb01da0c9e9a48d21)
+Par Nathan Coustance & Donnovan Feuillastre
 
 # Fiche signalétique
 
