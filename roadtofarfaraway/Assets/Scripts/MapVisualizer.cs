@@ -94,11 +94,7 @@ public class MapVisualizer : MonoBehaviour
                         CreateIndicator(position, environmentTiles[randomIndex]);
                         break;
                     case CellObjectType.Tower:
-                        var tile = CreateIndicator(position, towerTile);
-                        if (tile.TryGetComponent(out Tower tower))
-                        {
-                            tower.Spawner.UnitContainer.localScale /= scaleAtEnd;
-                        }
+                        CreateIndicator(position, towerTile);
                         break;
                     case CellObjectType.Start:
                         if (data.path.Count > 0)
@@ -181,8 +177,8 @@ public class MapVisualizer : MonoBehaviour
 
     private GameObject CreateIndicator(Vector3 position, GameObject prefab, Quaternion rotation = new Quaternion())
     {
-        Vector3 worldPosition = position + new Vector3(0.5f, 0f, 0.5f);
-        GameObject element = Instantiate(prefab, worldPosition, rotation);
+        //Vector3 worldPosition = position + new Vector3(0.5f, 0f, 0.5f);
+        GameObject element = Instantiate(prefab, position, rotation);
         element.transform.parent = _parent;
         gameObjects.Add(position, element);
 
@@ -217,12 +213,14 @@ public class MapVisualizer : MonoBehaviour
             if (gameObjects[position].TryGetComponent(out Tower t) && t == tower)
             {
                 towerPosition = position;
-                Destroy(gameObjects[position]);
-                gameObjects.Remove(position);
                 Direction previousDirection = GetPreviousDirection(position, data);
                 Direction nextDirection = GetNextDirection(position, data);
                 CalculatePrefabAndRotationFromDirections(previousDirection, nextDirection, out var roadPrefab, out var roadRotation);
-                CreateIndicator(position, roadPrefab, roadRotation);
+                GameObject go = CreateIndicator(tower.transform.position, roadPrefab, roadRotation);
+                Debug.Log(go.transform.position);
+                go.transform.localScale *= scaleAtEnd;
+                Destroy(gameObjects[position]);
+                gameObjects.Remove(position);
                 break;
             }
         }

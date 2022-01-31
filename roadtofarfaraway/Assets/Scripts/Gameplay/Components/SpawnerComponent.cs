@@ -11,7 +11,6 @@ namespace Gameplay.Components
         public delegate void DRegisterSpawner(SpawnerComponent component);
         public static event DRegisterSpawner OnRegisterSpawner;
         
-        [field: SerializeField] public Transform UnitContainer { get; private set; }
         [field: SerializeField] public Transform LaunchTransform { get; private set; }
         [field: SerializeField] public float Height { get; private set; }
 
@@ -59,7 +58,7 @@ namespace Gameplay.Components
                     Money.TryUpdateCurrency(parameters.Cost, CurrencyOperation.Decrease, out float updated))
                 {
                     spawnedUnit = Instantiate(parameters.Prefab, LaunchTransform.position,
-                        Quaternion.identity, UnitContainer);
+                        Quaternion.identity);
                     spawnedUnit.name = $"{parameters.Prefab.name} ({spawnCount++})";
                     ShootWithGravity(spawnedUnit, position);
                     SpawnedUnits.Add(spawnedUnit);

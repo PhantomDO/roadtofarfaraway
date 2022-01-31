@@ -110,9 +110,9 @@ GameObject:
   - component: {fileID: 2679990052579822776}
   - component: {fileID: 1643655673443476852}
   - component: {fileID: 5214185527162665891}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: tile_tower
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -437,11 +437,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 619200707961331236, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1276695780623417213, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1319800008384750651, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
       propertyPath: _gravity
@@ -497,7 +497,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2065338494055408607, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2065338494055408607, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
       propertyPath: m_TagString
@@ -505,7 +505,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4197950410051231214, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5130484261154115022, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
       propertyPath: m_Enabled
@@ -517,7 +517,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6643891580023172123, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6643891580023172123, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
       propertyPath: m_IsActive

@@ -48,7 +48,7 @@ namespace UI
                 if (child.TryGetComponent(out UnitTypeSelector unitTypeSelector))
                 {
                     unitTypeSelectors.Add(unitTypeSelector);
-                    Debug.Log($"{child.name}");
+                    //Debug.Log($"{child.name}");
                     unitTypeSelector.OnButtonClicked += UnitButtonClicked; ;
                 }
             }
