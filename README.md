@@ -47,6 +47,7 @@ Rendez-vous à Far Far Away et prenez toutes les forteresses sur votre chemin po
 * __Current Health__ : points de vie actuels de l'unité.
 * __Move Speed__ : vitesse de déplacement de l'unité.
 * __Cost__ : coût d'envoi de l'unité.
+* __SearchingMethod__ : type de recherche des autres unités ennemis.
 
 ### __Ennemies__
 
