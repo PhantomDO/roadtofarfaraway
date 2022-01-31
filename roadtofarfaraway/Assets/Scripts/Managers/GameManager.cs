@@ -96,7 +96,7 @@ namespace Managers
             if (!InstanceIDUnits.ContainsKey(key))
             {
                 InstanceIDUnits.Add(key, unit);
-                if (unit.Type == UnitType.Tower)
+                if (unit.Parameters.UnitType == UnitType.Tower)
                 {
                     Towers.Add((Tower)unit);
                 }
@@ -109,7 +109,7 @@ namespace Managers
             if (InstanceIDUnits.ContainsKey(key))
             {
                 InstanceIDUnits.Remove(key);
-                if (unit.Type == UnitType.Tower)
+                if (unit.Parameters.UnitType == UnitType.Tower)
                 {
                     Towers.Remove((Tower)unit);
                 }

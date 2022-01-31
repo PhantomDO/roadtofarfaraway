@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b7f2f72c85a2474d88ab2e844b9740e, type: 3}
   m_Name: FionaParameters
   m_EditorClassIdentifier: 
-  Cost: 20
+  UnitType: 2
+  GoldSpawnCost: 10
+  GoldDeathDrop: 10
   Prefab: {fileID: 6744037785525426033, guid: a24d472a0c66af449b16eae921bf2419, type: 3}

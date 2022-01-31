@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b7f2f72c85a2474d88ab2e844b9740e, type: 3}
   m_Name: ShrekParameters
   m_EditorClassIdentifier: 
-  Cost: 10
+  UnitType: 0
+  GoldSpawnCost: 15
+  GoldDeathDrop: 15
   Prefab: {fileID: 1518027972769674038, guid: 987e2c014a2fdab4da68594de92242aa, type: 3}

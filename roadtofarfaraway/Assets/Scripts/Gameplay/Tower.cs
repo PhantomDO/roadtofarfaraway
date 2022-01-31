@@ -84,7 +84,7 @@ namespace Gameplay
                     }
                 }
                 
-                //Debug.Log($"RDM : {rdmValue}, Spawning tower percentage : {minPercentage}, Type {PercentSpawningTypes[minPercentage]}");
+                //Debug.Log($"RDM : {rdmValue}, Spawning tower percentage : {minPercentage}, Parameters {PercentSpawningTypes[minPercentage]}");
 
                 var randomSphere = Random.insideUnitSphere * radiusSpawn;
                 randomSphere.y = 0;

@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b7f2f72c85a2474d88ab2e844b9740e, type: 3}
-  m_Name: DonkeyParameters
+  m_Name: TowerParameters
   m_EditorClassIdentifier: 
-  UnitType: 1
-  GoldSpawnCost: 5
-  GoldDeathDrop: 5
-  Prefab: {fileID: 121112471376265311, guid: 6b8b2ab6f39859046a092b8ad8bafca2, type: 3}
+  UnitType: 0
+  GoldSpawnCost: 0
+  GoldDeathDrop: 0
+  Prefab: {fileID: 0}
+  ProfilePicture: {fileID: 0}

@@ -80,7 +80,7 @@ namespace UI
                 return;
             }
 
-            UnitInformationProfilePicture.sprite = selectedUnit.ProfilePicture;
+            UnitInformationProfilePicture.sprite = selectedUnit.Parameters.ProfilePicture;
 
             if (selectedUnit.Health != null)
             {
@@ -135,7 +135,7 @@ namespace UI
         {
             foreach (var unitTypeSelector in unitTypeSelectors)
             {
-                if (unit.Type == unitTypeSelector.Type)
+                if (unit.Parameters.UnitType == unitTypeSelector.Type)
                 {
                     unitTypeSelector.PressableButton.interactable = true;
                     break;

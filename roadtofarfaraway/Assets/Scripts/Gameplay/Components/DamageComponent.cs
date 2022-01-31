@@ -104,9 +104,19 @@ namespace Gameplay.Components
 #endif
         private void DestroyUnit(Unit unit)
         {
-            if (unit == _latestTarget)
+            if (unit != _latestTarget) return;
+            
+            if (!TryGetComponent(out Unit thisUnit)) return;
+
+            // gain money
+            foreach (var spawner in GameManager.Instance?.Spawners)
             {
-                // gain money
+                if (spawner.SpawnedUnits.Contains(thisUnit))
+                {
+                    spawner.Money.UpdateCurrency(unit.Parameters.GoldDeathDrop, CurrencyOperation.Increase);
+
+                    break;
+                }
             }
         }
 

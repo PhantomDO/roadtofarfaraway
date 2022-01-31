@@ -146,8 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21dda5d997aa2db4ba59ed332f53955b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Type>k__BackingField: 4
-  <ProfilePicture>k__BackingField: {fileID: 0}
+  <Parameters>k__BackingField: {fileID: 11400000, guid: 15271ad99ca133242accc8f315165aa1, type: 2}
   upgrades:
   - {fileID: 3186953087920399638}
   - {fileID: 4581301533171624651}

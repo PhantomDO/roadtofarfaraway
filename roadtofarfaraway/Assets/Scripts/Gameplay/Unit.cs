@@ -31,8 +31,7 @@ namespace Gameplay
         public delegate void DUnregisterUnit(Unit unit);
         public static event DUnregisterUnit OnUnregisterUnit;
 
-        [field: SerializeField] public UnitType Type { get; protected set; }
-        [field: SerializeField] public Sprite ProfilePicture { get; protected set; }
+        [field: SerializeField] public UnitParameters Parameters { get; protected set; }
 
         public Outline Outline { get; protected set; }
 

@@ -59,6 +59,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7264612644995849857}
     m_Modifications:
+    - target: {fileID: 179775354901459845, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
+      propertyPath: <CanGainMoney>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1372016001058757702, guid: 66745f38fb3f0ff4dad811f1f25033e7, type: 3}
       propertyPath: m_RootOrder
       value: 0

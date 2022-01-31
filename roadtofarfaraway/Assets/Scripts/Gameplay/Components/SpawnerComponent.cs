@@ -55,7 +55,7 @@ namespace Gameplay.Components
                 var parameters = GameManager.Instance.TypesParameters[type];
 
                 if (parameters.Prefab != null && Money != null &&
-                    Money.TryUpdateCurrency(parameters.Cost, CurrencyOperation.Decrease, out float updated))
+                    Money.TryUpdateCurrency(parameters.GoldSpawnCost, CurrencyOperation.Decrease, out float updated))
                 {
                     spawnedUnit = Instantiate(parameters.Prefab, LaunchTransform.position,
                         Quaternion.identity);

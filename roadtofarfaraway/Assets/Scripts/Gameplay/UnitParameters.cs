@@ -5,7 +5,10 @@ namespace Gameplay
     [CreateAssetMenu(menuName = "UnitParameters", fileName = "Default Parameter")]
     public class UnitParameters : ScriptableObject
     {
-        public uint Cost;
+        public UnitType UnitType;
+        public uint GoldSpawnCost;
+        public uint GoldDeathDrop;
         public Unit Prefab;
+        public Sprite ProfilePicture;
     }
 }

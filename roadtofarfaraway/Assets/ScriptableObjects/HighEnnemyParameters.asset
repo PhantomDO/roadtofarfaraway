@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b7f2f72c85a2474d88ab2e844b9740e, type: 3}
   m_Name: HighEnnemyParameters
   m_EditorClassIdentifier: 
-  Cost: 20
+  UnitType: 6
+  GoldSpawnCost: 20
+  GoldDeathDrop: 20
   Prefab: {fileID: 856649220771542707, guid: 3899bd983fafda647aaca76835bf3bdd, type: 3}
