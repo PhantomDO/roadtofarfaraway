@@ -13,6 +13,7 @@ namespace Gameplay.Components
 
         [SerializeField] private bool _canMove = false;
         [SerializeField] private float _moveSpeed = 10;
+        [SerializeField] private float _rotateDegreeSpeed = 15;
         [SerializeField] private float _dragInAir = 0.1f;
         
         public Rigidbody Rigidbody { get; private set; }
@@ -20,9 +21,6 @@ namespace Gameplay.Components
 
         private RadarComponent _radar;
         private bool _isGrounded;
-
-        private Vector2 _target2D;
-        private Vector2 _transform2D;
 
         private void Awake()
         {
@@ -41,8 +39,6 @@ namespace Gameplay.Components
 
         private void FixedUpdate()
         {
-            _transform2D = new Vector2(transform.position.x, transform.position.z);
-
             if (!_isGrounded)
             {
                 Rigidbody.velocity -= Rigidbody.velocity * (_dragInAir * Time.fixedDeltaTime);
@@ -56,12 +52,15 @@ namespace Gameplay.Components
             }
 
             var targetPosition = _radar.Target.transform.position;
-            _target2D = new Vector2(targetPosition.x, targetPosition.z);
+
+            RotateTo(Agent.steeringTarget);
 
             if (Vector3.Distance(Agent.destination, targetPosition) > 0.05f)
             {
                 Agent.destination = targetPosition;
             }
+
+            //MoveTo(Agent.nextPosition);
         }
 
         /// <summary>
@@ -74,7 +73,26 @@ namespace Gameplay.Components
 
             var position = transform.position;
             var direction = (nextPosition - position).normalized;
+
             transform.position = Vector3.MoveTowards(position, direction, Time.deltaTime * (_moveSpeed));
+            
+        }
+
+        /// <summary>
+        /// Rotation method, rotate to the next point
+        /// </summary>
+        /// <param name="nextPosition"></param>
+        public void RotateTo(Vector3 nextPosition)
+        {
+            if (!_canMove) return;
+
+            var rotation = transform.rotation;
+            var direction = nextPosition - transform.position;
+            var rotateTowards = Vector3.RotateTowards(transform.forward, direction,
+                Time.deltaTime * _rotateDegreeSpeed, 0.0f);
+            var lookRotation = Quaternion.LookRotation(rotateTowards);
+            transform.rotation = lookRotation;
+            Debug.Log($"[{name}] rotate toward: {rotateTowards}, lookrotation: {lookRotation}, tr.rot: {transform.rotation}");
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -82,8 +100,14 @@ namespace Gameplay.Components
             if (!_isGrounded)
             {
                 Agent = gameObject.AddComponent<NavMeshAgent>();
-                Rigidbody.velocity = Vector3.zero;
-                Rigidbody.angularVelocity = Vector3.zero;
+                if (Rigidbody)
+                {
+                    Rigidbody.velocity = Vector3.zero;
+                    Rigidbody.angularVelocity = Vector3.zero;
+                    Rigidbody.isKinematic = true;
+                    //Agent.updatePosition = false;
+                    Agent.updateRotation = false;
+                }
                 _isGrounded = true;
                 OnLandingComplete?.Invoke(this);
             }
