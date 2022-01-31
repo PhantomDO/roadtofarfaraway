@@ -21,9 +21,11 @@ namespace Gameplay.Components
         [SerializeField] private float searchingRateInSecond = 0.5f;
         [SerializeField] private float fovRadiusMin = 2;
         [SerializeField] private float fovRadiusMax = 8;
+        [SerializeField] private float speedFovIncrease = 5f;
+        [SerializeField] private float speedFovDecrease = 1.5f;
         [SerializeField] private float smoothTime = 0.1f;
         [SerializeField] private LayerMask detectionLayer;
-        [SerializeField] private string[] targetTags;
+        //[SerializeField] private string[] targetTags;
         [SerializeField] private Collider[] colliderResults;
         [SerializeField] private List<Unit> nearbyUnits;
         public SearchingMethod SearchingMethod = SearchingMethod.LowLife;
@@ -49,8 +51,8 @@ namespace Gameplay.Components
                 _rateSinceUpdateSearchInSecond = Time.time;
 
                 var targetRadius = Target == null 
-                    ? Mathf.Min(_currentRadius * 1.5f, fovRadiusMax) 
-                    : Mathf.Max(_currentRadius / 1.5f, fovRadiusMin);
+                    ? Mathf.Min(_currentRadius * speedFovIncrease, fovRadiusMax) 
+                    : Mathf.Max(_currentRadius / speedFovDecrease, fovRadiusMin);
                 _currentRadius = Mathf.SmoothDamp(_currentRadius, targetRadius, ref _radiusVelocity, smoothTime);
             }
         }
@@ -110,13 +112,9 @@ namespace Gameplay.Components
                             rootNotPlayer.GetInstanceID() != transform.GetInstanceID())
                         {
                             // if it does not contains the unit add it to the list then break
-                            foreach (var targetTag in targetTags)
+                            if (!nearbyUnits.Contains(unit))
                             {
-                                if (!nearbyUnits.Contains(unit) && unit.CompareTag(targetTag))
-                                {
-                                    nearbyUnits.Add(unit);
-                                    break;
-                                }
+                                nearbyUnits.Add(unit);
                             }
 
                             break;

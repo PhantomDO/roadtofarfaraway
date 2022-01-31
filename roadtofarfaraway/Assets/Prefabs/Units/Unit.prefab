@@ -162,12 +162,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   searchingRateInSecond: 0.5
   fovRadiusMin: 3
-  fovRadiusMax: 50
+  fovRadiusMax: 15
+  speedFovIncrease: 5
+  speedFovDecrease: 1.5
   smoothTime: 0.1
   detectionLayer:
     serializedVersion: 2
     m_Bits: 64
-  targetTags: []
   colliderResults: []
   nearbyUnits: []
   SearchingMethod: 1

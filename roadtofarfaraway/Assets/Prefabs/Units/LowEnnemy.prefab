@@ -8,6 +8,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -2777550692428188803, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: detectionLayer.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: -2777550692428188803, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
       propertyPath: targetTags.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -63,9 +67,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5032052825202630861, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5950127577575670744, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
       propertyPath: m_Name
       value: LowEnnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5950127577575670744, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5950127577575670744, guid: 5b6c422ba3f306b49b755065e451034b, type: 3}
       propertyPath: m_TagString

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8436126891185608660}
   - component: {fileID: 134302737228689100}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: towers
   m_TagString: Tower
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3025467594718942146}
   - component: {fileID: 1211124298430840059}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Tier1
   m_TagString: Tower
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 2679990052579822776}
   - component: {fileID: 1643655673443476852}
   - component: {fileID: 5214185527162665891}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: tile_tower
   m_TagString: Tower
   m_Icon: {fileID: 0}
@@ -148,7 +148,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Type>k__BackingField: 4
   <ProfilePicture>k__BackingField: {fileID: 0}
-  <MeshCollider>k__BackingField: {fileID: 134302737228689100}
   upgrades:
   - {fileID: 3186953087920399638}
   - {fileID: 4581301533171624651}
@@ -194,7 +193,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6608053411796622776}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Tier2
   m_TagString: Tower
   m_Icon: {fileID: 0}
@@ -227,7 +226,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4924557731809259781}
   - component: {fileID: 575037503155532064}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Tier3
   m_TagString: Tower
   m_Icon: {fileID: 0}
@@ -337,7 +336,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9014233218394151631, guid: f05df414859584545bb64e8adc77c855, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 9014233218394151631, guid: f05df414859584545bb64e8adc77c855, type: 3}
       propertyPath: m_IsActive
@@ -419,7 +418,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9014233218394151631, guid: f05df414859584545bb64e8adc77c855, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f05df414859584545bb64e8adc77c855, type: 3}
@@ -680,7 +679,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c1bbcdfed0aa3d748ad0c63c8a612ca6, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c1bbcdfed0aa3d748ad0c63c8a612ca6, type: 3}
       propertyPath: m_IsActive
@@ -730,7 +729,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5829960354885140007, guid: 21b83d7d7108c6240aad1ab285da8198, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5829960354885140007, guid: 21b83d7d7108c6240aad1ab285da8198, type: 3}
       propertyPath: m_IsActive
