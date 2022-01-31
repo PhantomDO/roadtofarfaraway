@@ -10,66 +10,83 @@ __Type de jeu__ : Reversed Tower Defense <br>
 __Mode__ : Solo <br>
 __Support__ : PC <br>
 __Moteur__ : Unity 2020.3.23f1 <br>
-__Pitch__ : Aidez Shrek et ses amis à sauver Fiona de Lord Farquaad à Far Far Away. Prenez toutes les forteresses sur votre chemin pour vous faire plus d'alliés à déployer lors de l'attaque de la ville.<br>
+__Pitch__ : Aidez Shrek et ses amis à sauver chasser Lord Farquaad de son trône.
+Rendez-vous à Far Far Away et prenez toutes les forteresses sur votre chemin pour libérer le pays de son oppresseur.<br>
 
-# Inspiration 
+# Inspirations
 
-## Shrek
-![image](images/shrek.gif)
-
-## Totally Accurate Battle Simulator
-![image](images/tabs.gif)
-
-## Advance Wars
-![image](images/advance_wars.gif)
+<table>
+    <thead>
+        <tr>
+            <th><p align="center">Shrek</p></th>
+            <th><p align="center">TABS</p></th>
+            <th><p align="center">Advance Wars</p></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><image src="images/shrek.gif" alt="shrek_gif"></td>
+            <td><image src="images/tabs.gif" alt="tabs_gif"></td>
+            <td><image src="images/advance_wars_2.gif" alt="advance_wars_gif"></td>
+        </tr>
+    </tbody>
+</table>
 
 # Gameplay
 
-### Spawn
+### __Units__
 
-* __Start__ : le joueur peut poser notre base sur une tile libre et tagger comme *__"Spawnable"__* 
-* __Spawner__ : le joueur peut faire apparaitre ses unitées sur les tiles *__Spawner__*, ces tiles sont créer au départ et lorsqu'il détruit des bâtiments adverses.
+* __Allies__ : ce sont les unités possédées par le joueur. Chacune possède des points de vie, une cible, ainsi qu'un ordre, donné par le joueur, indiquant quel type de cible prendre en priorité.
+* __Ennemies__ : ce sont les unités ennemies. Leur seul objectif est de défendre les tours en attaquant l'unité *Allies* la plus proche.
 
-### Actions
+### __Unit Properties__
 
-* __Movement__ : les unitées vont d'un point A vers un point B, si celui-ci est une cible elles attaques.
-* __Attaque__ : l'unité inflige des dégats à celle qu'elle attaque.
+* __Damage__ : montant de dégats d'une attaque.
+* __Fire rate__ : délai entre chaque attaque.
+* __Max Health__ : montant maximum des points de vie.
+* __Current Health__ : points de vie actuels de l'unité.
+* __Move Speed__ : vitesse de déplacement de l'unité.
+* __Cost__ : coût d'envoi de l'unité.
 
-![image](images/advance_wars_movement.gif)
-![image](images/creep_lol_attack.gif)
+### __Ennemies__
 
-### Ai Properties
+* __Soldats__ : séparant le joueur des tours, ces unités sont les seuls défenseurs du royaume.
+* __Tours__ : servant de garnisons aux unités ennemies, ces tours sont les cibles principales du joueur. À chaque fois qu'une est détruite, les autres s'améliorent et gagnent en puissance.
 
-* __Damage__ : dégats total qu'elle peut infliger aux unitées adverses sans malus
-* __Max Health__ : point de vie total de l'unité lors de sa création
-* __Current Health__ : point de vie actuel de l'unité
-* __Move Speed__ : vitesse de déplacement de l'unité
-* __Fire rate__ : temps entre chacun des coups de l'unité
-* __Cost__ : coût de spawn de l'unité
+### __Spawning__
 
-### Player / Opponent
+* __Canon__ : le joueur dispose d'un canon lui servant à envoyer ses unités au combat. Il dispose d'un choix entre plusieurs unités et est libre de les envoyer où il souhaite sur la map.
+* __Tours__ : les unités ennemies apparaissent depuis les tours. Chaque tour faire apparaître régulièrement des unités pour se défendre.
 
-* __Max Money__ : argent total en debut de partie
-* __Current Money__ : argent actuellement possédé par le joueur
-* __Unit Counts__ : set de données contenant le nombre d'unité disponible pour chaque classe
-* __Spawned Units__ : set de données contenant les unitées déjà en jeu
+### __End Conditions__
+
+* __Winning condition__ : le joueur a détruit toutes les tours ennemies.
+* __Losing condition__ : le joueur n'a plus assez d'argent pour se battre.
 
 # Level Design
 
-Le level design est géré par une TileMap. On défini un set de règles de construction avec différents set d'objets tile. <br> 
-L'ennemi a ses forts placés aléatoirement sur la TileMap, de préférences, au bords des routes.
+La création de la map est gérée de manière procédurale.
 
-![image](images/3D_tilemap.jpg)
+Le placement d'obstacles est tiré de cet article de recherche : https://www.researchgate.net/publication/224180076_Automatic_generation_of_game_elements_via_evolution. <br>
+Il s'agit de placer les obstacles à la manière des déplacements d'un cavalier dans un jeu d'échecs. <br>
+On place plusieurs cavaliers sur la map, puis on génère un obstacle à chacune de ses positions possibles de déplacement afin d'obtenir une répartition naturelle des obstacles.
+
+Après avoir placé les obstacles, on créé le chemin en placant 2 points, chacun sur une extrémité du terrain.
+On va ensuite utiliser l'algorithme de pathfinding A* afin de trouver un chemin reliant ces 2 points parmis les obstacles. <br>
+Si aucun n'est trouvé, on essaye d'enlever aléatoirement des obstacles afin de dégager la voie pour un chemin.
+
+Après avoir exécuté les étapes précédentes, on obtient une map correcte mais pouvant parfois être décevante.
+Pour cela, nous avons implémenté un algorithme génétique permettant d'obtenir systématiquement de bons résultats grâce à une fonction de fitness et des paramètres adaptés.
+
+![MapPreview](images/map_preview.png)
 
 # UX/UI
 
-Le jeu aura une interface autour de la zone de jeu.
-Des icones contextuelles qui permettent au joueur de spawn les différentes classes d'unitées.
-*Il y a une carte du jeu dans l'écran qui montre la progression du joueur jusqu'au fort.*
+Les éléments d'informations sont affichés directement sur le HUD. <br>
+En bas on trouve les différentes unités que le joueur peut envoyer au combat. Il suffit de cliquer sur l'un des boutons pour sélectionner l'unité correspondante et ainsi pouvoir l'envoyer en cliquant sur le terrain. <br>
+En haut se trouvent les informations de l'unité actuellement sélectionnée. Les unités sélectionnables sont celles se trouvant sur le terrain. On peut ainsi consulter leurs points de vie actuels ainsi que modifier leur stratégie de combat.
 
-![image](images/age-of-empires-4-abbasid-gameplay-02.webp)
-![image](images/city_skylines_ui.webp)
-![image](images/tabs_ui.jpg)
+![HUD](images/hud.png)
 
 
 # Défi
