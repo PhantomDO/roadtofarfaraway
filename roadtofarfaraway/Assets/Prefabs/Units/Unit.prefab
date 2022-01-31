@@ -161,7 +161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   searchingRateInSecond: 0.5
   fovRadiusMin: 3
-  fovRadiusMax: 15
+  fovRadiusMax: 35
   speedFovIncrease: 5
   speedFovDecrease: 1.5
   smoothTime: 0.1

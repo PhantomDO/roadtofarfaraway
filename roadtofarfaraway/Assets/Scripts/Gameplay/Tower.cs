@@ -126,7 +126,7 @@ namespace Gameplay
                 surface.BuildNavMesh();
             }
 
-            //yield return SpawnAfterTime();
+            yield return SpawnAfterTime();
         }
     }
 }

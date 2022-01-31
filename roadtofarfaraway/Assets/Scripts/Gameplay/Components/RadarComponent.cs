@@ -69,23 +69,6 @@ namespace Gameplay.Components
         }
 #endif
 
-        /// <summary>
-        /// Search nearest unit
-        /// </summary>
-        /// <param name="units"></param>
-        /// <param name="positiveInfinity"></param>
-        /// <param name="lambdaParameter"></param>
-        /// <returns></returns>
-        private int SearchParameter(List<Unit> units, Func<int, int> lambdaParameter = null)
-        {
-            if (lambdaParameter == null) return -1;
-
-            var index = -1;
-
-            for (int i = 0; i < units.Count; i++) index = lambdaParameter.Invoke(i);
-
-            return index;
-        }
 
         /// <summary>
         /// Search a target in the fov of the unit
@@ -105,7 +88,7 @@ namespace Gameplay.Components
                 {
                     // Check if you find a UnitComponent in the hierarchy of the collider
                     Transform rootNotPlayer = colliderResults[i].transform;
-                    while (!rootNotPlayer.CompareTag("Player"))
+                    while (true)
                     {
                         // it can't be this unit, then ignore itself
                         if (rootNotPlayer.TryGetComponent(out Unit unit) &&
@@ -121,8 +104,8 @@ namespace Gameplay.Components
                         }
 
                         // up the hierarchy
-                        if (rootNotPlayer.parent == null) break;
                         rootNotPlayer = rootNotPlayer.parent;
+                        if (rootNotPlayer == null) break;
                     }
                 }
             }
@@ -134,37 +117,41 @@ namespace Gameplay.Components
                 switch (SearchingMethod)
                 {
                     case SearchingMethod.Nearest:
-                        save = Mathf.NegativeInfinity;
-                        index = SearchParameter(nearbyUnits, (i) =>
+                        save = Mathf.Infinity;
+                        for (int i = 0; i < nearbyUnits.Count; i++)
                         {
                             var dist = Vector3.Distance(transform.position, nearbyUnits[i].transform.position);
-                            if (save >= dist) return -1;
+                            if (save < dist) continue;
 
                             save = dist;
-                            return i;
-                        });
+                            index = i;
+                        }
                         break;
                     case SearchingMethod.LowLife:
                         save = Mathf.Infinity;
-                        index = SearchParameter(nearbyUnits, (i) =>
+                        for (int i = 0; i < nearbyUnits.Count; i++)
                         {
                             if (!nearbyUnits[i].Health || save <= nearbyUnits[i].Health.Current)
-                                return -1;
+                            {
+                                continue;
+                            }
 
                             save = nearbyUnits[i].Health.Current;
-                            return i;
-                        });
+                            index = i;
+                        }
                         break;
                     case SearchingMethod.HighLife:
                         save = Mathf.NegativeInfinity;
-                        index = SearchParameter(nearbyUnits, (i) =>
+                        for (int i = 0; i < nearbyUnits.Count; i++)
                         {
                             if (!nearbyUnits[i].Health || save >= nearbyUnits[i].Health.Current)
-                                return -1;
+                            {
+                                continue;
+                            }
 
                             save = nearbyUnits[i].Health.Current;
-                            return i;
-                        });
+                            index = i;
+                        }
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
